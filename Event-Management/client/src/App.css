@@ -1,5 +1,6 @@
 #root {
-  max-width: 1280px;
+  width: 1440px;
+  height: 1024px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
@@ -47,29 +48,36 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f0f0f0;
+  background-color: #ADEBB3;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: 400px;
+  width: 950px;
   padding: 2rem;
-  background-color: #ffffff;
+  background-color: #F5FFFA;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  align-items: stretch; /* Ensures child elements stretch to the form's width */
 }
 
 h1 {
   font-size: 2rem;
+  
   margin-bottom: 1rem;
   text-align: center;
+  color: black;
 }
 
 label {
   font-weight: bold;
   font-size: 1rem;
+  color: black; /* Set label color to black */
+  display: block; /* Ensures the label is on its own line */
+  text-align: left; /* Aligns the label to the left */
+  margin-bottom: 0.5rem; /* Adds spacing between the label and the input */
 }
 
 input {
@@ -77,6 +85,8 @@ input {
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: 100%; /* Ensures all input boxes are the same width */
+  box-sizing: border-box; /* Includes padding and border in the width */
 }
 
 button {
@@ -97,6 +107,7 @@ button:hover {
 p {
   margin-top: 1rem;
   text-align: center;
+  color: black;
 }
 
 p button {

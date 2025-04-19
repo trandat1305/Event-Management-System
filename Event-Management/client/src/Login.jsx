@@ -5,8 +5,8 @@ import './App.css';
 function Login() {
   return (
     <div className="login-container">
-      <h1>Login</h1>
       <form>
+      <h1>Login</h1>
         <div>
           <label htmlFor="email">Email:</label>
           <input type="email" id="email" placeholder="Enter your email" />
@@ -16,13 +16,14 @@ function Login() {
           <input type="password" id="password" placeholder="Enter your password" />
         </div>
         <button type="button">Login</button>
-      </form>
-      <p>
+        <p>
         Don't have an account?{' '}
         <Link to="/signup">
           <button>Sign Up</button>
         </Link>
       </p>
+      </form>
+
     </div>
   );
 }

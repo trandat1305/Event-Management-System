@@ -1,35 +1,52 @@
 const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, 
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
-    required: true },
-  event: { type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Event' },
-  message: { type: String, 
-    required: true },
-  read: { type: Boolean, 
-    default: false },
-  createdAt: { type: Date, 
-    default: Date.now },
+    required: true 
+  },
+  event: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Event',
+  },
+  message: { 
+    type: String, 
+    required: true 
+  },
+  isRead: { 
+    type: Boolean, 
+    default: false 
+  },
   isDeleted: { 
     type: Boolean, 
     default: false 
   },
-}, { timestamps: true 
+}, { 
+  timestamps: true 
 });
-notificationSchema.index({ user: 1, read: 1 }); // Faster "unread notifications" queries
+notificationSchema.index({ user: 1, isRead: 1 }); // Faster "unread notifications" queries
 
-// Middleware to exclude soft-deleted users
-userSchema.pre(/^find/, function(next) {
-  this.where({ isDeleted: false });
+// Exclude soft-deleted notifications
+notificationSchema.pre(/^find/, function(next) {
+  this.where({ isDeleted: { $ne: true } });
   next();
 });
 
 // Soft delete method
-userSchema.methods.softDelete = async function() {
+notificationSchema.methods.softDelete = async function() {
   this.isDeleted = true;
-  await this.save();
+  return await this.save();
 };
+
+// Static method to create a new notification
+notificationSchema.statics.createNotification = async function({ userId, eventId = null, message }) {
+  return await this.create({
+    user: userId,
+    event: eventId,
+    message: message,
+  });
+};
+
 
 module.exports = mongoose.model('Notification', notificationSchema);

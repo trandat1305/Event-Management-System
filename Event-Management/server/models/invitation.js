@@ -1,31 +1,68 @@
 const mongoose = require('mongoose');
+const Event = require('./Event');
+const User = require('./User');
 
 const invitationSchema = new mongoose.Schema({
-  event: { type: mongoose.Schema.Types.ObjectId, 
+  eventId: { 
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'Event', 
-    required: true },
-  user: { type: mongoose.Schema.Types.ObjectId, 
+    required: true 
+  },
+  userId: { 
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
-    required: true },
-  rsvpStatus: { type: String, enum: ['pending', 'accepted', 'declined'], default: 'pending' },
+    required: true 
+  },
+  rsvpStatus: { 
+    type: String, 
+    enum: ['pending', 'accepted', 'declined'], 
+    default: 'pending' 
+  },
+
+  timeSent: { 
+    type: Date, 
+    default: Date.now 
+  },
+  timeResponded: {
+    type: Date,
+    default: null 
+  },
   isDeleted: { 
     type: Boolean, 
     default: false 
   },
 }, { timestamps: true 
 });
-invitationSchema.index({ event: 1, user: 1 }, { unique: true });
 
-// Middleware to exclude soft-deleted users
-userSchema.pre(/^find/, function(next) {
-  this.where({ isDeleted: false });
+// Auto set timeResponded when RSVP status changes
+invitationSchema.pre('save', function(next) {
+  if (this.isModified('rsvpStatus') && this.rsvpStatus !== 'pending' && !this.timeResponded) {
+    this.timeResponded = new Date();
+  }
   next();
 });
 
-// Soft delete method
-userSchema.methods.softDelete = async function() {
+invitationSchema.pre(/^find/, function(next) {
+  this.where({ isDeleted: { $ne: true } });
+  next();
+});
+
+invitationSchema.methods.softDelete = async function() {
   this.isDeleted = true;
-  await this.save();
+  return await this.save();
 };
+
+invitationSchema.pre('findOneAndUpdate', function(next) {
+  const update = this.getUpdate();
+  if (update.rsvpStatus && update.rsvpStatus !== 'pending' && !update.timeResponded) {
+    this.setUpdate({ 
+      ...update, 
+      timeResponded: new Date()
+    });
+  }
+  next();
+});
+
+invitationSchema.index({ eventId: 1, userId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Invitation', invitationSchema);

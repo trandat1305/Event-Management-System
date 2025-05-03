@@ -1,0 +1,81 @@
+/* filepath: d:\github\Event-Management-System\Event-Management-System\Event-Management\client\src\Home.css */
+.home-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.toggle-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background-color: #646cff;
+  color: black; /* Change text color to black */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.toggle-button:hover {
+  background-color: #535bf2;
+}
+
+.side-panel {
+  width: 250px;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: -250px;
+  height: 100%;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  padding: 20px;
+}
+
+.side-panel.open {
+  left: 0;
+}
+
+.side-panel h2 {
+  margin-top: 0;
+}
+
+.side-panel ul {
+  list-style: none;
+  padding: 0;
+}
+
+.side-panel ul li {
+  margin: 10px 0;
+  color: black; /* Make the text black */
+  cursor: pointer; /* Indicate that the items are clickable */
+  transition: color 0.3s ease;
+}
+
+.side-panel ul li:hover {
+  color: #646cff; /* Change color on hover for better interactivity */
+  text-decoration: underline; /* Optional: Add underline on hover */
+}
+
+.close-button {
+  display: block;
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #e04343;
+}
+
+.content {
+  flex: 1;
+  margin-left: 20px;
+  padding: 20px;
+}

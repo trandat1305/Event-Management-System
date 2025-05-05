@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
   },
   imageURL: { 
     type: String,
-    default: 'defaultAvatar.jpg', // reminder to change to your default avatar path
+    default: 'uploads/defaultAvatar.jpg',
     validate: {
       validator: function(v) {
         if (!v) return true;  
@@ -39,10 +39,6 @@ const userSchema = new mongoose.Schema({
   },
 }, { timestamps: true 
 });
-userSchema.index({ email: 1 }, 
-    { unique: true }); // Already implicit from schema
-userSchema.index({ username: 1 }, 
-    { unique: true }); // Already implicit
 
 // Middleware to exclude soft-deleted users
 userSchema.pre(/^find/, function(next) {

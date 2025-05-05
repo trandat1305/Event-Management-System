@@ -17,9 +17,11 @@ const messageSchema = new mongoose.Schema({
   },
   content: { 
     type: String, 
-    required: true 
+    required: true,
+    trim: true,
+    maxlength: [1000, 'Message must not exceed 1000 characters']
   },
-  imageURL: { 
+  imageURL: [{ 
     type: String,
     default: null,
     validate: {
@@ -29,7 +31,7 @@ const messageSchema = new mongoose.Schema({
       },
       message: 'Invalid image URL'
     }
-  },
+  }],
   replyToMessageId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Message', 

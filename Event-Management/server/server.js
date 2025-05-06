@@ -3,27 +3,34 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const path = require('path');
+
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const PORT = process.env.PORT || 3000;
 
-// Cấu hình middleware
-app.use(cors());
+const apiRouter = require('./routes/centralRoute');
+
+// middleware
+app.use(cors()); // reminder to unuse this in production
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Import và sử dụng các route, ví dụ:
-const userRoutes = require('./routes/userRoutes');
-const eventRoutes = require('./routes/eventRoutes');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use('/api/users', userRoutes);
-app.use('/api/events', eventRoutes);
-
-// Middleware xử lý lỗi
+// Middleware error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Có lỗi xảy ra!' });
+  res.status(500).json({ error: 'Error!' });
 });
 
+app.get("/", (req, res) => { 
+    res.send("hello!");
+});
+
+app.use("/api", apiRouter);
+
 app.listen(PORT, () => {
-  console.log(`Server đang chạy trên cổng ${PORT}`);
+  console.log(`Server is running on ${PORT}, http://localhost:${PORT}`);
 });

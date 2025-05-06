@@ -1,12 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 function Login() {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate('/home'); // Navigate to the homepage
+  };
+
   return (
     <div className="login-container">
-      <form>
       <h1>Login</h1>
+      <form>
         <div>
           <label htmlFor="email">Email:</label>
           <input type="email" id="email" placeholder="Enter your email" />
@@ -15,15 +21,10 @@ function Login() {
           <label htmlFor="password">Password:</label>
           <input type="password" id="password" placeholder="Enter your password" />
         </div>
-        <button type="button">Login</button>
-        <p>
-        Don't have an account?{' '}
-        <Link to="/signup">
-          <button>Sign Up</button>
-        </Link>
-      </p>
+        <button type="button" onClick={handleLogin}>
+          Login
+        </button>
       </form>
-
     </div>
   );
 }

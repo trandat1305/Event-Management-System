@@ -48,6 +48,23 @@ const messageSchema = new mongoose.Schema({
 }, { timestamps: true }
 );
 
+// Return the full message unless it's deleted
+messageSchema.set('toJSON', {
+  transform: function(doc, ret) {
+    if (ret.isDeleted) {
+      return {
+        _id: ret._id,
+        content: 'Message deleted',
+        createdAt: ret.createdAt,
+        updatedAt: ret.updatedAt
+      };
+    }
+
+    // Otherwise, return the full message
+    return ret;
+  }
+});
+
 // Middleware to exclude soft-deleted messages
 messageSchema.pre(/^find/, function(next) {
   this.where({ isDeleted: { $ne: true } }); // Excludes soft-deleted messages

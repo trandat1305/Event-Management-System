@@ -1,0 +1,16 @@
+.create-event-container {
+  padding: 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  height: 100vh;
+}
+
+.create-event-container h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.create-event-container p {
+  font-size: 1.2rem;
+  color: #666;
+}

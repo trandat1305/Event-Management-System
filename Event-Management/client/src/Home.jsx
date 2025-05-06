@@ -27,6 +27,9 @@ function Home() {
       <div className="content">
         <h1>Welcome to the Homepage</h1>
         <p>This is the homepage that appears after signing in.</p>
+        <button className="create-button" onClick={() => navigate('/home/createevent')}>
+          Create
+        </button>
       </div>
     </div>
   );

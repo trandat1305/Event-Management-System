@@ -87,3 +87,18 @@
 .home-container .side-panel.open ~ .content {
   filter: brightness(0.5); /* Reduce brightness */
 }
+
+.create-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.create-button:hover {
+  background-color: #535bf2;
+}

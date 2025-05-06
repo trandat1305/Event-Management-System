@@ -31,8 +31,8 @@ const userSchema = new mongoose.Schema({
     default: 'uploads/defaultAvatar.jpg',
     validate: {
       validator: function(v) {
-        if (!v) return true;  
-        return /^(http|https):\/\/\S+\.(jpg|jpeg|png|webp)$/.test(v);
+        if (!v) return true;  // Skip validation if empty
+        return /^(uploads\/\S+\.(jpg|jpeg|png|webp)$)|(https?:\/\/\S+\.(jpg|jpeg|png|webp))$/.test(v);
       },
       message: 'Invalid image URL'
     }

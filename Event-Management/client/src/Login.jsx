@@ -5,8 +5,7 @@ import './App.css';
 function Login() {
   const navigate = useNavigate();
 
-  const handleSignIn = () => {
-    // Add authentication logic here if needed
+  const handleLogin = () => {
     navigate('/home'); // Navigate to the homepage
   };
 
@@ -22,14 +21,10 @@ function Login() {
           <label htmlFor="password">Password:</label>
           <input type="password" id="password" placeholder="Enter your password" />
         </div>
-        <button type="button" onClick={handleSignIn}>
-          Sign In
+        <button type="button" onClick={handleLogin}>
+          Login
         </button>
       </form>
-      <p>
-        Don't have an account?{' '}
-        <button onClick={() => navigate('/signup')}>Sign Up</button>
-      </p>
     </div>
   );
 }

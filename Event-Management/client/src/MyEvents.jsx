@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Home.css';
+import './MyEvents.css';
 
-function Home() {
+function MyEvents() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -11,7 +11,7 @@ function Home() {
   };
 
   return (
-    <div className="home-container">
+    <div className="my-events-container">
       <button className="toggle-button" onClick={toggleSidePanel}>
         {isSidePanelOpen ? 'Close Panel' : 'Open Panel'}
       </button>
@@ -20,16 +20,16 @@ function Home() {
         <ul>
           <li onClick={() => navigate('/home/myevents')}>My Events</li>
           <li onClick={() => navigate('/home/events')}>Events</li>
-          <li onClick={() => navigate('/home')}>Home</li> {/* Navigate back to the homepage */}
+          <li onClick={() => navigate('/home')}>Home</li>
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
       <div className="content">
-        <h1>Welcome to the Homepage</h1>
-        <p>This is the homepage that appears after signing in.</p>
+        <h1>My Events</h1>
+        <p>This is the My Events page where you can view your events.</p>
       </div>
     </div>
   );
 }
 
-export default Home;
+export default MyEvents;

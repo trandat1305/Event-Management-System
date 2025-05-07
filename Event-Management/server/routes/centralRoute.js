@@ -2,8 +2,11 @@ const router = require("express").Router();
 const userRouter = require("./userRoutes");
 
 const upload = require("../middlewares/uploadImages");
+const authenticateUser = require("../middlewares/authMiddleware");
 
 router.use("/user", userRouter);
+
+router.use(authenticateUser); // Protect all routes below this line
 
 
 // image upload route TESTING ONLY

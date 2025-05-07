@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
 const User = require('../models/User');
+
 const authenticateUser = async (req, res, next) => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
   if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
@@ -11,6 +11,7 @@ const authenticateUser = async (req, res, next) => {
     const user = await User.findById(decoded.userId); // Check if user exists
     if (!user) return res.status(401).json({ error: 'User no longer exists' });
     req.user = user; // { userId, role } from JWT payload
+    console.log('User authenticated:', req.user);
     next();
   } catch (err) {
     let errorMsg = 'Invalid token';

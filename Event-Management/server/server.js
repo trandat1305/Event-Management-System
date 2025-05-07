@@ -6,7 +6,7 @@ const app = express();
 const path = require('path');
 
 const mongoose = require('mongoose');
-mongoose.connect(process.env.MONGOURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.MONGOURI)
 
 const PORT = process.env.PORT || 3000;
 

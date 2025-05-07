@@ -7,12 +7,12 @@ const storage = multer.diskStorage({
     cb(null, './uploads/'); // Folder where files will be stored
   },
   filename: function (req, file, cb) {
-    const uniqueName = Date.now() + '-' + file.originalname;
+    const uniqueName = Date.now() + '-' + file.originalname; // Unique name for the file
     cb(null, uniqueName);
   }
 });
 
-// File filter (optional)
+// File filter
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -28,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 10 * 1024 * 1024 } // Limit: 5MB
+  limits: { fileSize: 10 * 1024 * 1024 } // Limit: 10MB
 });
 
 module.exports = upload;

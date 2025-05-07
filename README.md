@@ -12,7 +12,8 @@
   "username": "string",
   "email": "string",
   "password": "string"
-}```
+}
+```
 
 /api/user/auth/login
 endpoint take in these info:
@@ -21,7 +22,8 @@ endpoint take in these info:
 {
   "email": "string",
   "password": "string"
-}```
+}
+```
 
 use these exact words as the key name
 

@@ -1,19 +1,27 @@
-# Event-Management-System
+# Event Management System
 
-Currently useable routes
-/api/user/auth/register
-endpoint take in these info:
-username
-email
-password
+## Available API Routes
 
-use these exact words as the key name
----
+### 1. **Register User**
+**Endpoint**: `/api/user/auth/register`  
+**Method**: `POST`  
+
+**Request Body**:
+```json
+{
+  "username": "string",
+  "email": "string",
+  "password": "string"
+}```
 
 /api/user/auth/login
 endpoint take in these info:
-email
-password
+
+```json
+{
+  "email": "string",
+  "password": "string"
+}```
 
 use these exact words as the key name
 

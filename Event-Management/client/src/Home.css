@@ -102,3 +102,100 @@
 .create-button:hover {
   background-color: #535bf2;
 }
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 250px; /* Match the calendar width */
+  margin: 0 auto; /* Center the header horizontally */
+}
+
+.calendar-header h2 {
+  font-size: 1rem; /* Scale down the font size */
+  margin: 0;
+}
+
+.calendar-nav {
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem; /* Scale down the font size */
+}
+
+.calendar-nav:hover {
+  background-color: #535bf2;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.7rem; /* Scale down the font size */
+  margin-bottom: 5px;
+  width: 250px; /* Match the calendar width */
+  margin: 0 auto; /* Center the days horizontally */
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 columns for a week */
+  gap: 2px; /* Reduce gap between dates */
+  width: 250px; /* Set a fixed width for the calendar */
+  height: 250px; /* Set a fixed height for the calendar */
+  margin: 0 auto; /* Center the calendar horizontally */
+}
+
+.calendar-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Make the date fill its grid cell */
+  height: 100%; /* Make the date fill its grid cell */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px; /* Slightly round the corners */
+  cursor: pointer;
+  color: black; /* Set default text color to black */
+  font-size: 0.7rem; /* Scale down the font size */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.calendar-date.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default; /* Prevent pointer cursor for empty boxes */
+  pointer-events: none; /* Disable all interactions for empty boxes */
+}
+
+.calendar-date:hover {
+  background-color: #e0e0ff; /* Change background color on hover */
+  color: #646cff; /* Change text color on hover */
+}
+
+.calendar-date.selected {
+  background-color: #646cff; /* Change background color when selected */
+  color: white; /* Change text color when selected */
+}
+
+.calendar-date.current-day {
+  background-color: #ffcccb; /* Highlight current day */
+  color: black;
+  font-weight: bold;
+  cursor: pointer; /* Ensure the current day is clickable */
+}
+
+.calendar-date.current-day.selected {
+  background-color: #646cff; /* Same background color as other selected dates */
+  color: white; /* Same text color as other selected dates */
+}
+
+.calendar-date.current-day:hover {
+  background-color: #e0e0ff; /* Same hover effect as other dates */
+  color: #646cff; /* Same hover text color as other dates */
+}

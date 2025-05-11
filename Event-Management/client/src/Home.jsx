@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Profile from './Profile'; // Import the Profile component
 import './Home.css';
 
 function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // Track if the profile is open
   const [selectedDate, setSelectedDate] = useState(null); // Track the selected date
   const [calendarDays, setCalendarDays] = useState([]); // Store days of the current month
   const [monthYear, setMonthYear] = useState(''); // Store the current month and year
@@ -20,6 +22,10 @@ function Home() {
 
   const toggleSidePanel = () => {
     setIsSidePanelOpen(!isSidePanelOpen);
+  };
+
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen); // Toggle the profile overlay
   };
 
   const handleDateClick = (date) => {
@@ -91,10 +97,14 @@ function Home() {
   }, []);
 
   return (
-    <div className="home-container">
+    <div className={`home-container ${isProfileOpen ? 'dimmed' : ''}`}>
       <button className="toggle-button" onClick={toggleSidePanel}>
         {isSidePanelOpen ? 'Close Panel' : 'Open Panel'}
       </button>
+      <button className="profile-button" onClick={toggleProfile}>
+        Avatar
+      </button>
+      <Profile isProfileOpen={isProfileOpen} toggleProfile={toggleProfile} />
       <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
         <h2>Side Panel</h2>
         <ul>

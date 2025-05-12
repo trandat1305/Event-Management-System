@@ -18,9 +18,9 @@ function Events() {
       <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
         <h2>Side Panel</h2>
         <ul>
+          <li onClick={() => navigate('/home')}>Home</li>
           <li onClick={() => navigate('/home/myevents')}>My Events</li>
           <li onClick={() => navigate('/home/events')}>Events</li>
-          <li onClick={() => navigate('/home')}>Home</li>
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}

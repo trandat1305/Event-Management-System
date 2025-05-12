@@ -5,6 +5,7 @@ import Home from './Home';
 import MyEvents from './MyEvents';
 import Events from './Events';
 import CreateEvent from './CreateEvent';
+import MyAccount from './MyAccount';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/home/events" element={<Events />} />
         <Route path="/home/createevent" element={<CreateEvent />} />
         <Route path="*" element={<Login />} /> {/* Redirects undefined routes to login */}
+         <Route path="/myaccount" element={<MyAccount />} /> {/* My Account route */}
       </Routes>
     </Router>
   );

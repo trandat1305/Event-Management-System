@@ -6,9 +6,8 @@ const User = require('../models/User');
 exports.registerUser = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ username, email, password: hashedPassword, role });
-    res.status(201).json({ message: 'User registered', userId: user.id });
+    const user = await User.create({ username, email, password, role });
+    res.status(201).json({ message: 'User registered', userId: user._id });
   } catch (err) {
     if (err.code === 11000) { // MongoDB duplicate key error
       return res.status(400).json({ error: 'Email or username already exists' });

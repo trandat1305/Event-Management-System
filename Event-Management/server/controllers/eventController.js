@@ -1,6 +1,6 @@
 
 const Event = require('../models/Event');
-const Invitation = require('../models/Invitation');
+const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
 const notificationQueue = require('../Queues/NotifQueue');
 

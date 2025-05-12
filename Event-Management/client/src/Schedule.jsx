@@ -16,7 +16,7 @@ function Schedule() {
     setSelectedDate(date);
   };
 
-  const generateCalendar = () => {
+  const generateCalendar = React.useCallback(() => {
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
@@ -30,7 +30,7 @@ function Schedule() {
       daysArray.push(i);
     }
     setCalendarDays(daysArray);
-  };
+  }, [currentMonth, currentYear]);
 
   const handlePreviousMonth = () => {
     if (currentMonth === 0) {
@@ -52,7 +52,7 @@ function Schedule() {
 
   useEffect(() => {
     generateCalendar();
-  }, [currentMonth, currentYear]);
+  }, [currentMonth, currentYear, generateCalendar]);
 
   useEffect(() => {
     const interval = setInterval(() => {

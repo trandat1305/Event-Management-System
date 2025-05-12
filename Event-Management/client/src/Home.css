@@ -2,8 +2,17 @@
 .home-container {
   position: relative;
   display: flex;
-  height: 100vh;
-  background-color: #f0f0f0;
+  flex-direction: column;
+  width: 1440px; /* Set fixed width */
+  height: 1024px; /* Set fixed height */
+  margin: 0 auto; /* Center the container horizontally */
+  background-color: #F5FFFA;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.home-container.dark-mode {
+  background-color: #F5FFFA;
+  filter: brightness(0.7); /* Dim the background in dark mode */
 }
 
 .toggle-button {
@@ -74,6 +83,19 @@
   color: #646cff;
   text-decoration: underline;
 }
+
+.dark-mode .side-panel {
+  background-color: #2a2a2a;
+}
+
+.dark-mode .side-panel ul li {
+  color: white;
+}
+
+.dark-mode .side-panel ul li:hover {
+  color: #a0a0ff;
+}
+
 /* Remove the close button styles */
 .close-button {
   display: none;
@@ -104,13 +126,21 @@
   filter: brightness(0.5); /* Reduce brightness */
 }
 
+.welcome-section {
+  width: 100%;
+  height: 200px;
+  background: url('./assets/background.png') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .welcome-message {
   font-size: 2.5rem;
   font-weight: bold;
   color: white;
   text-align: center;
-  margin-top: 50px;
-  width: 100%;
 }
 
 .sections-wrapper {
@@ -140,6 +170,11 @@
   color: black;
   margin-bottom: 10px;
 }
+
+.dark-mode .events-section h2 {
+  color: white;
+}
+
 .event-card {
   display: flex;
   background-color: white;
@@ -148,6 +183,12 @@
   padding: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.dark-mode .event-card {
+  background-color: #2a2a2a;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
 .event-image-placeholder {
   width: 50px;
   height: 50px;
@@ -155,18 +196,32 @@
   margin-right: 10px;
 }
 
+.dark-mode .event-image-placeholder {
+  background-color: #4a4a4a;
+}
+
 .event-details {
   flex: 1;
 }
 
 .event-details h3 {
+  color: black; /* Ensure the title is black */
   margin: 0 0 5px;
   font-size: 1.2rem;
 }
+
+.dark-mode .event-details h3 {
+  color: white;
+}
+
 .event-details p {
   margin: 0 0 10px;
   font-size: 0.9rem;
   color: #555;
+}
+
+.dark-mode .event-details p {
+  color: #ccc;
 }
 
 .event-buttons {
@@ -212,6 +267,10 @@
   align-items: center;
 }
 
+.dark-mode .calendar-section h2 {
+  color: white;
+}
+
 .calendar-icon {
   margin-right: 5px;
   font-size: 1.2rem;
@@ -228,6 +287,10 @@
 .calendar-header h2 {
   font-size: 1rem; /* Scale down the font size */
   margin: 0;
+}
+
+.dark-mode .calendar-header h2 {
+  color: white;
 }
 
 .calendar-nav {
@@ -253,6 +316,11 @@
   width: 300px; /* Increased width to match image */
   margin: 0 auto; /* Center the days horizontally */
 }
+
+.dark-mode .calendar-days span {
+  color: white;
+}
+
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr); /* 7 columns for a week */
@@ -276,6 +344,12 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
+.dark-mode .calendar-date {
+  background-color: #3a3a3a;
+  border-color: #555;
+  color: white;
+}
+
 .calendar-date.empty {
   background-color: transparent;
   border: none;
@@ -285,6 +359,11 @@
 .calendar-date:hover {
   background-color: #e0e0ff; /* Change background color on hover */
   color: #646cff; /* Change text color on hover */
+}
+
+.dark-mode .calendar-date:hover {
+  background-color: #5050ff;
+  color: white;
 }
 
 .calendar-date.selected {
@@ -302,6 +381,10 @@
   cursor: pointer; /* Ensure the current day is clickable */
 }
 
+.dark-mode .calendar-date.current-day {
+  background-color: #ff6666;
+}
+
 .calendar-date.current-day.selected {
   background-color: #646cff; /* Same background color as other selected dates */
   color: white; /* Same text color as other selected dates */
@@ -310,6 +393,10 @@
 .calendar-date.current-day:hover {
   background-color: #e0e0ff; /* Same hover effect as other dates */
   color: #646cff; /* Same hover text color as other dates */
+}
+
+.dark-mode .calendar-date.current-day:hover {
+  background-color: #5050ff;
 }
 
 .calendar-date.event-day {
@@ -333,6 +420,27 @@
   .calendar-header {
     width: 100%;
   }
+  .header-right {
+    gap: 10px; /* Reduce gap between elements */
+  }
+.icon-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem; /* Adjust font size to fit the container */
+  cursor: pointer;
+  padding: 5px; /* Add padding for better spacing */
+  display: flex; /* Ensure proper alignment */
+  align-items: center; /* Center icon vertically */
+  justify-content: center; /* Center icon horizontally */
+  max-width: 100%; /* Prevent overflow */
+  max-height: 100%; /* Prevent overflow */
+}
+  .create-button {
+    padding: 3px 10px; /* Reduce padding */
+    font-size: 0.8rem; /* Reduce font size */
+  }
 }
 .header {
   position: absolute;
@@ -355,7 +463,9 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 15px; /* Space between icons */
+  margin-right: 20px; /* Space from the right edge */
+  justify-content: center; /* Centers items horizontally */
 }
 .icon-button {
   position: relative;

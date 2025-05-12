@@ -16,7 +16,6 @@ function Home() {
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
 
-
   const calendarRef = useRef(null);
   const navigate = useNavigate();
 
@@ -90,8 +89,6 @@ function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const userId = "131136";
-
   return (
     <div className="home-container">
       <header className="header">
@@ -124,8 +121,10 @@ function Home() {
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
+      <div className="welcome-section">
+        <h1 className="welcome-message">WELCOME to homepage</h1>
+      </div>
       <div className="content">
-        <h1 className="welcome-message">WELCOME, User{userId}</h1>
         <div className="sections-wrapper">
           <div className="events-section">
             <h2>Your upcoming events are:</h2>

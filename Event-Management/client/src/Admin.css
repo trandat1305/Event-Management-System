@@ -1,0 +1,157 @@
+.admin-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.side-panel {
+  width: 250px;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+}
+
+.side-panel.open {
+  transform: translateX(0);
+}
+
+.side-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.side-panel ul li {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.side-panel ul li:hover {
+  background-color: #f0f0f0;
+}
+
+.side-panel ul li .icon {
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+.content.shifted {
+  margin-left: 250px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.header-icons .icon-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.admin-summary {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.summary-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  margin-right: 20px;
+  text-align: center;
+}
+
+.summary-card:last-child {
+  margin-right: 0;
+}
+
+.summary-card h2 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.summary-card p {
+  font-size: 1.5rem;
+  color: #646cff;
+}
+
+.status-live {
+  color: green;
+  font-weight: bold;
+}
+
+.system-summary {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.system-summary h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.summary-grid {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-item {
+  flex: 1;
+  text-align: center;
+  margin-right: 20px;
+}
+
+.summary-item:last-child {
+  margin-right: 0;
+}
+
+.summary-item h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.summary-item p {
+  font-size: 1.5rem;
+  color: #646cff;
+}
+
+.summary-item span {
+  font-size: 0.9rem;
+  color: #666;
+}

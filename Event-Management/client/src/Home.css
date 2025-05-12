@@ -376,4 +376,16 @@
   border-radius: 50%;
 }
 
- 
+.schedule-link {
+  margin-left: 10px;
+  font-size: 0.9rem;
+  color: #646cff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.schedule-link:hover {
+  text-decoration: underline;
+  color: #535bf2;
+}
+

@@ -9,6 +9,10 @@ function Login() {
     navigate('/home'); // Navigate to the homepage
   };
 
+  const handleAdminLogin = () => {
+    navigate('/admin'); // Navigate to the admin page
+  };
+
   return (
     <div className="login-container">
       <h1>Login</h1>
@@ -24,7 +28,14 @@ function Login() {
         <button type="button" onClick={handleLogin}>
           Login
         </button>
+        <button type="button" onClick={handleAdminLogin} className="admin-login-button">
+          Log in as Admin
+        </button>
       </form>
+      <p>
+        Don't have an account?{' '}
+        <button onClick={() => navigate('/signup')}>Sign Up</button>
+      </p>
     </div>
   );
 }

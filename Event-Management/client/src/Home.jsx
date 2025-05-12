@@ -15,7 +15,7 @@ function Home() {
   const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
-  const [eventDates] = useState([20, 31]); // Example event dates
+
 
   const calendarRef = useRef(null);
   const navigate = useNavigate();

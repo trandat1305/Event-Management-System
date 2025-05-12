@@ -2,7 +2,7 @@ const router = require("express").Router();
 const userRouter = require("./userRoutes");
 
 const upload = require("../middlewares/uploadImages");
-const authenticateUser = require("../middlewares/authMiddleware");
+const authenticateUser = require("../middlewares/authentication");
 
 router.use("/user", userRouter);
 

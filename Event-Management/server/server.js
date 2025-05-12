@@ -17,7 +17,10 @@ app.use(cors()); // reminder to unuse this in production
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const buildPath = path.join(__dirname, 'dist');
+app.use(express.static(buildPath)); // react folder
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // image upload folder
 
 // Middleware error handling
 app.use((err, req, res, next) => {
@@ -25,8 +28,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Error!' });
 });
 
-app.get("/", (req, res) => { 
+app.get("/hello", (req, res) => { 
     res.send("hello!");
+});
+
+app.get('/*splat', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
 });
 
 app.use("/api", apiRouter);

@@ -28,21 +28,17 @@ const userSchema = new mongoose.Schema({
   },
   imageURL: { 
     type: String,
-    default: 'defaultAvatar.jpg', // reminder to change to your default avatar path
+    default: 'uploads/defaultAvatar.jpg',
     validate: {
       validator: function(v) {
-        if (!v) return true;  
-        return /^(http|https):\/\/\S+\.(jpg|jpeg|png|webp)$/.test(v);
+        if (!v) return true;  // Skip validation if empty
+        return /^(uploads\/\S+\.(jpg|jpeg|png|webp)$)|(https?:\/\/\S+\.(jpg|jpeg|png|webp))$/.test(v);
       },
       message: 'Invalid image URL'
     }
   },
 }, { timestamps: true 
 });
-userSchema.index({ email: 1 }, 
-    { unique: true }); // Already implicit from schema
-userSchema.index({ username: 1 }, 
-    { unique: true }); // Already implicit
 
 // Middleware to exclude soft-deleted users
 userSchema.pre(/^find/, function(next) {

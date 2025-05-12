@@ -17,9 +17,11 @@ const messageSchema = new mongoose.Schema({
   },
   content: { 
     type: String, 
-    required: true 
+    required: true,
+    trim: true,
+    maxlength: [1000, 'Message must not exceed 1000 characters']
   },
-  imageURL: { 
+  imageURL: [{ 
     type: String,
     default: null,
     validate: {
@@ -29,7 +31,7 @@ const messageSchema = new mongoose.Schema({
       },
       message: 'Invalid image URL'
     }
-  },
+  }],
   replyToMessageId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Message', 
@@ -45,6 +47,23 @@ const messageSchema = new mongoose.Schema({
   }
 }, { timestamps: true }
 );
+
+// Return the full message unless it's deleted
+messageSchema.set('toJSON', {
+  transform: function(doc, ret) {
+    if (ret.isDeleted) {
+      return {
+        _id: ret._id,
+        content: 'Message deleted',
+        createdAt: ret.createdAt,
+        updatedAt: ret.updatedAt
+      };
+    }
+
+    // Otherwise, return the full message
+    return ret;
+  }
+});
 
 // Middleware to exclude soft-deleted messages
 messageSchema.pre(/^find/, function(next) {

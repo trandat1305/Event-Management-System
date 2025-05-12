@@ -1,5 +1,6 @@
+
 const Event = require('../models/Event');
-const Invitation = require('../models/Invitation');
+const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
 const notificationQueue = require('../Queues/NotifQueue');
 
@@ -89,3 +90,4 @@ exports.createEvent = async (req, res) => {
       res.status(500).json({ error: 'Failed to update event' });
     }
   };
+

@@ -24,7 +24,7 @@ const eventSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', required: true 
   },
-  imageURL: { 
+  imageURL: [{ 
     type: String,
     default: 'defaultPicture.jpg', // reminder to change to your default picture path
     validate: {
@@ -34,10 +34,10 @@ const eventSchema = new mongoose.Schema({
       },
       message: 'Invalid image URL'
     }
-  },
+  }],
   status: { 
     type: String, 
-    enum: ['active','cancelled'],
+    enum: ['active','cancelled', "finished"],
     default: 'active'
   },
   location: {

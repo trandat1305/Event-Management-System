@@ -127,14 +127,12 @@
 }
 
 .create-button {
-  margin-top: 20px;
   padding: 5px 15px;
   background-color: #646cff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
 }
 
 .create-button:hover {
@@ -268,17 +266,17 @@
   font-weight: bold;
   font-size: 0.7rem; /* Scale down the font size */
   margin-bottom: 10px;
-  width: 300px; /* Increased width to match image */
-  margin: 0 auto; /* Center the days horizontally */
+  width: 300px;
+  margin: 0 auto;
 }
 
 .calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr); /* 7 columns for a week */
   gap: 2px; /* Reduce gap between dates */
-  width: 300px; /* Increased width to match image */
-  height: 300px; /* Increased height to match image */
-  margin: 0 auto; /* Center the calendar horizontally */
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
 }
 
 .calendar-date {
@@ -356,4 +354,47 @@
   .calendar-header {
     width: 100%;
   }
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: transparent;
+  z-index: 1000;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
 }

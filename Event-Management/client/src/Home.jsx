@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaBars, FaMoon, FaBell, FaUserCircle, FaCalendarAlt } from 'react-icons/fa';
 import './Home.css';
 
 function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null); // Track the selected date
-  const [calendarDays, setCalendarDays] = useState([]); // Store days of the current month
-  const [monthYear, setMonthYear] = useState(''); // Store the current month and year
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()); // Track the displayed month
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // Track the displayed year
-
-  // Track the real current date
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [calendarDays, setCalendarDays] = useState([]);
+  const [monthYear, setMonthYear] = useState('');
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
@@ -23,10 +22,6 @@ function Home() {
     setIsSidePanelOpen(!isSidePanelOpen);
   };
 
-  const toggleProfile = () => {
-    setIsProfileOpen(!isProfileOpen); // Toggle the profile overlay
-  };
-
   const handleDateClick = (date) => {
     setSelectedDate(date);
   };
@@ -37,7 +32,7 @@ function Home() {
     }
   };
 
-  const generateCalendar = () => {
+  const generateCalendar = React.useCallback(() => {
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
@@ -51,7 +46,7 @@ function Home() {
       daysArray.push(i);
     }
     setCalendarDays(daysArray);
-  };
+  }, [currentMonth, currentYear]);
 
   const handlePreviousMonth = () => {
     if (currentMonth === 0) {
@@ -77,7 +72,7 @@ function Home() {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [currentMonth, currentYear]);
+  }, [currentMonth, currentYear, generateCalendar]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -93,9 +88,24 @@ function Home() {
 
   return (
     <div className="home-container">
-      <button className="toggle-button" onClick={toggleSidePanel}>
-        {isSidePanelOpen ? 'Close Panel' : 'Open Panel'}
-      </button>
+      <header className="header">
+        <div className="header-left">
+          <button className="toggle-button" onClick={toggleSidePanel}>
+            <FaBars />
+          </button>
+        </div>
+        <div className="header-right">
+          <button className="icon-button"><FaMoon /></button>
+          <button className="icon-button">
+            <FaBell />
+            <span className="notification-dot"></span>
+          </button>
+            <button className="create-button" onClick={() => navigate('/home/createevent')}>
+            + Create
+            </button>
+          <button className="icon-button"><FaUserCircle /></button>
+        </div>
+      </header>
       <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
         <h2>Side Panel</h2>
         <ul>
@@ -106,7 +116,7 @@ function Home() {
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
       <div className="content">
-        <h1 className="welcome-message">WELCOME, to the homepage</h1>
+        <h1 className="welcome-message">WELCOME, User{userId}</h1>
         <div className="sections-wrapper">
           <div className="events-section">
             <h2>Your upcoming events are:</h2>

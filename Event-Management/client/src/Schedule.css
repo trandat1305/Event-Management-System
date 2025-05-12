@@ -1,0 +1,105 @@
+.schedule-container {
+  width: 100%; /* Full width to fit the web layout */
+  height: 100vh; /* Full height of the viewport */
+  padding: 20px;
+  background-color: #f9f9f9; /* Light background color */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.schedule-container h1 {
+  font-size: 2.5rem;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.schedule-container p {
+  font-size: 1.2rem;
+  color: #555555;
+  margin-bottom: 30px;
+}
+
+.calendar-section {
+  width: 100%;
+  max-width: 400px; /* Limit the calendar section width */
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-nav {
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.calendar-nav:hover {
+  background-color: #535bf2;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 columns for the calendar dates */
+  gap: 2px;
+  width: 100%; /* Make the calendar fit within the container */
+  aspect-ratio: 1 / 1; /* Force a square ratio */
+}
+
+.calendar-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.calendar-date.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default;
+  pointer-events: none;
+}
+
+.calendar-date:hover {
+  background-color: #e0e0ff;
+  color: #646cff;
+}
+
+.calendar-date.selected {
+  background-color: #646cff;
+  color: white;
+}
+
+.calendar-date.current-day {
+  background-color: #ffcccb;
+  color: black;
+  font-weight: bold;
+}

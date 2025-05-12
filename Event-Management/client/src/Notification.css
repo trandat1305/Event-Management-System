@@ -1,0 +1,41 @@
+.notification-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.notification-container h1 {
+  font-size: 2rem;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+.notification-container p {
+  font-size: 1rem;
+  color: #555555;
+  margin-bottom: 20px;
+}
+
+.notification-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-container ul li {
+  font-size: 1rem;
+  color: #333333;
+  margin: 10px 0;
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.notification-container ul li:last-child {
+  border-bottom: none;
+}

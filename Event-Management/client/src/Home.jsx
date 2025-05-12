@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
 import { FaBars, FaMoon, FaBell, FaUserCircle, FaCalendarAlt } from 'react-icons/fa';
 import Profile from './Profile'; // Import the Profile component
 import './Home.css';
@@ -102,7 +102,7 @@ function Home() {
         </div>
         <div className="header-right">
           <button className="icon-button"><FaMoon /></button>
-          <button className="icon-button">
+          <button className="icon-button" onClick={() => navigate('/home/notification')}>
             <FaBell />
             <span className="notification-dot"></span>
           </button>
@@ -153,7 +153,10 @@ function Home() {
             </div>
           </div>
           <div className="calendar-section">
-            <h2><FaCalendarAlt className="calendar-icon" /> Schedule:</h2>
+            <h2>
+              <FaCalendarAlt className="calendar-icon" /> Schedule:
+              <Link to="/home/schedule" className="schedule-link">View Full Schedule</Link> {/* Add hyperlink */}
+            </h2>
             <div className="calendar-header">
               <button className="calendar-nav" onClick={handlePreviousMonth}>
                 &lt; Previous

@@ -11,16 +11,15 @@
   top: 20px;
   left: 20px;
   padding: 10px 20px;
-  background: none;
-  color: white;
+  background-color: #646cff;
+  color: black;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1.5rem;
 }
 
 .toggle-button:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: #535bf2;
 }
 
 .profile-button {
@@ -100,35 +99,15 @@
   margin-left: 20px;
   padding: 20px;
   transition: filter 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
 }
 
 .home-container .side-panel.open ~ .content {
   filter: brightness(0.5); /* Reduce brightness */
 }
 
-.welcome-message {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  margin-top: 50px;
-  width: 100%;
-}
-
-.sections-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start; /* Align items at the top */
-  width: 100%;
-  margin-top: 20px;
-}
-
 .create-button {
   margin-top: 20px;
-  padding: 5px 15px;
+  padding: 10px 20px;
   background-color: #646cff;
   color: white;
   border: none;
@@ -141,104 +120,12 @@
   background-color: #535bf2;
 }
 
-.events-section {
-  width: 50%;
-  margin-right: 20px;
-}
-
-.events-section h2 {
-  font-size: 1.5rem;
-  color: black;
-  margin-bottom: 10px;
-}
-
-.event-card {
-  display: flex;
-  background-color: white;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.event-image-placeholder {
-  width: 50px;
-  height: 50px;
-  background-color: #e0e0e0;
-  margin-right: 10px;
-}
-
-.event-details {
-  flex: 1;
-}
-
-.event-details h3 {
-  margin: 0 0 5px;
-  font-size: 1.2rem;
-}
-
-.event-details p {
-  margin: 0 0 10px;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.event-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.complete-button {
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.complete-button:hover {
-  background-color: #0056b3;
-}
-
-.delete-button {
-  padding: 5px 10px;
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.delete-button:hover {
-  background-color: #b02a37;
-}
-
-/* Calendar Section */
-.calendar-section {
-  width: 40%;
-  margin-left: auto; /* Push to the right within flex container */
-}
-
-.calendar-section h2 {
-  font-size: 1.5rem;
-  color: black;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.calendar-icon {
-  margin-right: 5px;
-  font-size: 1.2rem;
-}
-
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  width: 300px; /* Increased width to match image */
+  width: 250px; /* Match the calendar width */
   margin: 0 auto; /* Center the header horizontally */
 }
 
@@ -267,8 +154,8 @@
   text-align: center;
   font-weight: bold;
   font-size: 0.7rem; /* Scale down the font size */
-  margin-bottom: 10px;
-  width: 300px; /* Increased width to match image */
+  margin-bottom: 5px;
+  width: 250px; /* Match the calendar width */
   margin: 0 auto; /* Center the days horizontally */
 }
 
@@ -276,8 +163,8 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr); /* 7 columns for a week */
   gap: 2px; /* Reduce gap between dates */
-  width: 300px; /* Increased width to match image */
-  height: 300px; /* Increased height to match image */
+  width: 250px; /* Set a fixed width for the calendar */
+  height: 250px; /* Set a fixed height for the calendar */
   margin: 0 auto; /* Center the calendar horizontally */
 }
 
@@ -309,15 +196,11 @@
 }
 
 .calendar-date.selected {
-  border: 2px solid red;
-  border-radius: 50%;
   background-color: #646cff; /* Change background color when selected */
   color: white; /* Change text color when selected */
 }
 
 .calendar-date.current-day {
-  border: 2px solid red;
-  border-radius: 50%;
   background-color: #ffcccb; /* Highlight current day */
   color: black;
   font-weight: bold;
@@ -332,28 +215,4 @@
 .calendar-date.current-day:hover {
   background-color: #e0e0ff; /* Same hover effect as other dates */
   color: #646cff; /* Same hover text color as other dates */
-}
-
-.calendar-date.event-day {
-  border: 2px solid blue;
-  border-radius: 50%;
-}
-
-@media (max-width: 768px) {
-  .sections-wrapper {
-    flex-direction: column;
-  }
-  .events-section, .calendar-section {
-    width: 100%;
-  }
-  .calendar {
-    width: 100%;
-    height: auto;
-  }
-  .calendar-days {
-    width: 100%;
-  }
-  .calendar-header {
-    width: 100%;
-  }
 }

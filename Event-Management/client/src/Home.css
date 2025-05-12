@@ -6,11 +6,6 @@
   background-color: #f0f0f0;
 }
 
-/* Remove the dimmed effect */
-.home-container.dimmed {
-  filter: none; /* No brightness adjustment */
-}
-
 .toggle-button {
   position: absolute;
   top: 20px;

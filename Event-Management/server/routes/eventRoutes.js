@@ -1,34 +1,22 @@
 const express = require('express');
-const router = express.Router();
-const {
-  createEvent,
-  getPublicEvents,
-  updateEvent,
-  deleteEvent,
-} = require('../Controllers/eventController');
-const authMiddleware = require('../middlewares/authMiddleware');
-const restrictTo = require('../middlewares/roleMiddleware');
-const { validateEventCreation } = require('../middlewares/Validators/eventValidator');
+const eventRouter = express.Router();
+const eventController = require('../controllers/eventController');
+
 const upload = require('../configuration/multer'); // Import Multer
 
 // Protected routes (organizer/admins only)
+eventRouter.use(authMiddleware); // Protect all routes below this line
 
-router.post(
-  '/',
-  authMiddleware,
-  restrictTo('admin', 'organizer'),
-  validateEventCreation,
-  createEvent
-);
+eventRouter.post('/createEvent', upload.single('image'), createEvent); // Use Multer for image upload
 
-router.put('/:id', authMiddleware, updateEvent);
-router.delete('/:id', authMiddleware, deleteEvent);
+eventRouter.put('updateEvent/:id', authMiddleware, updateEvent);
+eventRouter.delete('/:id', authMiddleware, deleteEvent);
 
 // Public route
-router.get('/public', getPublicEvents);
+eventRouter.get('/publicEvents', getPublicEvents);
 
 //calendar route
-router.get('/calendar', authenMiddleware, getCalendarEvents);
+eventRouter.get('/calendar', authenMiddleware, getCalendarEvents);
 
 module.exports = router;
 

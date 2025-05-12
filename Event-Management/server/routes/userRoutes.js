@@ -14,9 +14,11 @@ userRouter.use(authenticateUser); // Protect all routes below this line
 
 userRouter.put('/updateAvatar', upload.single("avatar"), userController.updateAvatar);
 
-// userRouter.get('/profile/', userController.getOwnUserProfile);
+userRouter.put('/updateProfile', userController.updateProfile);
 
-// userRouter.get('/profile/:id', userController.getUserProfileById);
+userRouter.get('/profile/', userController.getOwnUserProfile);
+
+userRouter.get('/profile/:id', userController.getUserProfileById);
 
 userRouter.get('/auth/secret', (req, res) => {
   try {

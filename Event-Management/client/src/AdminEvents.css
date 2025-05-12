@@ -1,0 +1,41 @@
+.event-container {
+  padding: 20px;
+  background-color: #f9f9f9;
+  height: 100vh;
+}
+
+.event-container h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.event-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.event-table th,
+.event-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.event-table th {
+  background-color: #646cff;
+  color: white;
+  font-weight: bold;
+}
+
+.event-table tr:hover {
+  background-color: #f0f0f0;
+}
+
+.event-table tr:last-child td {
+  border-bottom: none;
+}

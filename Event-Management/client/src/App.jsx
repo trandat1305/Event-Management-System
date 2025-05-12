@@ -9,6 +9,9 @@ import MyAccount from './MyAccount';
 import Schedule from './Schedule';
 import Notification from './Notification'; // Import the Notification page
 import SignUp from './SignUp';
+import Admin from './Admin';
+import User from './User'; // Import the User page
+import AdminEvents from './AdminEvents'; // Updated import
 
 function App() {
   return (
@@ -26,6 +29,9 @@ function App() {
         <Route path="*" element={<Login />} />
         <Route path="/myaccount" element={<MyAccount />} /> {/* My Account route */}
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/admin" element={<Admin />} /> {/* Admin route */}
+        <Route path="/admin/users" element={<User />} /> {/* User route */}
+        <Route path="/admin/events" element={<AdminEvents />} /> {/* Updated route */}
       </Routes>
     </Router>
   );

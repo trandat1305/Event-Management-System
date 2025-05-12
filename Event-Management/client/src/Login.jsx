@@ -25,6 +25,10 @@ function Login() {
           Login
         </button>
       </form>
+      <p>
+        Don't have an account?{' '}
+        <button onClick={() => navigate('/signup')}>Sign Up</button>
+      </p>
     </div>
   );
 }

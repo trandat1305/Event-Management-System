@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBars, FaMoon, FaBell, FaUserCircle, FaCalendarAlt } from 'react-icons/fa';
 import './Home.css';
 
 function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [calendarDays, setCalendarDays] = useState([]);
-  const [monthYear, setMonthYear] = useState('');
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+  const [selectedDate, setSelectedDate] = useState(null); // Track the selected date
+  const [calendarDays, setCalendarDays] = useState([]); // Store days of the current month
+  const [monthYear, setMonthYear] = useState(''); // Store the current month and year
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()); // Track the displayed month
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // Track the displayed year
+
+  // Track the real current date
   const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
@@ -20,6 +21,10 @@ function Home() {
 
   const toggleSidePanel = () => {
     setIsSidePanelOpen(!isSidePanelOpen);
+  };
+
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen); // Toggle the profile overlay
   };
 
   const handleDateClick = (date) => {
@@ -88,24 +93,9 @@ function Home() {
 
   return (
     <div className="home-container">
-      <header className="header">
-        <div className="header-left">
-          <button className="toggle-button" onClick={toggleSidePanel}>
-            <FaBars />
-          </button>
-        </div>
-        <div className="header-right">
-          <button className="icon-button"><FaMoon /></button>
-          <button className="icon-button">
-            <FaBell />
-            <span className="notification-dot"></span>
-          </button>
-            <button className="create-button" onClick={() => navigate('/home/createevent')}>
-            + Create
-            </button>
-          <button className="icon-button"><FaUserCircle /></button>
-        </div>
-      </header>
+      <button className="toggle-button" onClick={toggleSidePanel}>
+        {isSidePanelOpen ? 'Close Panel' : 'Open Panel'}
+      </button>
       <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
         <h2>Side Panel</h2>
         <ul>

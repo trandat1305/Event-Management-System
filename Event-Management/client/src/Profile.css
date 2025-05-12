@@ -1,0 +1,55 @@
+.profile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent; /* Keep the overlay transparent */
+  z-index: 1000; /* Ensure it overlays everything */
+}
+
+.profile-window {
+  position: absolute;
+  top: 50px; /* Adjust to position below the avatar button */
+  right: 20px; /* Align to the right side */
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  width: 150px; /* Small square box */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: left;
+  z-index: 1100; /* Ensure it appears above the overlay */
+}
+
+.profile-window ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: black; /* Change text color to black */
+}
+
+.profile-window ul li {
+  margin: 8px 0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.3s;
+}
+
+.profile-window ul li:hover {
+  color: #646cff;
+}
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #646cff;
+}
+
+.close-button:hover {
+  color: #535bf2;
+}

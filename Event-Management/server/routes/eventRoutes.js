@@ -7,7 +7,7 @@ const {
   deleteEvent,
 } = require('../Controllers/eventController');
 const authMiddleware = require('../middlewares/authMiddleware');
-const restrictTo = require('../middlewarse/roleMiddleware');
+const restrictTo = require('../middlewares/roleMiddleware');
 const { validateEventCreation } = require('../middlewares/Validators/eventValidator');
 const upload = require('../configuration/multer'); // Import Multer
 
@@ -26,6 +26,9 @@ router.delete('/:id', authMiddleware, deleteEvent);
 
 // Public route
 router.get('/public', getPublicEvents);
+
+//calendar route
+router.get('/calendar', authenMiddleware, getCalendarEvents);
 
 module.exports = router;
 

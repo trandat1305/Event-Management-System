@@ -90,4 +90,50 @@ exports.createEvent = async (req, res) => {
       res.status(500).json({ error: 'Failed to update event' });
     }
   };
+  
+  //Calendar for event
+  exports.getCalendarEvents = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { month, year } = req.query; // Ex:., month=5, year=2025
+
+    // 1. Get hosted events
+    const hostedEvents = await Event.find({
+      organizer: userId,
+      startTime: { 
+        $gte: new Date(year, month - 1, 1), 
+        $lt: new Date(year, month, 1) 
+      }
+    });
+
+    // 2. Get accepted invitations
+    const acceptedInvites = await Invitation.find({
+      user: userId,
+      rsvpStatus: 'accepted'
+    }).populate('event');
+
+    // 3. Process dates
+    const dateMap = new Map();
+    
+    hostedEvents.forEach(event => {
+      const date = event.startTime.toISOString().split('T')[0];
+      dateMap.set(date, [...(dateMap.get(date) || []), 'hosting']);
+    });
+
+    acceptedInvites.forEach(invite => {
+      const date = invite.event.startTime.toISOString().split('T')[0];
+      dateMap.set(date, [...(dateMap.get(date) || []), 'attending']);
+    });
+
+    // 4. Format response
+    const events = Array.from(dateMap.entries()).map(([date, types]) => ({
+      date,
+      types: [...new Set(types)] // Deduplicate
+    }));
+
+    res.json({ events });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch calendar data' });
+  }
+};
 

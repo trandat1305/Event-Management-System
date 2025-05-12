@@ -8,6 +8,7 @@ import CreateEvent from './CreateEvent';
 import MyAccount from './MyAccount';
 import Schedule from './Schedule';
 import Notification from './Notification'; // Import the Notification page
+import SignUp from './SignUp';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/home/schedule" element={<Schedule />} />
         <Route path="*" element={<Login />} />
         <Route path="/myaccount" element={<MyAccount />} /> {/* My Account route */}
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
   );

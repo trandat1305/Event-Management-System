@@ -2,7 +2,7 @@
 const Event = require('../models/Event');
 const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
-const notificationQueue = require('../Queues/NotifQueue');
+// const notificationQueue = require('../Queues/NotifQueue');
 
 // Helper function 
 const getAcceptedAttendees = async (eventId) => {
@@ -15,25 +15,31 @@ const getAcceptedAttendees = async (eventId) => {
   // Create Event
 exports.createEvent = async (req, res) => {
     try {
-      const { title, description, isPublic, startTime, endTime } = req.body;
+      const { title, description, isPublic, location, startTime, endTime } = req.body;
       const organizer = req.user._id;
   
-      const event = new Event({ title, description, isPublic, startTime, endTime, organizer, imageUrl: req.file?.path });
+      const event = new Event({ title, description, isPublic, startTime, endTime, creator: organizer, imageUrl: req.file?.path, location });
       await event.save();
+
+      /**
   
       // Schedule 24-hour reminder
       const delay = event.startTime - 24 * 60 * 60 * 1000;
       const attendees = await getAcceptedAttendees(event._id);
+
+      */
       
+      /**
       notificationQueue.add({
         eventId: event._id,
         userIds: attendees,
         message: 'Event starts in 24 hours!',
       }, { delay });
+      */
   
       res.status(201).json(event);
     } catch (err) {
-      res.status(500).json({ error: 'Failed to create event' });
+      res.status(500).json(err);
     }
   };
   
@@ -130,5 +136,14 @@ exports.createEvent = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch calendar data' });
   }
+};
+
+exports.getAllPublicEvents = async (req, res) => {
+    try {
+      const events = await Event.find().populate('creator', 'username');
+      res.status(200).json(events);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
 };
 

@@ -3,8 +3,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 1440px; /* Set fixed width */
-  height: 1024px; /* Set fixed height */
+  width: 100%;
+  height: 100vh;
   margin: 0 auto; /* Center the container horizontally */
   background-color: #F5FFFA;
   transition: background-color 0.3s, color 0.3s;

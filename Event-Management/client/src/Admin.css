@@ -1,9 +1,13 @@
 .admin-container {
+  position: relative;
   display: flex;
+  flex-direction: column;
+  width: 100%;
   height: 100vh;
-  background-color: #f9f9f9;
+  margin: 0 auto; /* Center the container horizontally */
+  background-color: #F5FFFA;
+  transition: background-color 0.3s, color 0.3s;
 }
-
 .side-panel {
   width: 250px;
   background-color: #ffffff;

@@ -3,6 +3,7 @@ const userRouter = require("./userRoutes");
 const adminRouter = require("./adminRoutes");
 const eventRouter = require("./eventRoutes");
 const notificationRouter = require("./notificationRoutes");
+const participantRouter = require("./participantRoutes");
 
 const upload = require("../middlewares/uploadImages");
  
@@ -14,6 +15,8 @@ router.use("/admin", adminRouter);
 router.use("/events", eventRouter);
 
 router.use('/notifications', notificationRouter);
+
+router.use('/participants', participantRouter);
 
 // image upload route TESTING ONLY
 router.post("/imageupload", upload.single("image"), (req, res) => {

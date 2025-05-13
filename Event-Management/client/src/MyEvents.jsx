@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaBars, FaMoon, FaBell, FaUserCircle, FaCalendarAlt } from 'react-icons/fa';
 import Profile from './Profile';
-import './MyEvents.css';
+import './MyEvents.css'; // Contains styles specific to MyEvents.jsx
 
 function MyEvents() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
@@ -91,30 +91,30 @@ function MyEvents() {
 
   return (
     <div className="my-events-container">
-      <header className="my-events-header">
-        <div className="my-events-header-left">
-          <button className="my-events-toggle-button" onClick={toggleSidePanel}>
+      <header className="header">
+        <div className="header-left">
+          <button className="toggle-button" onClick={toggleSidePanel}>
             <FaBars />
           </button>
         </div>
-        <div className="my-events-header-right">
-          <button className="my-events-icon-button">
+        <div className="header-right">
+          <button className="icon-button">
             <FaMoon />
           </button>
-          <button className="my-events-icon-button" onClick={() => navigate('/home/notification')}>
+          <button className="icon-button" onClick={() => navigate('/home/notification')}>
             <FaBell />
-            <span className="my-events-notification-dot"></span>
+            <span className="notification-dot"></span>
           </button>
           <button className="my-events-create-button" onClick={() => navigate('/home/createevent')}>
             + Create
           </button>
-          <button className="my-events-icon-button" onClick={toggleProfile}>
+          <button className="icon-button" onClick={toggleProfile}>
             <FaUserCircle />
           </button>
         </div>
       </header>
       <Profile isProfileOpen={isProfileOpen} toggleProfile={toggleProfile} />
-      <div className={`my-events-side-panel ${isSidePanelOpen ? 'open' : ''}`}>
+      <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
         <h2>Side Panel</h2>
         <ul>
           <li onClick={() => navigate('/home')}>Home</li>
@@ -122,19 +122,30 @@ function MyEvents() {
           <li onClick={() => navigate('/home/events')}>Events</li>
         </ul>
       </div>
-      {isSidePanelOpen && <div className="my-events-overlay" onClick={toggleSidePanel}></div>}
+      {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
       <div className="my-events-welcome-section">
-        <h1 className="my-events-welcome-message">My Events</h1>
+        <h1 className="my-events-welcome-message">WELCOME to My Events</h1>
       </div>
-      <div className="my-events-content">
+      <div className="content">
         <div className="my-events-sections-wrapper">
           <div className="my-events-events-section">
-            <h2>Your events are:</h2>
+            <h2>Your upcoming events are:</h2>
             <div className="my-events-event-card">
               <div className="my-events-event-image-placeholder"></div>
               <div className="my-events-event-details">
-                <h3>Event Title</h3>
-                <p>Details about your event. Customize this as needed.</p>
+                <h3>Title</h3>
+                <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
+                <div className="my-events-event-buttons">
+                  <button className="my-events-complete-button">Complete</button>
+                  <button className="my-events-delete-button">Delete</button>
+                </div>
+              </div>
+            </div>
+            <div className="my-events-event-card">
+              <div className="my-events-event-image-placeholder"></div>
+              <div className="my-events-event-details">
+                <h3>Title</h3>
+                <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
                 <div className="my-events-event-buttons">
                   <button className="my-events-complete-button">Complete</button>
                   <button className="my-events-delete-button">Delete</button>

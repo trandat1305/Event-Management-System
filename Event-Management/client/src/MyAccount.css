@@ -1,8 +1,15 @@
+#root {
+  background-color: #ffffff; /* Set the background color to white */
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+  margin: 0;
+  padding: 0;
+}
+
 .my-account-container {
   max-width: 600px;
   margin: 50px auto;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: #f9f8f8;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;

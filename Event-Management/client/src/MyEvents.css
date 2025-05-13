@@ -1,26 +1,84 @@
 .my-events-container {
   position: relative;
-  height: 100vh;
-  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  width: 1440px;
+  height: 1024px;
+  margin: 0 auto;
+  background-color: #F5FFFA;
 }
 
-.toggle-button {
+.my-events-header {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 20px;
+  background-color: transparent;
+  z-index: 1000;
+}
+
+.my-events-header-left {
+  display: flex;
+  align-items: center;
+}
+
+.my-events-header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-right: 20px;
+}
+
+.my-events-toggle-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.my-events-toggle-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.my-events-icon-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.my-events-notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.my-events-create-button {
+  padding: 5px 15px;
   background-color: #646cff;
-  color: black;
+  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.toggle-button:hover {
+.my-events-create-button:hover {
   background-color: #535bf2;
 }
 
-.side-panel {
+.my-events-side-panel {
   width: 250px;
   background-color: #ffffff;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -34,27 +92,30 @@
   z-index: 1000;
 }
 
-.side-panel.open {
+.my-events-side-panel.open {
   left: 0;
 }
 
-.side-panel ul {
+.my-events-side-panel h2 {
+  margin-top: 0;
+}
+
+.my-events-side-panel ul {
   padding: 0;
 }
 
-.side-panel ul li {
+.my-events-side-panel ul li {
   margin: 10px 0;
   color: black;
   cursor: pointer;
-  transition: color 0.3s ease;
 }
 
-.side-panel ul li:hover {
+.my-events-side-panel ul li:hover {
   color: #646cff;
   text-decoration: underline;
 }
 
-.overlay {
+.my-events-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -64,6 +125,267 @@
   z-index: 500;
 }
 
-.content {
+.my-events-welcome-section {
+  width: 100%;
+  height: 200px;
+  background: url('./assets/MyEventbackground.jpg') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.my-events-welcome-message {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+.my-events-content {
+  flex: 1;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.my-events-sections-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.my-events-events-section {
+  width: 50%;
+  margin-right: 20px;
+}
+
+.my-events-events-section h2 {
+  font-size: 1.5rem;
+  color: black;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.my-events-event-card {
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.my-events-event-image-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #e0e0e0;
+  margin-right: 10px;
+}
+
+.my-events-event-details {
+  flex: 1;
+}
+
+.my-events-event-details h3 {
+  color: black;
+  margin: 0 0 5px;
+  font-size: 1.2rem;
+}
+
+.my-events-event-details p {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.my-events-event-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.my-events-complete-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.my-events-complete-button:hover {
+  background-color: #0056b3;
+}
+
+.my-events-delete-button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.my-events-delete-button:hover {
+  background-color: #b02a37;
+}
+
+.my-events-calendar-section {
+  width: 40%;
+  margin-left: auto;
+}
+
+.my-events-calendar-section h2 {
+  font-size: 1.5rem;
+  color: black;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.my-events-calendar-icon {
+  margin-right: 5px;
+  font-size: 1.2rem;
+}
+
+.my-events-calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.my-events-calendar-header h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.my-events-calendar-nav {
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.my-events-calendar-nav:hover {
+  background-color: #535bf2;
+}
+
+.my-events-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.7rem;
+  margin-bottom: 10px;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.my-events-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+}
+
+.my-events-calendar-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Make the date fill its grid cell */
+  height: 100%; /* Make the date fill its grid cell */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px; /* Slightly round the corners */
+  cursor: pointer;
+  color: black; /* Set default text color to black */
+  font-size: 0.7rem; /* Scale down the font size */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.my-events-calendar-date.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default; /* Prevent pointer cursor for empty boxes */
+  pointer-events: none; /* Disable all interactions for empty boxes */
+}
+
+.my-events-calendar-date:hover {
+  background-color: #e0e0ff; /* Change background color on hover */
+  color: #646cff; /* Change text color on hover */
+}
+.my-events-calendar-date.selected {
+  border: 2px solid red;
+  border-radius: 50%;
+  background-color: #646cff; /* Change background color when selected */
+  color: white; /* Change text color when selected */
+}
+.my-events-calendar-date.current-day {
+  border: 2px solid red;
+  border-radius: 50%;
+  background-color: #ffcccb; /* Highlight current day */
+  color: black;
+  font-weight: bold;
+  cursor: pointer; /* Ensure the current day is clickable */
+}
+.my-events-calendar-date.event-day {
+  border: 2px solid blue;
+  border-radius: 50%;
+}
+.my-events-schedule-link {
+  color: #646cff; /* Blue color for the link */
+  text-decoration: none; /* Remove underline */
+  font-size: 0.9rem; /* Adjust font size */
+  margin-left: 5px; /* Add spacing if needed */
+}
+
+.my-events-schedule-link:hover {
+  text-decoration: underline; /* Add underline on hover */
+  color: #535bf2; /* Darker blue on hover */
+}
+@media (max-width: 768px) {
+  .my-events-sections-wrapper {
+    flex-direction: column;
+  }
+  .my-events-events-section, .my-events-calendar-section {
+    width: 100%;
+  }
+  .my-events-calendar {
+    width: 100%;
+    height: auto;
+  }
+  .my-events-calendar-days {
+    width: 100%;
+  }
+  .my-events-calendar-header {
+    width: 100%;
+  }
+  .my-events-header-right {
+    gap: 10px;
+  }
+  .my-events-icon-button {
+    font-size: 1rem;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .my-events-create-button {
+    padding: 3px 10px;
+    font-size: 0.8rem;
+  }
 }

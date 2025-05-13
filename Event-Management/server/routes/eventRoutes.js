@@ -3,11 +3,15 @@ const eventRouter = express.Router();
 const eventController = require('../controllers/eventController');
 
 const upload = require('../middlewares/uploadImages'); // Import Multer
+const authMiddleware = require('../middlewares/authentication'); // Import authentication middleware
+
+eventRouter.get('/getAllPublicEvents', eventController.getAllPublicEvents); // get all public events regardless of attendance
 
 eventRouter.use(authMiddleware); // Protect all routes below this line
 
 eventRouter.post('/createEvent', upload.single('image'), eventController.createEvent);
 
+/**
 eventRouter.put('/updateEvent/:id', eventController.updateEvent);
 
 eventRouter.put('/updateEvent/:id', upload.single('image'), eventController.updateEventImage); // update an event
@@ -28,5 +32,6 @@ eventRouter.get('/getOrganizedEvents', eventController.getOrganizedEvents); // g
 
 eventRouter.get('/getMyevents', eventController.getMyEvents); // get all events that a person has made
 
+*/
 module.exports = eventRouter;
 

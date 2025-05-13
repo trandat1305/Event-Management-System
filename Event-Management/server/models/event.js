@@ -26,11 +26,11 @@ const eventSchema = new mongoose.Schema({
   },
   imageURL: { 
     type: String,
-    default: 'defaultPicture.jpg', // reminder to change to your default picture path
+    default: 'uploads/defaultPicture.jpg', // reminder to change to your default picture path
     validate: {
       validator: function(v) {
         if (!v) return true;  
-        return /^(http|https):\/\/\S+\.(jpg|jpeg|png|webp)$/.test(v);
+        return /^(uploads\/\S+\.(jpg|jpeg|png|webp)$)|(https?:\/\/\S+\.(jpg|jpeg|png|webp))$/.test(v);
       },
       message: 'Invalid image URL'
     }

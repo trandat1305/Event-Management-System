@@ -264,12 +264,12 @@
 }
 
 /* Calendar Section */
-.my-events-calendar-section {
+.calendar-section {
   width: 40%;
   margin-left: auto; /* Push to the right within flex container */
 }
 
-.my-events-calendar-section h2 {
+.calendar-section h2 {
   font-size: 1.5rem;
   color: black;
   margin-bottom: 10px;
@@ -277,16 +277,15 @@
   align-items: center;
 }
 
-.dark-mode .my-events-calendar-section h2 {
+.dark-mode .calendar-section h2 {
   color: white;
 }
 
-.my-events-calendar-icon {
+.calendar-icon {
   margin-right: 5px;
   font-size: 1.2rem;
 }
-
-.my-events-calendar-header {
+.calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -295,16 +294,16 @@
   margin: 0 auto; /* Center the header horizontally */
 }
 
-.my-events-calendar-header h2 {
+.calendar-header h2 {
   font-size: 1rem; /* Scale down the font size */
   margin: 0;
 }
 
-.dark-mode .my-events-calendar-header h2 {
+.dark-mode .calendar-header h2 {
   color: white;
 }
 
-.my-events-calendar-nav {
+.calendar-nav {
   background-color: #646cff;
   color: white;
   border: none;
@@ -313,12 +312,11 @@
   cursor: pointer;
   font-size: 0.8rem; /* Scale down the font size */
 }
-
-.my-events-calendar-nav:hover {
+.calendar-nav:hover {
   background-color: #535bf2;
 }
 
-.my-events-calendar-days {
+.calendar-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
   text-align: center;
@@ -329,11 +327,11 @@
   margin: 0 auto; /* Center the days horizontally */
 }
 
-.dark-mode .my-events-calendar-days span {
+.dark-mode .calendar-days span {
   color: white;
 }
 
-.my-events-calendar {
+.calendar {
   display: grid;
   grid-template-columns: repeat(7, 1fr); /* 7 columns for a week */
   gap: 2px; /* Reduce gap between dates */
@@ -341,8 +339,7 @@
   height: 300px; /* Increased height to match image */
   margin: 0 auto; /* Center the calendar horizontally */
 }
-
-.my-events-calendar-date {
+.calendar-date {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -357,37 +354,35 @@
   transition: background-color 0.3s, color 0.3s;
 }
 
-.dark-mode .my-events-calendar-date {
+.dark-mode .calendar-date {
   background-color: #3a3a3a;
   border-color: #555;
   color: white;
 }
 
-.my-events-calendar-date.empty {
+.calendar-date.empty {
   background-color: transparent;
   border: none;
   cursor: default; /* Prevent pointer cursor for empty boxes */
   pointer-events: none; /* Disable all interactions for empty boxes */
 }
-
-.my-events-calendar-date:hover {
+.calendar-date:hover {
   background-color: #e0e0ff; /* Change background color on hover */
   color: #646cff; /* Change text color on hover */
 }
 
-.dark-mode .my-events-calendar-date:hover {
+.dark-mode .calendar-date:hover {
   background-color: #5050ff;
   color: white;
 }
 
-.my-events-calendar-date.selected {
+.calendar-date.selected {
   border: 2px solid red;
   border-radius: 50%;
   background-color: #646cff; /* Change background color when selected */
   color: white; /* Change text color when selected */
 }
-
-.my-events-calendar-date.current-day {
+.calendar-date.current-day {
   border: 2px solid red;
   border-radius: 50%;
   background-color: #ffcccb; /* Highlight current day */
@@ -396,25 +391,25 @@
   cursor: pointer; /* Ensure the current day is clickable */
 }
 
-.dark-mode .my-events-calendar-date.current-day {
+.dark-mode .calendar-date.current-day {
   background-color: #ff6666;
 }
 
-.my-events-calendar-date.current-day.selected {
+.calendar-date.current-day.selected {
   background-color: #646cff; /* Same background color as other selected dates */
   color: white; /* Same text color as other selected dates */
 }
 
-.my-events-calendar-date.current-day:hover {
+.calendar-date.current-day:hover {
   background-color: #e0e0ff; /* Same hover effect as other dates */
   color: #646cff; /* Same hover text color as other dates */
 }
 
-.dark-mode .my-events-calendar-date.current-day:hover {
+.dark-mode .calendar-date.current-day:hover {
   background-color: #5050ff;
 }
 
-.my-events-calendar-date.event-day {
+.calendar-date.event-day {
   border: 2px solid blue;
   border-radius: 50%;
 }
@@ -503,8 +498,7 @@
   background-color: red;
   border-radius: 50%;
 }
-
-.my-events-schedule-link {
+.schedule-link {
   margin-left: 10px;
   font-size: 0.9rem;
   color: #646cff;
@@ -512,7 +506,7 @@
   cursor: pointer;
 }
 
-.my-events-schedule-link:hover {
+.schedule-link:hover {
   text-decoration: underline;
   color: #535bf2;
 }

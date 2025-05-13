@@ -153,21 +153,21 @@ function MyEvents() {
               </div>
             </div>
           </div>
-          <div className="my-events-calendar-section">
+          <div className="calendar-section">
             <h2>
-              <FaCalendarAlt className="my-events-calendar-icon" /> Schedule:
-              <Link to="/home/schedule" className="my-events-schedule-link">View Full Schedule</Link>
+              <FaCalendarAlt className="calendar-icon" /> Schedule:
+              <Link to="/home/schedule" className="schedule-link">View Full Schedule</Link> {/* Add hyperlink */}
             </h2>
-            <div className="my-events-calendar-header">
-              <button className="my-events-calendar-nav" onClick={handlePreviousMonth}>
+            <div className="calendar-header">
+              <button className="calendar-nav" onClick={handlePreviousMonth}>
                 &lt; Previous
               </button>
               <h2>{monthYear}</h2>
-              <button className="my-events-calendar-nav" onClick={handleNextMonth}>
+              <button className="calendar-nav" onClick={handleNextMonth}>
                 Next &gt;
               </button>
             </div>
-            <div className="my-events-calendar-days">
+            <div className="calendar-days">
               <span>Mon</span>
               <span>Tue</span>
               <span>Wed</span>
@@ -176,11 +176,11 @@ function MyEvents() {
               <span>Sat</span>
               <span>Sun</span>
             </div>
-            <div className="my-events-calendar" ref={calendarRef}>
+            <div className="calendar" ref={calendarRef}>
               {calendarDays.map((day, index) => (
                 <div
                   key={index}
-                  className={`my-events-calendar-date ${
+                  className={`calendar-date ${
                     day && selectedDate === day ? 'selected' : ''
                   } ${
                     day &&

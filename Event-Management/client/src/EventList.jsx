@@ -1,11 +1,12 @@
 import React from 'react';
 import './EventList.css';
 
-function EventList({ selectedDate, events, currentMonth, currentYear }) {
+function EventList({ selectedDate, events, currentMonth, currentYear, onCreateButtonClick }) {
   // Ensure currentMonth and currentYear are valid before formatting
-  const formattedDate = selectedDate && currentMonth !== undefined && currentYear !== undefined
-    ? `${selectedDate} ${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })}, ${currentYear}`
-    : 'No Date Selected';
+  const formattedDate =
+    selectedDate && currentMonth !== undefined && currentYear !== undefined
+      ? `${selectedDate} ${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })}, ${currentYear}`
+      : 'No Date Selected';
 
   return (
     <div className={`event-list-container ${selectedDate ? 'visible' : ''}`}>
@@ -16,13 +17,18 @@ function EventList({ selectedDate, events, currentMonth, currentYear }) {
             <li key={index}>
               <h3>{event.title}</h3>
               <p>{event.description}</p>
-              <p><strong>Time:</strong> {event.time}</p>
+              <p>
+                <strong>Time:</strong> {event.time}
+              </p>
             </li>
           ))}
         </ul>
       ) : (
         <p>No events for this day.</p>
       )}
+      <button className="create-event-button" onClick={onCreateButtonClick}>
+        Create Event
+      </button>
     </div>
   );
 }

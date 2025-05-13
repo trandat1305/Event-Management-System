@@ -1,0 +1,75 @@
+.event-create-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.event-create-form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 90%; /* Ensure it doesn't exceed the viewport width */
+  box-sizing: border-box; /* Include padding and border in width/height */
+}
+
+.event-create-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%; /* Ensure the input fields take up the full width of the container */
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; /* Include padding and border in width */
+}
+
+.form-group textarea {
+  resize: none; /* Prevent resizing of the textarea */
+  height: 80px; /* Set a fixed height for the textarea */
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.form-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-actions button[type="submit"] {
+  background-color: #646cff;
+  color: white;
+}
+
+.form-actions button[type="button"] {
+  background-color: #ddd;
+  color: black;
+}

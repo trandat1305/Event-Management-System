@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './CreateEvent.css';
 import EventList from './EventList';
+import EventCreateForm from './EventCreateForm';
 
 function CreateEvent() {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -12,6 +13,7 @@ function CreateEvent() {
   const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
+  const [isCreating, setIsCreating] = useState(false); // Manage form visibility
   const calendarRef = useRef(null);
 
   const handleDateClick = (date) => {
@@ -24,14 +26,12 @@ function CreateEvent() {
     setEvents(mockEvents);
   };
 
-  const handleClickOutside = (event) => {
-    if (calendarRef.current && !calendarRef.current.contains(event.target)) {
-      setSelectedDate(null); // Unselect the date if clicked outside
-    }
+  const handleCreateEvent = (newEvent) => {
+    setEvents((prevEvents) => [...prevEvents, newEvent]); // Add the new event
+    setIsCreating(false); // Close the form
   };
 
   const generateCalendar = React.useCallback(() => {
-    // Get the first day of the month (adjusted to start on Monday)
     const firstDayOfMonth = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
@@ -80,9 +80,17 @@ function CreateEvent() {
   }, []);
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setSelectedDate(null); // Unselect the date if clicked outside
+      }
+    });
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('click', (event) => {
+        if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+          setSelectedDate(null); // Unselect the date if clicked outside
+        }
+      });
     };
   }, []);
 
@@ -140,7 +148,14 @@ function CreateEvent() {
         events={events}
         currentMonth={currentMonth}
         currentYear={currentYear}
+        onCreateButtonClick={() => setIsCreating(true)} // Show the form when the button is clicked
       />
+      {isCreating && (
+        <EventCreateForm
+          onClose={() => setIsCreating(false)}
+          onCreate={handleCreateEvent}
+        />
+      )}
     </div>
   );
 }

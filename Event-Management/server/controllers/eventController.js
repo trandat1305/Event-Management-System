@@ -41,10 +41,10 @@ exports.createEvent = async (req, res) => {
     } catch (err) {
       res.status(500).json(err);
     }
-  };
+};
   
   // Update Event
-  exports.updateEvent = async (req, res) => {
+exports.updateEvent = async (req, res) => {
     try {
       const event = await Event.findById(req.params.id);
       if (!event) return res.status(404).json({ error: 'Event not found' });
@@ -57,16 +57,14 @@ exports.createEvent = async (req, res) => {
       event.startTime = updates.startTime || event.startTime;
       event.endTime = updates.endTime || event.endTime;
       event.isPublic = updates.isPublic ?? event.isPublic;
+      event.location = updates.location || event.location;
+      event.imageUrl = req.file?.path || event.imageUrl;
       event.description = updates.description || event.description;
       if (updates.status === 'cancelled') event.status = 'cancelled';
   
-      // Validate startTime < endTime
-      if (event.startTime >= event.endTime) {
-        return res.status(400).json({ error: 'End time must be after start time' });
-      }
-  
       await event.save();
-  
+      
+      /*
       // Check for critical changes
       const isCancelled = event.status === 'cancelled';
       const fieldsChanged = ['title', 'startTime', 'endTime'].some(
@@ -85,15 +83,32 @@ exports.createEvent = async (req, res) => {
           message 
         });
       }
+      */
   
       res.json(event);
     } catch (err) {
       res.status(500).json({ error: 'Failed to update event' });
     }
-  };
+};
+
+exports.deleteEvent = async (req, res) => {
+    try {
+      const eventId = req.params.id;
+
+      const event = await Event.findByIdAndDelete(eventId);
+      if (!event) return res.status(404).json({ error: 'Event not found' });
+  
+      // Notify attendees about cancellation
+      
+  
+      res.json({ message: 'Event deleted successfully' });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to delete event' });
+    }
+};
   
   //Calendar for event
-  exports.getCalendarEvents = async (req, res) => {
+exports.getCalendarEvents = async (req, res) => {
   try {
     const userId = req.user._id;
     const { month, year } = req.query; // Ex:., month=5, year=2025

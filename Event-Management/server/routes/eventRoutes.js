@@ -8,17 +8,17 @@ eventRouter.use(authMiddleware); // Protect all routes below this line
 
 eventRouter.post('/createEvent', upload.single('image'), eventController.createEvent);
 
-eventRouter.put('updateEvent/:id', eventController.updateEvent);
+eventRouter.put('/updateEvent/:id', eventController.updateEvent);
 
 eventRouter.put('/updateEvent/:id', upload.single('image'), eventController.updateEventImage); // update an event
 
-eventRouter.delete('/:id', eventController.deleteEvent); 
+eventRouter.delete('/deleteEvent/:id', eventController.deleteEvent); 
 
 eventRouter.get('/getEvent/:id', eventController.getEventById); // get an event by ID
 
 eventRouter.get('/getAllEvents', eventController.getAllEvents); // get all events that a person is attending
 
-eventRouter.get('/getAllEvents', eventController.getAllPublicEvents); // get all events that a person is attending
+eventRouter.get('/getAllEvents', eventController.getAllPublicEvents); // get all public events regardless of attendance
 
 eventRouter.get('/privateEvents', eventController.getPrivateEvents); // get all private events that a person is attending
 

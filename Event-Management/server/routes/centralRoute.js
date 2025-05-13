@@ -2,9 +2,10 @@ const router = require("express").Router();
 const userRouter = require("./userRoutes");
 const adminRouter = require("./adminRoutes");
 const eventRouter = require("./eventRoutes");
+const notificationRouter = require("./notificationRoutes");
 
 const upload = require("../middlewares/uploadImages");
-const authenticateUser = require("../middlewares/authentication");
+ 
 
 router.use("/user", userRouter);
 
@@ -12,8 +13,7 @@ router.use("/admin", adminRouter);
 
 router.use("/events", eventRouter);
 
-router.use(authenticateUser); // Protect all routes below this line
-
+router.use('/notifications', notificationRouter);
 
 // image upload route TESTING ONLY
 router.post("/imageupload", upload.single("image"), (req, res) => {

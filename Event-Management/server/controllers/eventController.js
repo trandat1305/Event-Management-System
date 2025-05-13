@@ -18,12 +18,7 @@ exports.createEvent = async (req, res) => {
       const { title, description, isPublic, startTime, endTime } = req.body;
       const organizer = req.user._id;
   
-      // Validate startTime < endTime
-      if (new Date(startTime) >= new Date(endTime)) {
-        return res.status(400).json({ error: 'End time must be after start time' });
-      }
-  
-      const event = new Event({ ...req.body, organizer, imageUrl: req.file?.path });
+      const event = new Event({ title, description, isPublic, startTime, endTime, organizer, imageUrl: req.file?.path });
       await event.save();
   
       // Schedule 24-hour reminder

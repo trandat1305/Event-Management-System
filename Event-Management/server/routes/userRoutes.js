@@ -20,13 +20,4 @@ userRouter.get('/profile/', userController.getOwnUserProfile);
 
 userRouter.get('/profile/:id', userController.getUserProfileById);
 
-userRouter.get('/auth/secret', (req, res) => {
-  try {
-    res.status(200).json({ message: 'This is a secret route', user: req.user });
-  }
-  catch (err) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 module.exports = userRouter;

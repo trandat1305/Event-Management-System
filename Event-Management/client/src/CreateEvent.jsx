@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './CreateEvent.css';
+import EventList from './EventList';
 
 function CreateEvent() {
   const [selectedDate, setSelectedDate] = useState(null);
+  const [events, setEvents] = useState([]);
   const [calendarDays, setCalendarDays] = useState([]);
   const [monthYear, setMonthYear] = useState('');
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -14,6 +16,12 @@ function CreateEvent() {
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
+    // Fetch events for the selected date (mock data for now)
+    const mockEvents = [
+      { title: 'Meeting', description: 'Team meeting at office', time: '10:00 AM' },
+      { title: 'Lunch', description: 'Lunch with client', time: '1:00 PM' },
+    ];
+    setEvents(mockEvents);
   };
 
   const handleClickOutside = (event) => {
@@ -127,6 +135,12 @@ function CreateEvent() {
           ))}
         </div>
       </div>
+      <EventList
+        selectedDate={selectedDate}
+        events={events}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+      />
     </div>
   );
 }

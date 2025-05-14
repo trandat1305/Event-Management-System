@@ -8,21 +8,19 @@ const authMiddleware = require('../middlewares/authentication'); // Import authe
 
 eventRouter.use(authMiddleware); // Protect all routes below this line
 
-eventRouter.get('/:id', eventController.getEventById); // get an event by ID
+eventRouter.get('/:eventId', eventController.getEventById); // get an event by ID
 
 eventRouter.post('/create', upload.single('image'), eventController.createEvent); // create a new event
 
-eventRouter.put('/:id/update', upload.single('image'), eventController.updateEventImage); // update an event
+eventRouter.put('/:eventId/update', upload.single('image'), eventController.updateEvent); // update an event
 
-eventRouter.delete('/:id/delete', eventController.deleteEvent); // delete an event
+eventRouter.delete('/:eventId/delete', eventController.deleteEvent); // delete an event
 
 eventRouter.get('/:eventId/participants', participantController.getEventParticipants); // get all participants of an event
 
 eventRouter.get('/:eventId/attendee-count', participantController.getEventAttendeeCount); // get the count of attendees for an event
 
 eventRouter.delete('/:eventId/:participantId', participantController.deleteParticipant); // delete a participant from an event
-
-eventRouter.delete('/:eventId/participants', participantController.deleteAllParticipants); // delete all participants of an event
 
 eventRouter.post('/:eventId/join', participantController.joinEvent); // join an event
 

@@ -1,6 +1,7 @@
 const Event = require('../models/Event');
 const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
+const EventParticipants = require('../models/EventParticipants');
 
 exports.createEvent = async (req, res) => {
     try {
@@ -41,7 +42,7 @@ exports.createEvent = async (req, res) => {
 
 exports.getEventById = async (req, res) => {
     try {
-      const eventId = req.params.id;
+      const eventId = req.params.eventId;
       const event = await Event.findById(eventId).populate('creator', 'username');
       if (!event) return res.status(404).json({ error: 'Event not found' });
 
@@ -100,18 +101,27 @@ exports.updateEvent = async (req, res) => {
 
 exports.deleteEvent = async (req, res) => {
     try {
-      const eventId = req.params.id;
+      const eventId = req.params.eventId;
 
       const event = await Event.findById(eventId);
       if (!event) return res.status(404).json({ error: 'Event not found' });
       
-      event.softDelete();
-  
-      // Notify attendees about cancellation
+      await event.softDelete();
 
       // Delete all attendees from the Eventparticipants collection
+      const participants = await EventParticipants.find({ event: eventId });
+      if (participants.length > 0) {
+        await Promise.all(participants.map(participant => participant.softDelete()));
+      }
       
-  
+      // Notify attendees about cancellation
+      const notifications = participants.map(participant => ({
+        userId: participant.userId,
+        eventId: eventId,
+        message: `The event "${event.title}" has been deleted.`,
+      }));
+      await Notification.insertMany(notifications);
+
       res.json({ message: 'Event deleted successfully' });
     } catch (err) {
       res.status(500).json({ error: 'Failed to delete event', errorMessage: err.message });
@@ -142,5 +152,3 @@ exports.getAllPublicEvents = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-

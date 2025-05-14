@@ -13,6 +13,11 @@ const invitationSchema = new mongoose.Schema({
     ref: 'User', 
     required: true 
   },
+  senderId: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  },
   rsvpStatus: { 
     type: String, 
     enum: ['pending', 'accepted', 'declined'], 

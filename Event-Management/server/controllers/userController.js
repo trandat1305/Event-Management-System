@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const upload = require('../middlewares/uploadImages');
 const eventParticipants = require('../models/EventParticipants');
+const eventOrganizers = require('../models/EventOrganizers');
 require('dotenv').config();
 
 // Register user
@@ -75,6 +76,44 @@ exports.getUserEvents = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getUserOrganizedEvents = async (req, res) => {
+  try {
+    const userId = req.user._id; // Get user ID from the authenticated user
+    const events = await eventOrganizers
+    .find({ user: userId })
+    .populate({ path: 'event', populate: { path: 'creator', select: 'username _id' } });
+    if (!events || events.length === 0) {
+      return res.status(404).json({ error: 'No events found for this user' });
+    }
+
+    // Add the `myEvent` key to each event
+    const updatedEvents = events.map(event => {
+      const isMyEvent = event.event.creator._id.toString() === userId.toString();
+      return {
+        ...event.toObject(), // Convert Mongoose document to plain object
+        myEvent: isMyEvent // Add the `myEvent` key
+      };
+    });
+    res.status(200).json(updatedEvents);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getUserCreatedEvents = async (req, res) => {
+  try {
+    const userId = req.user._id; // Get user ID from the authenticated user
+    const events = await Event.find({ creator: userId }).populate('creator', 'username _id');
+    if (!events || events.length === 0) {
+      return res.status(404).json({ error: 'No events found for this user' });
+    }
+
+    res.status(200).json(events);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};  
 
 exports.getUserProfileById = async (req, res) => {
   try {

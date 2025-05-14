@@ -14,7 +14,7 @@ userRouter.use(authenticateUser);
 
 userRouter.put('/profile/', upload.single("avatar"), userController.updateProfile);
 
-userRouter.get('/profile/', userController.getOwnUserProfile);
+userRouter.get('/profile/', userController.getProfile);
 
 userRouter.get('/notifications', notificationController.getNotifs); // get all notifications of a user
 

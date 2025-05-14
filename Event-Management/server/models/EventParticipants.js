@@ -13,12 +13,6 @@ const participationSchema = new mongoose.Schema({
         ref: 'Event', 
         required: true 
     },
-    /**
-    rsvpStatus: { 
-        type: String, 
-        enum: ['yes', 'no', 'maybe'], 
-        default: 'maybe'
-    }, */
     joinedAt: { 
         type: Date, 
         default: Date.now 

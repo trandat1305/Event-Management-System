@@ -16,6 +16,7 @@ const eventOrganizerSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    /**
     status: { 
       type: String, 
       enum: ['pending', 'accepted', 'rejected'], 
@@ -23,9 +24,9 @@ const eventOrganizerSchema = new mongoose.Schema({
     },
     invitedAt: { type: Date, default: Date.now },
     acceptedAt: { type: Date },
-    }, 
-    { timestamps: true 
-});
+    }, */
+    }, { timestamps: true }
+);
 
 // Get all active organizers of an event
 eventOrganizerSchema.statics.getOrganizers = async function(eventId) {

@@ -6,7 +6,6 @@ const notificationRouter = require("./notificationRoutes");
 const participantRouter = require("./participantRoutes");
 
 const upload = require("../middlewares/uploadImages");
- 
 
 router.use("/user", userRouter);
 

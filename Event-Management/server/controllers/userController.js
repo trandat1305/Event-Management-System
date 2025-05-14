@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const upload = require('../middlewares/uploadImages');
+const eventParticipants = require('../models/EventParticipants');
 require('dotenv').config();
 
 // Register user
@@ -32,7 +33,7 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-exports.getOwnUserProfile = async (req, res) => {
+exports.getProfile = async (req, res) => {
   try {
     const userId = req.user._id; // Get user ID from the authenticated user
     const user = await User.findById(userId).select('-password'); // Exclude password field
@@ -43,26 +44,44 @@ exports.getOwnUserProfile = async (req, res) => {
   }
 }
 
-exports.getUserProfileById = async (req, res) => {
+exports.getUserEvents = async (req, res) => {
   try {
-    const userId = req.params.id; // Get user ID from the request parameters
-    const user = await User.findById(userId).select('-password'); // Exclude password field
-    if (!user) return res.status(404).json({ error: 'User not found' });
-    res.status(200).json(user);
+    const userId = req.user._id; // Get user ID from the authenticated user
+
+    const events = await eventParticipants
+    .find({ user: userId })
+    .populate({
+      path: 'event', // Populate the event details
+      populate: {
+        path: 'creator', // Populate the organizer details
+        select: 'username _id', // Select only the username
+    }});
+
+    if (!events || events.length === 0) {
+      return res.status(404).json({ error: 'No events found for this user' });
+    }
+
+    // Add the `myEvent` key to each event
+    const updatedEvents = events.map(event => {
+      const isMyEvent = event.event.creator._id.toString() === userId.toString();
+      return {
+        ...event.toObject(), // Convert Mongoose document to plain object
+        myEvent: isMyEvent // Add the `myEvent` key
+      };
+    });
+
+    res.status(200).json(updatedEvents);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-exports.updateAvatar = async (req, res) => {
+exports.getUserProfileById = async (req, res) => {
   try {
-    const userId = req.user._id; // Get user ID from the authenticated user
-    const avatarPath = req.file.path; // Path to the uploaded file
-
-    const user = await User.findByIdAndUpdate(userId, { avatar: avatarPath }, { new: true });
+    const userId = req.params.userId; // Get user ID from the request parameters
+    const user = await User.findById(userId).select('-password'); // Exclude password field
     if (!user) return res.status(404).json({ error: 'User not found' });
-
-    res.status(200).json({ message: 'Avatar updated successfully', avatar: user.avatar });
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -72,19 +91,27 @@ exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user._id; // Get user ID from the authenticated user
     const { username, email } = req.body;
+    const avatarPath = req.file ? req.file.path : null; // Check if an avatar file is uploaded
 
-    const user = await User.findByIdAndUpdate(userId, { username, email }, { new: true });
+    // Prepare the update object
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+    if (avatarPath) updateData.avatar = avatarPath;
+
+    // Update the user
+    const user = await User.findByIdAndUpdate(userId, updateData, { new: true });
     if (!user) return res.status(404).json({ error: 'User not found' });
+
     res.status(200).json({ message: 'Profile updated successfully', user });
-  }
-  catch (err) {
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 exports.updateUserById = async (req, res) => {
   try {
-    const userId = req.params.id; // Get user ID from the request parameters
+    const userId = req.params.userId; // Get user ID from the request parameters
     const { username, email, isAdmin } = req.body;
 
     const user = await User.findByIdAndUpdate(userId, { username, email, isAdmin }, { new: true });
@@ -145,11 +172,13 @@ exports.registerAdmin = async (req, res) => {
 
 exports.deleteUserById = async (req, res) => {
   try {
-    const userId = req.params.id; // Get user ID from the request parameters
+    const userId = req.params.userId; // Get user ID from the request parameters
     const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
     user.softDelete(); // Soft delete the user
     await user.save();
-    if (!user) return res.status(404).json({ error: 'User not found' });
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });

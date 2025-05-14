@@ -4,20 +4,16 @@ const upload = require('../middlewares/uploadImages');
 
 const authenticateUser = require('../middlewares/authentication');
 
-//router: user/auth/register
 userRouter.post('/auth/register', userController.registerUser);
 
-//router: user/auth/login
 userRouter.post('/auth/login', userController.loginUser);
 
-userRouter.use(authenticateUser); // Protect all routes below this line
+userRouter.use(authenticateUser);
 
-userRouter.put('/updateAvatar', upload.single("avatar"), userController.updateAvatar);
-
-userRouter.put('/updateProfile', userController.updateProfile);
+userRouter.put('/profile/', upload.single("avatar"), userController.updateProfile);
 
 userRouter.get('/profile/', userController.getOwnUserProfile);
 
-userRouter.get('/profile/:id', userController.getUserProfileById);
+userRouter.get('/getEvents', userController.getUserEvents);
 
 module.exports = userRouter;

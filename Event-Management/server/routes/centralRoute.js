@@ -4,16 +4,22 @@ const adminRouter = require("./adminRoutes");
 const eventRouter = require("./eventRoutes");
 const notificationRouter = require("./notificationRoutes");
 const participantRouter = require("./participantRoutes");
+const discussionRouter = require("./discussionRoutes");
+const invitationRouter = require("./invitationRoutes");
 
 const upload = require("../middlewares/uploadImages");
 
-router.use("/user", userRouter);
+router.use("/users", userRouter);
 
-router.use("/admin", adminRouter);
+router.use("/admins", adminRouter);
 
 router.use("/events", eventRouter);
 
+router.use("/discussions", discussionRouter);
+
 router.use('/notifications', notificationRouter);
+
+router.use('/invitations', invitationRouter);
 
 router.use('/participants', participantRouter);
 

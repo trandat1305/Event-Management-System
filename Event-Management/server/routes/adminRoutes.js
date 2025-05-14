@@ -4,9 +4,6 @@ const upload = require('../middlewares/uploadImages');
 
 const authenticateAdmin = require('../middlewares/authAdmin');
 
-
-//route: /admin/createAdmin
-// Create a new admin
 adminRouter.post('/createAdmin', userController.registerAdmin); // DELETE THIS LATER
 
 adminRouter.use(authenticateAdmin);

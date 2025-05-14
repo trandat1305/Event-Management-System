@@ -1,4 +1,6 @@
 const userController = require('../controllers/userController');
+const notificationController = require('../controllers/notificationController');
+
 const userRouter = require('express').Router();
 const upload = require('../middlewares/uploadImages');
 
@@ -14,6 +16,12 @@ userRouter.put('/profile/', upload.single("avatar"), userController.updateProfil
 
 userRouter.get('/profile/', userController.getOwnUserProfile);
 
-userRouter.get('/getEvents', userController.getUserEvents);
+userRouter.get('/notifications', notificationController.getNotifs); // get all notifications of a user
+
+userRouter.get('/events', userController.getUserEvents); // get all events that a person is attending
+
+userRouter.get('/organizedEvents', userController.getUserOrganizedEvents); // get all events that a person is organizing
+
+userRouter.get('/createdEvents', userController.getUserCreatedEvents); // get all events that a person has made
 
 module.exports = userRouter;

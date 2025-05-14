@@ -61,6 +61,19 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
+userSchema.statics.insertManyWithHashing = async function(users) {
+  const hashedUsers = await Promise.all(
+    users.map(async (user) => {
+      if (user.password) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+      }
+      return user;
+    })
+  );
+  return this.insertMany(hashedUsers);
+};
+
 userSchema.methods.resetPassword = async function(newPassword) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(newPassword, salt);

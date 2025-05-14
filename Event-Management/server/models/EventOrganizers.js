@@ -16,6 +16,10 @@ const eventOrganizerSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    joinedAt: { 
+        type: Date, 
+        default: Date.now 
+    },
     }, { timestamps: true }
 );
 

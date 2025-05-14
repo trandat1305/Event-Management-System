@@ -18,6 +18,8 @@ adminRouter.put('/updateUser/:userId', userController.updateUserById);
 
 adminRouter.delete('/deleteUser/:userId', userController.deleteUserById);
 
+// add more admin functions later
+
 module.exports = adminRouter;
 
 

@@ -1,6 +1,4 @@
 .schedule-container {
-  width: 100%; /* Full width to fit the web layout */
-  height: 100vh; /* Full height of the viewport */
   padding: 20px;
   background-color: #f9f9f9; /* Light background color */
   display: flex;

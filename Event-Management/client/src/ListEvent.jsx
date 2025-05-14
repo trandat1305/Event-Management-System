@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBars, FaMoon, FaBell, FaUserCircle } from 'react-icons/fa';
-import './Notification.css';
+import { FaBars } from 'react-icons/fa';
+import './ListEvent.css';
 
-function Notification() {
+function ListEvent() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ function Notification() {
   };
 
   return (
-    <div className="notification-container">
+    <div className="list-event-container">
       <header className="header">
         <div className="header-left">
           <button className="toggle-button" onClick={toggleSidePanel}>
@@ -30,17 +30,12 @@ function Notification() {
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
-      <div className="notification-content">
-        <h1>Notifications</h1>
-        <p>This is the Notifications page where you can view all your notifications.</p>
-        <ul>
-          <li>Notification 1: Event reminder</li>
-          <li>Notification 2: New event added</li>
-          <li>Notification 3: Event updated</li>
-        </ul>
+      <div className="list-event-content">
+        <h1>List of Events</h1>
+        <p>This is the ListEvent page where you can view and join all public events.</p>
       </div>
     </div>
   );
 }
 
-export default Notification;
+export default ListEvent;

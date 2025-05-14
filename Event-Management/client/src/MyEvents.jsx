@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaBars, FaMoon, FaBell, FaUserCircle, FaCalendarAlt } from 'react-icons/fa';
 import Profile from './Profile';
+import UpcomingEventCard from './UpcomingEventCard'; // Import the UpcomingEventCard component
 import './MyEvents.css'; // Contains styles specific to MyEvents.jsx
 
 function MyEvents() {
@@ -31,24 +32,18 @@ function MyEvents() {
     setSelectedDate(date);
   };
 
-  const handleClickOutside = (event) => {
-    if (calendarRef.current && !calendarRef.current.contains(event.target)) {
-      setSelectedDate(null);
-    }
-  };
-
   const generateCalendar = React.useCallback(() => {
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+    const firstDayOfMonth = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     setMonthYear(`${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`);
 
     const daysArray = [];
     for (let i = 0; i < firstDayOfMonth; i++) {
-      daysArray.push(null);
+      daysArray.push(null); // Empty cells for alignment
     }
     for (let i = 1; i <= daysInMonth; i++) {
-      daysArray.push(i);
+      daysArray.push(i); // Actual days of the month
     }
     setCalendarDays(daysArray);
   }, [currentMonth, currentYear]);
@@ -73,10 +68,6 @@ function MyEvents() {
 
   useEffect(() => {
     generateCalendar();
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
   }, [currentMonth, currentYear, generateCalendar]);
 
   useEffect(() => {
@@ -88,6 +79,49 @@ function MyEvents() {
     }, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    document.addEventListener('click', (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setSelectedDate(null); // Unselect the date if clicked outside
+      }
+    });
+    return () => {
+      document.removeEventListener('click', (event) => {
+        if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+          setSelectedDate(null); // Unselect the date if clicked outside
+        }
+      });
+    };
+  }, []);
+
+  // Sample event data for UpcomingEventCard
+  const events = [
+    {
+      title: 'My Event 1',
+      description: 'Description for My Event 1',
+      date: '2025-05-20',
+      time: '10:00 AM',
+      image: 'https://via.placeholder.com/300x150',
+      type: 'my-event', // Marked as "My Event"
+    },
+    {
+      title: 'My Event 2',
+      description: 'Description for My Event 2',
+      date: '2025-05-22',
+      time: '2:00 PM',
+      image: 'https://via.placeholder.com/300x150',
+      type: 'my-event', // Marked as "My Event"
+    },
+    {
+      title: 'My Event 3',
+      description: 'Description for My Event 3',
+      date: '2025-05-25',
+      time: '6:00 PM',
+      image: 'https://via.placeholder.com/300x150',
+      type: 'my-event', // Marked as "My Event"
+    },
+  ];
 
   return (
     <div className="my-events-container">
@@ -120,6 +154,7 @@ function MyEvents() {
           <li onClick={() => navigate('/home')}>Home</li>
           <li onClick={() => navigate('/home/myevents')}>My Events</li>
           <li onClick={() => navigate('/home/events')}>Events</li>
+          <li onClick={() => navigate('/home/listevent')}>List Events</li>
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
@@ -127,36 +162,12 @@ function MyEvents() {
         <h1 className="my-events-welcome-message">WELCOME to My Events</h1>
       </div>
       <div className="content">
-        <div className="my-events-sections-wrapper">
-          <div className="my-events-events-section">
-            <h2>Your upcoming events are:</h2>
-            <div className="my-events-event-card">
-              <div className="my-events-event-image-placeholder"></div>
-              <div className="my-events-event-details">
-                <h3>Title</h3>
-                <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
-                <div className="my-events-event-buttons">
-                  <button className="my-events-complete-button">Complete</button>
-                  <button className="my-events-delete-button">Delete</button>
-                </div>
-              </div>
-            </div>
-            <div className="my-events-event-card">
-              <div className="my-events-event-image-placeholder"></div>
-              <div className="my-events-event-details">
-                <h3>Title</h3>
-                <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
-                <div className="my-events-event-buttons">
-                  <button className="my-events-complete-button">Complete</button>
-                  <button className="my-events-delete-button">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="main-content">
+          <UpcomingEventCard events={events} /> {/* Add UpcomingEventCard here */}
           <div className="calendar-section">
             <h2>
               <FaCalendarAlt className="calendar-icon" /> Schedule:
-              <Link to="/home/schedule" className="schedule-link">View Full Schedule</Link> {/* Add hyperlink */}
+              <Link to="/home/myevent/schedule" className="schedule-link">View Full Schedule</Link>
             </h2>
             <div className="calendar-header">
               <button className="calendar-nav" onClick={handlePreviousMonth}>
@@ -167,15 +178,19 @@ function MyEvents() {
                 Next &gt;
               </button>
             </div>
-            <div className="calendar-days">
-              <span>Mon</span>
-              <span>Tue</span>
-              <span>Wed</span>
-              <span>Thu</span>
-              <span>Fri</span>
-              <span>Sat</span>
-              <span>Sun</span>
-            </div>
+            <table className="calendar-table">
+              <thead>
+                <tr>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th>Sat</th>
+                  <th>Sun</th>
+                </tr>
+              </thead>
+            </table>
             <div className="calendar" ref={calendarRef}>
               {calendarDays.map((day, index) => (
                 <div
@@ -192,7 +207,7 @@ function MyEvents() {
                   } ${day === null ? 'empty' : ''}`}
                   onClick={() => day && handleDateClick(day)}
                 >
-                  {day}
+                  {day || ''}
                 </div>
               ))}
             </div>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
+import { useNavigate, Link } from 'react-router-dom';
 import { FaBars, FaMoon, FaBell, FaUserCircle, FaCalendarAlt } from 'react-icons/fa';
-import Profile from './Profile'; // Import the Profile component
+import Profile from './Profile';
+import UpcomingEventCard from './UpcomingEventCard'; // Import the UpcomingEventCard component
 import './Home.css';
 
 function Home() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false); // Track if the profile is open
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarDays, setCalendarDays] = useState([]);
   const [monthYear, setMonthYear] = useState('');
@@ -15,8 +16,8 @@ function Home() {
   const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
-
   const calendarRef = useRef(null);
+
   const navigate = useNavigate();
 
   const toggleSidePanel = () => {
@@ -24,31 +25,25 @@ function Home() {
   };
 
   const toggleProfile = () => {
-    setIsProfileOpen(!isProfileOpen); // Toggle the profile overlay
+    setIsProfileOpen(!isProfileOpen);
   };
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
   };
 
-  const handleClickOutside = (event) => {
-    if (calendarRef.current && !calendarRef.current.contains(event.target)) {
-      setSelectedDate(null);
-    }
-  };
-
   const generateCalendar = React.useCallback(() => {
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+    const firstDayOfMonth = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     setMonthYear(`${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`);
 
     const daysArray = [];
     for (let i = 0; i < firstDayOfMonth; i++) {
-      daysArray.push(null);
+      daysArray.push(null); // Empty cells for alignment
     }
     for (let i = 1; i <= daysInMonth; i++) {
-      daysArray.push(i);
+      daysArray.push(i); // Actual days of the month
     }
     setCalendarDays(daysArray);
   }, [currentMonth, currentYear]);
@@ -73,10 +68,6 @@ function Home() {
 
   useEffect(() => {
     generateCalendar();
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
   }, [currentMonth, currentYear, generateCalendar]);
 
   useEffect(() => {
@@ -85,9 +76,52 @@ function Home() {
       setRealCurrentDay(now.getDate());
       setRealCurrentMonth(now.getMonth());
       setRealCurrentYear(now.getFullYear());
-    }, 60000);
+    }, 60000); // Update every minute
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    document.addEventListener('click', (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setSelectedDate(null); // Unselect the date if clicked outside
+      }
+    });
+    return () => {
+      document.removeEventListener('click', (event) => {
+        if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+          setSelectedDate(null); // Unselect the date if clicked outside
+        }
+      });
+    };
+  }, []);
+
+  // Sample event data for UpcomingEventCard
+  const events = [
+    {
+      title: 'Event 1',
+      description: 'Description for Event 1',
+      date: '2025-05-20',
+      time: '10:00 AM',
+      image: 'https://via.placeholder.com/300x150',
+      type: 'my-event', // This is a "My Event"
+    },
+    {
+      title: 'Event 2',
+      description: 'Description for Event 2',
+      date: '2025-05-22',
+      time: '2:00 PM',
+      image: 'https://via.placeholder.com/300x150',
+      type: 'participating-event', // This is a "Participating Event"
+    },
+    {
+      title: 'Event 3',
+      description: 'Description for Event 3',
+      date: '2025-05-25',
+      time: '6:00 PM',
+      image: 'https://via.placeholder.com/300x150',
+      type: 'my-event', // This is a "My Event"
+    },
+  ];
 
   return (
     <div className="home-container">
@@ -118,6 +152,7 @@ function Home() {
           <li onClick={() => navigate('/home')}>Home</li>
           <li onClick={() => navigate('/home/myevents')}>My Events</li>
           <li onClick={() => navigate('/home/events')}>Events</li>
+          <li onClick={() => navigate('/home/listevent')}>List Events</li>
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
@@ -125,36 +160,12 @@ function Home() {
         <h1 className="welcome-message">WELCOME to homepage</h1>
       </div>
       <div className="content">
-        <div className="sections-wrapper">
-          <div className="events-section">
-            <h2>Your upcoming events are:</h2>
-            <div className="event-card">
-              <div className="event-image-placeholder"></div>
-              <div className="event-details">
-                <h3>Title</h3>
-                <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
-                <div className="event-buttons">
-                  <button className="complete-button">Complete</button>
-                  <button className="delete-button">Delete</button>
-                </div>
-              </div>
-            </div>
-            <div className="event-card">
-              <div className="event-image-placeholder"></div>
-              <div className="event-details">
-                <h3>Title</h3>
-                <p>Body text for whatever you'd like to say. Add main takeaway points, quotes, anecdotes, or even a very very short story.</p>
-                <div className="event-buttons">
-                  <button className="complete-button">Complete</button>
-                  <button className="delete-button">Delete</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="main-content">
+          <UpcomingEventCard events={events} /> {/* Add UpcomingEventCard here */}
           <div className="calendar-section">
             <h2>
               <FaCalendarAlt className="calendar-icon" /> Schedule:
-              <Link to="/home/schedule" className="schedule-link">View Full Schedule</Link> {/* Add hyperlink */}
+              <Link to="/home/schedule" className="schedule-link">View Full Schedule</Link>
             </h2>
             <div className="calendar-header">
               <button className="calendar-nav" onClick={handlePreviousMonth}>
@@ -165,15 +176,19 @@ function Home() {
                 Next &gt;
               </button>
             </div>
-            <div className="calendar-days">
-              <span>Mon</span>
-              <span>Tue</span>
-              <span>Wed</span>
-              <span>Thu</span>
-              <span>Fri</span>
-              <span>Sat</span>
-              <span>Sun</span>
-            </div>
+            <table className="calendar-table">
+              <thead>
+                <tr>
+                  <th>Mon</th>
+                  <th>Tue</th>
+                  <th>Wed</th>
+                  <th>Thu</th>
+                  <th>Fri</th>
+                  <th>Sat</th>
+                  <th>Sun</th>
+                </tr>
+              </thead>
+            </table>
             <div className="calendar" ref={calendarRef}>
               {calendarDays.map((day, index) => (
                 <div
@@ -190,7 +205,7 @@ function Home() {
                   } ${day === null ? 'empty' : ''}`}
                   onClick={() => day && handleDateClick(day)}
                 >
-                  {day}
+                  {day || ''}
                 </div>
               ))}
             </div>

@@ -1,0 +1,15 @@
+.list-event-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.list-event-container h1 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.list-event-container p {
+  color: #555;
+  font-size: 1.2rem;
+}

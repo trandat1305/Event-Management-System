@@ -6,12 +6,13 @@ import MyEvents from './MyEvents';
 import Events from './Events';
 import CreateEvent from './CreateEvent';
 import MyAccount from './MyAccount';
-import Schedule from './Schedule';
+import Schedule from './Schedule'; // Import the new Schedule component
 import Notification from './Notification'; // Import the Notification page
 import SignUp from './SignUp';
 import Admin from './Admin';
 import User from './User'; // Import the User page
 import AdminEvents from './AdminEvents'; // Updated import
+import ListEvent from './ListEvent'; // Import the new component
 
 function App() {
   return (
@@ -21,11 +22,14 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/home/notification" element={<Notification />} /> {/* Home Notification route */}
         <Route path="/home/myevents" element={<MyEvents />} />
+        <Route path="/home/myevent/schedule" element={<Schedule />} /> {/* New Route */}
         <Route path="/home/myevents/notification" element={<Notification />} /> {/* MyEvents Notification route */}
         <Route path="/home/events" element={<Events />} />
+        <Route path="/home/events/schedule" element={<Schedule />} /> {/* New Route */}
         <Route path="/home/events/notification" element={<Notification />} /> {/* Events Notification route */}
         <Route path="/home/createevent" element={<CreateEvent />} />
         <Route path="/home/schedule" element={<Schedule />} />
+        <Route path="/home/listevent" element={<ListEvent />} /> {/* New Route */}
         <Route path="*" element={<Login />} />
         <Route path="/myaccount" element={<MyAccount />} /> {/* My Account route */}
         <Route path="/signup" element={<SignUp />} />

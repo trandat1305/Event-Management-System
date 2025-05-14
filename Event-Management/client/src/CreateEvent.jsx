@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './CreateEvent.css';
 import EventList from './EventList';
 import EventCreateForm from './EventCreateForm';
+import { FaBars } from 'react-icons/fa';
 
 function CreateEvent() {
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [events, setEvents] = useState([]);
   const [calendarDays, setCalendarDays] = useState([]);
@@ -15,6 +18,12 @@ function CreateEvent() {
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
   const [isCreating, setIsCreating] = useState(false); // Manage form visibility
   const calendarRef = useRef(null);
+
+  const navigate = useNavigate();
+
+  const toggleSidePanel = () => {
+    setIsSidePanelOpen(!isSidePanelOpen);
+  };
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -96,6 +105,23 @@ function CreateEvent() {
 
   return (
     <div className="create-event-container">
+      <header className="header">
+        <div className="header-left">
+          <button className="toggle-button" onClick={toggleSidePanel}>
+            <FaBars />
+          </button>
+        </div>
+      </header>
+      <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
+        <h2>Side Panel</h2>
+        <ul>
+          <li onClick={() => navigate('/home')}>Home</li>
+          <li onClick={() => navigate('/home/myevents')}>My Events</li>
+          <li onClick={() => navigate('/home/events')}>Events</li>
+          <li onClick={() => navigate('/home/listevent')}>List Events</li>
+        </ul>
+      </div>
+      {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
       <h1>Create Event</h1>
       <p>Select a date for your event:</p>
       <div className="calendar-section">

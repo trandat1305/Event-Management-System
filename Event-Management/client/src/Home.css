@@ -255,8 +255,9 @@
 }
 /* Calendar Section */
 .calendar-section {
-  width: 40%;
-  margin-left: auto; /* Push to the right within flex container */
+  flex: 1; /* Take up less space for the calendar */
+  max-width: 400px; /* Limit the width of the calendar */
+  margin-left: auto; /* Push the calendar to the right end */
 }
 
 .calendar-section h2 {
@@ -497,5 +498,22 @@
 .schedule-link:hover {
   text-decoration: underline;
   color: #535bf2;
+}
+
+.main-content {
+  display: flex;
+  justify-content: space-between; /* Push the calendar to the right */
+  align-items: flex-start; /* Align items at the top */
+}
+
+.upcoming-event-card-container {
+  flex: 2; /* Take up more space for the upcoming events */
+  margin-right: 20px; /* Add spacing between the upcoming events and the calendar */
+}
+
+.calendar-section {
+  flex: 1; /* Take up less space for the calendar */
+  max-width: 400px; /* Limit the width of the calendar */
+  margin-left: auto; /* Push the calendar to the right end */
 }
 

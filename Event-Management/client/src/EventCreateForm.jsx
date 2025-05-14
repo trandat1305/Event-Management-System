@@ -8,7 +8,6 @@ function EventCreateForm({ onClose, onCreate }) {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [isPublic, setIsPublic] = useState(true); // Default to public
-  const [participants, setParticipants] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,13 +64,6 @@ function EventCreateForm({ onClose, onCreate }) {
       return;
     }
 
-    // Validate number of participants
-    const participantsNumber = parseInt(participants, 10);
-    if (isNaN(participantsNumber) || participantsNumber < 0) {
-      alert('Number of participants must be 0 or a positive natural number.');
-      return;
-    }
-
     // Check if the event is in the past
     const eventDateTime = new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${startTime}`);
     const currentDateTime = new Date();
@@ -88,7 +80,6 @@ function EventCreateForm({ onClose, onCreate }) {
       startTime,
       endTime,
       isPublic,
-      participants: participantsNumber,
     };
 
     onCreate(newEvent); // Pass the new event to the parent component
@@ -154,16 +145,6 @@ function EventCreateForm({ onClose, onCreate }) {
               <option value="true">Public</option>
               <option value="false">Private</option>
             </select>
-          </div>
-          <div className="form-group">
-            <label>Number of Participants</label>
-            <input
-              type="number"
-              value={participants}
-              onChange={(e) => setParticipants(e.target.value)}
-              min="0"
-              required
-            />
           </div>
           <div className="form-actions">
             <button type="submit">Create</button>

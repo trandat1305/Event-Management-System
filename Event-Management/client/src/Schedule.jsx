@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaBars } from 'react-icons/fa';
 import './Schedule.css';
 
 function Schedule() {
+  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [calendarDays, setCalendarDays] = useState([]);
   const [monthYear, setMonthYear] = useState('');
@@ -12,22 +15,28 @@ function Schedule() {
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
   const calendarRef = useRef(null);
 
+  const navigate = useNavigate();
+
+  const toggleSidePanel = () => {
+    setIsSidePanelOpen(!isSidePanelOpen);
+  };
+
   const handleDateClick = (date) => {
     setSelectedDate(date);
   };
 
   const generateCalendar = React.useCallback(() => {
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+    const firstDayOfMonth = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     setMonthYear(`${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`);
 
     const daysArray = [];
     for (let i = 0; i < firstDayOfMonth; i++) {
-      daysArray.push(null);
+      daysArray.push(null); // Empty cells for alignment
     }
     for (let i = 1; i <= daysInMonth; i++) {
-      daysArray.push(i);
+      daysArray.push(i); // Actual days of the month
     }
     setCalendarDays(daysArray);
   }, [currentMonth, currentYear]);
@@ -64,8 +73,40 @@ function Schedule() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    document.addEventListener('click', (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setSelectedDate(null); // Unselect the date if clicked outside
+      }
+    });
+    return () => {
+      document.removeEventListener('click', (event) => {
+        if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+          setSelectedDate(null); // Unselect the date if clicked outside
+        }
+      });
+    };
+  }, []);
+
   return (
     <div className="schedule-container">
+      <header className="header">
+        <div className="header-left">
+          <button className="toggle-button" onClick={toggleSidePanel}>
+            <FaBars />
+          </button>
+        </div>
+      </header>
+      <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
+        <h2>Side Panel</h2>
+        <ul>
+          <li onClick={() => navigate('/home')}>Home</li>
+          <li onClick={() => navigate('/home/myevents')}>My Events</li>
+          <li onClick={() => navigate('/home/events')}>Events</li>
+          <li onClick={() => navigate('/home/listevent')}>List Events</li>
+        </ul>
+      </div>
+      {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
       <h1>Schedule</h1>
       <p>This is the Schedule page where you can view your scheduled events.</p>
       <div className="calendar-section">
@@ -79,15 +120,19 @@ function Schedule() {
             Next &gt;
           </button>
         </div>
-        <div className="calendar-days">
-          <span>Mon</span>
-          <span>Tue</span>
-          <span>Wed</span>
-          <span>Thu</span>
-          <span>Fri</span>
-          <span>Sat</span>
-          <span>Sun</span>
-        </div>
+        <table className="calendar-table">
+          <thead>
+            <tr>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+              <th>Sun</th>
+            </tr>
+          </thead>
+        </table>
         <div className="calendar" ref={calendarRef}>
           {calendarDays.map((day, index) => (
             <div
@@ -104,7 +149,7 @@ function Schedule() {
               } ${day === null ? 'empty' : ''}`}
               onClick={() => day && handleDateClick(day)}
             >
-              {day}
+              {day || ''}
             </div>
           ))}
         </div>

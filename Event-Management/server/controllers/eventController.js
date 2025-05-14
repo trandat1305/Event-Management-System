@@ -2,18 +2,40 @@ const Event = require('../models/Event');
 const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
 
-// Create Event
 exports.createEvent = async (req, res) => {
     try {
       const { title, description, isPublic, location, startTime, endTime } = req.body;
-      const organizer = req.user._id;
-  
-      const event = new Event({ title, description, isPublic, startTime, endTime, creator: organizer, imageUrl: req.file?.path, location });
+      const creator = req.user._id;
+
+      // Validate required fields
+      if (!title || !startTime || !endTime || !location) {
+        return res.status(400).json({ error: 'Title, startTime, endTime, and location are required' });
+      }
+
+      // Handle optional fields with default values
+      const isPublicValue = isPublic !== undefined ? isPublic : false; // Default to false
+      const descriptionValue = description || ''; // Default to an empty string
+      const imageUrl = req.file?.path || null; // Default to null if no file is uploaded
+
+      // Initialize event data
+      const eventData = {
+        title,
+        description: descriptionValue,
+        isPublic: isPublicValue,
+        startTime,
+        endTime,
+        creator: creator,
+        imageUrl,
+        location
+      };
+
+      // Create and save the event
+      const event = new Event(eventData);
       await event.save();
 
       res.status(201).json(event);
     } catch (err) {
-      res.status(500).json(err);
+      res.status(500).json({ error: 'Failed to create event', errorMessage: err.message });
     }
 };
 
@@ -22,12 +44,18 @@ exports.getEventById = async (req, res) => {
       const eventId = req.params.id;
       const event = await Event.findById(eventId).populate('creator', 'username');
       if (!event) return res.status(404).json({ error: 'Event not found' });
+
+      // Check if the user is the creator of the event
+      const isCreator = event.creator._id.toString() === req.user._id.toString();
+      if (isCreator) {
+        event.myEvent = true; // Add the `myEvent` key
+      }
+
       res.status(200).json(event);
     } catch (err) {
       res.status(500).json({ error: 'Failed to fetch event', errorMessage: err.message });
 }};
   
-  // Update Event
 exports.updateEvent = async (req, res) => {
     try {
       const event = await Event.findById(req.params.id);
@@ -35,7 +63,6 @@ exports.updateEvent = async (req, res) => {
   
       const oldEvent = event.toObject();
 
-      // Destructure fields from req.body
       const { title, startTime, endTime, isPublic, location, description, status } = req.body;
 
       // Update fields dynamically
@@ -59,7 +86,7 @@ exports.updateEvent = async (req, res) => {
         // Remove all participants from the Eventparticipants collection
       }
   
-      
+      // Create a notification for the event update
   
       // Save the updated event
       await event.save();
@@ -91,58 +118,29 @@ exports.deleteEvent = async (req, res) => {
     }
 };
   
-  //Calendar for event
-exports.getCalendarEvents = async (req, res) => {
+exports.getAllPublicEvents = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { month, year } = req.query; // Ex:., month=5, year=2025
+    const userId = req.user._id; // Get the authenticated user's ID
 
-    // 1. Get hosted events
-    const hostedEvents = await Event.find({
-      organizer: userId,
-      startTime: { 
-        $gte: new Date(year, month - 1, 1), 
-        $lt: new Date(year, month, 1) 
-      }
+    const events = await Event.find().populate('creator', 'username _id');
+
+    if (!events || events.length === 0) {
+      return res.status(404).json({ error: 'No events found' });
+    }
+
+    // Add the `myEvent` key to each event
+    const updatedEvents = events.map(event => {
+      const isMyEvent = event.creator._id.toString() === userId?.toString();
+      return {
+        ...event.toObject(), // Convert Mongoose document to plain object
+        myEvent: isMyEvent // Add the `myEvent` key
+      };
     });
 
-    // 2. Get accepted invitations
-    const acceptedInvites = await Invitation.find({
-      user: userId,
-      rsvpStatus: 'accepted'
-    }).populate('event');
-
-    // 3. Process dates
-    const dateMap = new Map();
-    
-    hostedEvents.forEach(event => {
-      const date = event.startTime.toISOString().split('T')[0];
-      dateMap.set(date, [...(dateMap.get(date) || []), 'hosting']);
-    });
-
-    acceptedInvites.forEach(invite => {
-      const date = invite.event.startTime.toISOString().split('T')[0];
-      dateMap.set(date, [...(dateMap.get(date) || []), 'attending']);
-    });
-
-    // 4. Format response
-    const events = Array.from(dateMap.entries()).map(([date, types]) => ({
-      date,
-      types: [...new Set(types)] // Deduplicate
-    }));
-
-    res.json({ events });
+    res.status(200).json(updatedEvents);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch calendar data' });
+    res.status(500).json({ error: err.message });
   }
 };
 
-exports.getAllPublicEvents = async (req, res) => {
-    try {
-      const events = await Event.find().populate('creator', 'username');
-      res.status(200).json(events);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-};
 

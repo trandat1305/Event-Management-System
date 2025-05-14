@@ -16,15 +16,6 @@ const eventOrganizerSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
-    /**
-    status: { 
-      type: String, 
-      enum: ['pending', 'accepted', 'rejected'], 
-      default: 'pending' 
-    },
-    invitedAt: { type: Date, default: Date.now },
-    acceptedAt: { type: Date },
-    }, */
     }, { timestamps: true }
 );
 

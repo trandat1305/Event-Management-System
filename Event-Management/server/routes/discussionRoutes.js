@@ -5,7 +5,7 @@ const discussionController = require('../controllers/discussionController');
 const authenticateUser = require('../middlewares/authentication');
 const upload = require('../middlewares/uploadImages');
 
-discussionRouter.use(authenticateUser); // Protect all routes below this line
+discussionRouter.use(authenticateUser);
 
 discussionRouter.post('/:eventId/create/', upload.single('image'), discussionController.postMessage); // create a new message
 
@@ -18,6 +18,5 @@ discussionRouter.put('/:eventId/edit/:messageId', upload.single("image"), discus
 discussionRouter.get('/:eventId/getAll/', discussionController.getAllMessages); // get all messages for an event
 
 discussionRouter.get('/:eventId/getAllwithReplies/', discussionController.getAllMessagesWithReplies); // get all messages for an event with replies
-
 
 module.exports = discussionRouter;

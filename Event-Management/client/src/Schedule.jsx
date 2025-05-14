@@ -74,17 +74,16 @@ function Schedule() {
   }, []);
 
   useEffect(() => {
-    document.addEventListener('click', (event) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+    const calendarNode = calendarRef.current;
+    const handleClickOutside = (event) => {
+      if (calendarNode && !calendarNode.contains(event.target)) {
         setSelectedDate(null); // Unselect the date if clicked outside
       }
-    });
+    };
+
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('click', (event) => {
-        if (calendarRef.current && !calendarRef.current.contains(event.target)) {
-          setSelectedDate(null); // Unselect the date if clicked outside
-        }
-      });
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 

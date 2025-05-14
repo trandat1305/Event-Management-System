@@ -1,18 +1,8 @@
-
 const Event = require('../models/Event');
 const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
-// const notificationQueue = require('../Queues/NotifQueue');
 
-// Helper function 
-const getAcceptedAttendees = async (eventId) => {
-    const invitations = await Invitation.find({ 
-      event: eventId, 
-      rsvpStatus: 'accepted' 
-    });
-    return invitations.map(inv => inv.user);
-  };
-  // Create Event
+// Create Event
 exports.createEvent = async (req, res) => {
     try {
       const { title, description, isPublic, location, startTime, endTime } = req.body;
@@ -21,27 +11,21 @@ exports.createEvent = async (req, res) => {
       const event = new Event({ title, description, isPublic, startTime, endTime, creator: organizer, imageUrl: req.file?.path, location });
       await event.save();
 
-      /**
-  
-      // Schedule 24-hour reminder
-      const delay = event.startTime - 24 * 60 * 60 * 1000;
-      const attendees = await getAcceptedAttendees(event._id);
-
-      */
-      
-      /**
-      notificationQueue.add({
-        eventId: event._id,
-        userIds: attendees,
-        message: 'Event starts in 24 hours!',
-      }, { delay });
-      */
-  
       res.status(201).json(event);
     } catch (err) {
       res.status(500).json(err);
     }
 };
+
+exports.getEventById = async (req, res) => {
+    try {
+      const eventId = req.params.id;
+      const event = await Event.findById(eventId).populate('creator', 'username');
+      if (!event) return res.status(404).json({ error: 'Event not found' });
+      res.status(200).json(event);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch event', errorMessage: err.message });
+}};
   
   // Update Event
 exports.updateEvent = async (req, res) => {
@@ -50,44 +34,40 @@ exports.updateEvent = async (req, res) => {
       if (!event) return res.status(404).json({ error: 'Event not found' });
   
       const oldEvent = event.toObject();
-      const updates = req.body;
-  
-      // Update fields
-      event.title = updates.title || event.title;
-      event.startTime = updates.startTime || event.startTime;
-      event.endTime = updates.endTime || event.endTime;
-      event.isPublic = updates.isPublic ?? event.isPublic;
-      event.location = updates.location || event.location;
-      event.imageUrl = req.file?.path || event.imageUrl;
-      event.description = updates.description || event.description;
-      if (updates.status === 'cancelled') event.status = 'cancelled';
-  
-      await event.save();
-      
-      /*
-      // Check for critical changes
-      const isCancelled = event.status === 'cancelled';
-      const fieldsChanged = ['title', 'startTime', 'endTime'].some(
-        (field) => event[field]?.getTime() !== oldEvent[field]?.getTime()
-      );
-  
-      if (isCancelled || fieldsChanged) {
-        const attendees = await getAcceptedAttendees(event._id);
-        const message = isCancelled 
-          ? 'Event has been cancelled.' 
-          : 'Event details have changed.';
-  
-        notificationQueue.add({ 
-          eventId: event._id, 
-          userIds: attendees, 
-          message 
-        });
+
+      // Destructure fields from req.body
+      const { title, startTime, endTime, isPublic, location, description, status } = req.body;
+
+      // Update fields dynamically
+      const fieldsToUpdate = { title, startTime, endTime, isPublic, location, description };
+      for (const [key, value] of Object.entries(fieldsToUpdate)) {
+        if (value !== undefined) {
+          event[key] = value;
+        }
       }
-      */
+
+      // Handle file upload for imageUrl
+      if (req.file?.path) {
+        event.imageURL = req.file.path;
+      }
+
+      // Handle status updates (e.g., cancellation)
+      if (status === 'cancelled') {
+        event.status = 'cancelled';
+
+        // Notify attendees about cancellation
+        // Remove all participants from the Eventparticipants collection
+      }
+  
+      
+  
+      // Save the updated event
+      await event.save();
   
       res.json(event);
     } catch (err) {
-      res.status(500).json({ error: 'Failed to update event' });
+      console.error('Error updating event:', err.message);
+      res.status(500).json({ error: 'Failed to update event', errorMessage: err.message });
     }
 };
 
@@ -95,15 +75,19 @@ exports.deleteEvent = async (req, res) => {
     try {
       const eventId = req.params.id;
 
-      const event = await Event.findByIdAndDelete(eventId);
+      const event = await Event.findById(eventId);
       if (!event) return res.status(404).json({ error: 'Event not found' });
+      
+      event.softDelete();
   
       // Notify attendees about cancellation
+
+      // Delete all attendees from the Eventparticipants collection
       
   
       res.json({ message: 'Event deleted successfully' });
     } catch (err) {
-      res.status(500).json({ error: 'Failed to delete event' });
+      res.status(500).json({ error: 'Failed to delete event', errorMessage: err.message });
     }
 };
   

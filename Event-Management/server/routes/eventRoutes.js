@@ -1,5 +1,5 @@
 const express = require('express');
-const eventRouter = express.Router();
+const eventRouter = express.eventRouter();
 const eventController = require('../controllers/eventController');
 
 const upload = require('../middlewares/uploadImages'); // Import Multer
@@ -9,15 +9,15 @@ eventRouter.get('/getAllPublicEvents', eventController.getAllPublicEvents); // g
 
 eventRouter.use(authMiddleware); // Protect all routes below this line
 
-eventRouter.post('/createEvent', upload.single('image'), eventController.createEvent);
+eventRouter.get('/get/:id', eventController.getEventById); // get an event by ID
 
-eventRouter.put('/updateEvent/:id', upload.single('image'), eventController.updateEventImage); // update an event
+eventRouter.post('/create', upload.single('image'), eventController.createEvent); // create a new event
 
-eventRouter.delete('/deleteEvent/:id', eventController.deleteEvent); 
+eventRouter.put('/update/:id', upload.single('image'), eventController.updateEventImage); // update an event
+
+eventRouter.delete('/delete/:id', eventController.deleteEvent); // delete an event
 
 /**
-eventRouter.get('/getEvent/:id', eventController.getEventById); // get an event by ID
-
 eventRouter.get('/getAllEvents', eventController.getAllEvents); // get all events that a person is attending
 
 eventRouter.get('/getAllEvents', eventController.getAllPublicEvents); // get all public events regardless of attendance
@@ -32,4 +32,3 @@ eventRouter.get('/getMyevents', eventController.getMyEvents); // get all events 
 
 */
 module.exports = eventRouter;
-

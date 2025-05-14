@@ -52,6 +52,16 @@ const eventSchema = new mongoose.Schema({
   timestamps:true
 });
 
+eventSchema.pre(/^find/, function(next) {
+  this.where({ isDeleted: { $ne: true } });
+  next();
+});
+
+eventSchema.methods.softDelete = async function() {
+  this.isDeleted = true;
+  return await this.save();
+}
+
 // Schema-level validator for startTime and endTime
 eventSchema.path('endTime').validate(function(value) {
   // `this` refers to the document

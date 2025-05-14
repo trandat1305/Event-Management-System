@@ -65,12 +65,6 @@ messageSchema.set('toJSON', {
   }
 });
 
-// Middleware to exclude soft-deleted messages
-messageSchema.pre(/^find/, function(next) {
-  this.where({ isDeleted: { $ne: true } }); // Excludes soft-deleted messages
-  next();
-});
-
 // Soft delete method
 messageSchema.methods.softDelete = async function() {
   this.isDeleted = true;

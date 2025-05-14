@@ -157,7 +157,7 @@ exports.editMessage = async (req, res) => {
 exports.getAllMessages = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const messages = await Discussion.find({ event: eventId })
+    const messages = await Discussion.find({ event: eventId, replyToMessageId: null })
       .populate('userId', 'username') // Corrected field name
       .sort({ timestamp: 1 });
 
@@ -174,6 +174,7 @@ const getMessageWithReplies = async (messageId) => {
 
   if (!message) return null;
 
+  /*
   if (message.isDeleted) {
     return {
       _id: message._id,
@@ -184,6 +185,7 @@ const getMessageWithReplies = async (messageId) => {
       replies: []
     };
   }
+  */
 
   // Fetch replies for the current message and sort by timestamp
   const replies = await Discussion.find({ replyToMessageId: message._id })

@@ -81,14 +81,15 @@ function Home() {
   }, []);
 
   useEffect(() => {
+    const calendarNode = calendarRef.current;
     document.addEventListener('click', (event) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+      if (calendarNode && !calendarNode.contains(event.target)) {
         setSelectedDate(null); // Unselect the date if clicked outside
       }
     });
     return () => {
       document.removeEventListener('click', (event) => {
-        if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        if (calendarNode && !calendarNode.contains(event.target)) {
           setSelectedDate(null); // Unselect the date if clicked outside
         }
       });

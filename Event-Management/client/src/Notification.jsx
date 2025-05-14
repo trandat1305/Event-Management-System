@@ -1,14 +1,55 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBars, FaMoon, FaBell, FaUserCircle } from 'react-icons/fa';
-import './Notification.css';
+import NotificationCard from './NotificationCard'; // Import the NotificationCard component
+import './Notification.css'; // Optional: Add styles for the Notification page
 
 function Notification() {
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const toggleSidePanel = () => {
     setIsSidePanelOpen(!isSidePanelOpen);
+  };
+
+  const notifications = [
+    {
+      id: 1,
+      type: 'invitation',
+      inviterName: 'Phong',
+      eventTitle: 'Online Game',
+    },
+    {
+      id: 2,
+      type: 'discussion',
+      userName: 'Hung',
+      eventTitle: 'Gym',
+    },
+    {
+      id: 3,
+      type: 'event-update',
+      userName: 'Dat',
+      eventTitle: 'Deadline',
+    },
+    {
+      id: 4,
+      type: 'invitation',
+      inviterName: 'Linh',
+      eventTitle: 'Team Meeting',
+    },
+    {
+      id: 5,
+      type: 'event-update',
+      userName: 'Trang',
+      eventTitle: 'Project Launch',
+    },
+  ];
+
+  const handleAccept = (id) => {
+    console.log(`Accepted invitation with ID: ${id}`);
+  };
+
+  const handleDecline = (id) => {
+    console.log(`Declined invitation with ID: ${id}`);
   };
 
   return (
@@ -16,7 +57,7 @@ function Notification() {
       <header className="header">
         <div className="header-left">
           <button className="toggle-button" onClick={toggleSidePanel}>
-            <FaBars />
+            <span>☰</span>
           </button>
         </div>
       </header>
@@ -30,14 +71,12 @@ function Notification() {
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
-      <div className="notification-content">
-        <h1>Notifications</h1>
-        <p>This is the Notifications page where you can view all your notifications.</p>
-        <ul>
-          <li>Notification 1: Event reminder</li>
-          <li>Notification 2: New event added</li>
-          <li>Notification 3: Event updated</li>
-        </ul>
+      <div className="notification-page">
+        <NotificationCard
+          notifications={notifications}
+          onAccept={handleAccept}
+          onDecline={handleDecline}
+        />
       </div>
     </div>
   );

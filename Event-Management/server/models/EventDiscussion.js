@@ -77,20 +77,4 @@ messageSchema.methods.softDelete = async function() {
   return await this.save();
 };
 
-messageSchema.pre('findOneAndUpdate', function(next) {
-  const update = this.getUpdate();
-  if (update.content) {
-    update.isEdited = true;
-    this.setUpdate(update);
-  }
-  next();
-});
-
-messageSchema.methods.editContent = async function(newContent) {
-  this.content = newContent;
-  this.isEdited = true;
-  return await this.save();
-};
-
-
 module.exports = mongoose.model('Message', messageSchema);

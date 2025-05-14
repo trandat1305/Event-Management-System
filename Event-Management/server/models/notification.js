@@ -3,12 +3,12 @@ const User = require('./User');
 const Event = require('./Event');
 
 const notificationSchema = new mongoose.Schema({
-  user: { 
+  userId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
     required: true 
   },
-  event: { 
+  eventId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Event',
   },
@@ -16,9 +16,10 @@ const notificationSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
-  isRead: { 
-    type: Boolean, 
-    default: false 
+  type: { 
+    type: String, 
+    enum: ['invitation', 'discussion', 'event'], 
+    default: 'null' 
   },
   isDeleted: { 
     type: Boolean, 
@@ -40,15 +41,5 @@ notificationSchema.methods.softDelete = async function() {
   this.isDeleted = true;
   return await this.save();
 };
-
-// Static method to create a new notification
-notificationSchema.statics.createNotification = async function({ userId, eventId = null, message }) {
-  return await this.create({
-    user: userId,
-    event: eventId,
-    message: message,
-  });
-};
-
 
 module.exports = mongoose.model('Notification', notificationSchema);

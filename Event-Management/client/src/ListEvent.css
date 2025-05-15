@@ -1,15 +1,22 @@
-.list-event-container {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+/* Add these styles to ListEvent.css */
+.list-event-welcome-section {
+  width: 100%;
+  height: 200px; /* Adjust this height as needed */
+  background-size: cover; /* Ensures the image covers the section */
+  background-position: center; /* Centers the image */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertically centers the text */
+  align-items: center; /* Horizontally centers the text */
+  color: white; /* Makes text visible against the background */
 }
 
-.list-event-container h1 {
-  color: #333;
-  font-size: 2rem;
-  margin-bottom: 10px;
+.list-event-welcome-message {
+  font-size: 2.5rem; /* Large heading size */
+  font-weight: bold;
+  margin-bottom: 10px; /* Space between heading and description */
 }
 
-.list-event-container p {
-  color: #555;
-  font-size: 1.2rem;
+.list-event-welcome-description {
+  font-size: 1.2rem; /* Slightly smaller text for the description */
 }

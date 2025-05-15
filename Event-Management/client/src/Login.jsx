@@ -34,7 +34,7 @@ function Login() {
       </form>
       <p>
         Don't have an account?{' '}
-        <button onClick={() => navigate('/signup')}>Sign Up</button>
+        <button className="signup-button" onClick={() => navigate('/signup')}>Sign Up</button>
       </p>
     </div>
   );

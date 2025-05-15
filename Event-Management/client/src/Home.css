@@ -27,6 +27,7 @@
   cursor: pointer;
   font-size: 1.5rem;
 }
+
 .toggle-button:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -47,27 +48,31 @@
 .profile-button:hover {
   background-color: #535bf2;
 }
+
 .side-panel {
   width: 250px;
   background-color: #ffffff;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
-  left: -250px;
+  left: -250px; /* Hide the panel off-screen initially */
   height: 100%;
   overflow-y: auto;
   transition: left 0.3s ease;
   padding: 20px;
   z-index: 1000;
+  visibility: hidden; /* Ensure it's not visible initially */
 }
 
 .side-panel.open {
   left: 0;
+  visibility: visible; /* Show the panel when open */
 }
 
 .side-panel h2 {
   margin-top: 0;
 }
+
 .side-panel ul {
   padding: 0;
 }
@@ -110,6 +115,14 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
   z-index: 500; /* Below the side panel but above the content */
+  visibility: hidden; /* Hide overlay initially */
+  opacity: 0; /* Ensure it's not visible */
+  transition: visibility 0.3s, opacity 0.3s ease; /* Smooth transition */
+}
+
+.overlay.visible {
+  visibility: visible; /* Show overlay when side panel is open */
+  opacity: 1;
 }
 
 /* Dim the content when the side panel is open */
@@ -122,6 +135,7 @@
   flex-direction: column;
   align-items: flex-start;
 }
+
 .home-container .side-panel.open ~ .content {
   filter: brightness(0.5); /* Reduce brightness */
 }
@@ -150,21 +164,25 @@
   width: 100%;
   margin-top: 20px;
 }
+
 .create-button {
   padding: 5px 15px;
   background-color: #646cff;
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   border-radius: 5px;
   cursor: pointer;
 }
+
 .create-button:hover {
-   background-color: #535bf2;
+  background-color: #535bf2;
 }
+
 .events-section {
   width: 50%;
   margin-right: 20px;
 }
+
 .events-section h2 {
   font-size: 1.5rem;
   color: black;
@@ -237,6 +255,7 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
 .complete-button:hover {
   background-color: #0056b3;
 }
@@ -253,11 +272,16 @@
 .delete-button:hover {
   background-color: #b02a37;
 }
+
 /* Calendar Section */
 .calendar-section {
-  flex: 1; /* Take up less space for the calendar */
+  flex: 1; /* Allow flexibility */
   max-width: 400px; /* Limit the width of the calendar */
-  margin-left: auto; /* Push the calendar to the right end */
+  margin: 0 auto; /* Center horizontally */
+  position: absolute; /* Position it absolutely */
+  top: 60%; /* Move it vertically to the center */
+  right: 2%; /* Align it to the left */
+  transform: translateY(-50%); /* Adjust for vertical centering */
 }
 
 .calendar-section h2 {
@@ -276,6 +300,7 @@
   margin-right: 5px;
   font-size: 1.2rem;
 }
+
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -303,6 +328,7 @@
   cursor: pointer;
   font-size: 0.8rem; /* Scale down the font size */
 }
+
 .calendar-nav:hover {
   background-color: #535bf2;
 }
@@ -330,6 +356,7 @@
   height: 300px; /* Increased height to match image */
   margin: 0 auto; /* Center the calendar horizontally */
 }
+
 .calendar-date {
   display: flex;
   align-items: center;
@@ -357,6 +384,7 @@
   cursor: default; /* Prevent pointer cursor for empty boxes */
   pointer-events: none; /* Disable all interactions for empty boxes */
 }
+
 .calendar-date:hover {
   background-color: #e0e0ff; /* Change background color on hover */
   color: #646cff; /* Change text color on hover */
@@ -373,6 +401,7 @@
   background-color: #646cff; /* Change background color when selected */
   color: white; /* Change text color when selected */
 }
+
 .calendar-date.current-day {
   border: 2px solid red;
   border-radius: 50%;
@@ -404,45 +433,55 @@
   border: 2px solid blue;
   border-radius: 50%;
 }
+
 @media (max-width: 768px) {
   .sections-wrapper {
     flex-direction: column;
   }
-  .events-section, .calendar-section {
+
+  .events-section,
+  .calendar-section {
     width: 100%;
   }
+
   .calendar {
     width: 100%;
     height: auto;
   }
+
   .calendar-days {
     width: 100%;
   }
+
   .calendar-header {
     width: 100%;
   }
+
   .header-right {
     gap: 10px; /* Reduce gap between elements */
   }
-.icon-button {
-  position: relative;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1rem; /* Adjust font size to fit the container */
-  cursor: pointer;
-  padding: 5px; /* Add padding for better spacing */
-  display: flex; /* Ensure proper alignment */
-  align-items: center; /* Center icon vertically */
-  justify-content: center; /* Center icon horizontally */
-  max-width: 100%; /* Prevent overflow */
-  max-height: 100%; /* Prevent overflow */
-}
+
+  .icon-button {
+    position: relative;
+    background: none;
+    border: none;
+    color: rgb(255, 255, 255);
+    font-size: 1rem; /* Adjust font size to fit the container */
+    cursor: pointer;
+    padding: 5px; /* Add padding for better spacing */
+    display: flex; /* Ensure proper alignment */
+    align-items: center; /* Center icon vertically */
+    justify-content: center; /* Center icon horizontally */
+    max-width: 100%; /* Prevent overflow */
+    max-height: 100%; /* Prevent overflow */
+  }
+
   .create-button {
     padding: 3px 10px; /* Reduce padding */
     font-size: 0.8rem; /* Reduce font size */
   }
 }
+
 .header {
   position: absolute;
   top: 0;
@@ -467,14 +506,6 @@
   gap: 15px; /* Space between icons */
   margin-right: 20px; /* Space from the right edge */
   justify-content: center; /* Centers items horizontally */
-}
-.icon-button {
-  position: relative;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
 }
 
 .notification-dot {
@@ -504,6 +535,7 @@
   display: flex;
   justify-content: space-between; /* Push the calendar to the right */
   align-items: flex-start; /* Align items at the top */
+  width: 50%;
 }
 
 .upcoming-event-card-container {
@@ -516,4 +548,3 @@
   max-width: 400px; /* Limit the width of the calendar */
   margin-left: auto; /* Push the calendar to the right end */
 }
-

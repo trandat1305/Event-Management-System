@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import './Schedule.css';
 
@@ -13,9 +13,23 @@ function Schedule() {
   const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
+  const [filter, setFilter] = useState('all'); // Add filter state
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Set filter based on the URL path
+  useEffect(() => {
+    const path = location.pathname;
+    if (path === '/home/schedule') {
+      setFilter('all');
+    } else if (path === '/home/myevent/schedule') {
+      setFilter('myevent');
+    } else if (path === '/home/events/schedule') {
+      setFilter('events');
+    }
+  }, [location.pathname]);
 
   const toggleSidePanel = () => {
     setIsSidePanelOpen(!isSidePanelOpen);
@@ -87,6 +101,17 @@ function Schedule() {
     };
   }, []);
 
+  // Dummy logic to demonstrate filtering (replace with actual event data filtering)
+  const filteredEvents = () => {
+    if (filter === 'all') {
+      return 'Showing all events for the selected date.';
+    } else if (filter === 'myevent') {
+      return 'Showing only your events for the selected date.';
+    } else if (filter === 'events') {
+      return 'Showing other events for the selected date.';
+    }
+  };
+
   return (
     <div className="schedule-container">
       <header className="header">
@@ -100,14 +125,14 @@ function Schedule() {
         <h2>Side Panel</h2>
         <ul>
           <li onClick={() => navigate('/home')}>Home</li>
-          <li onClick={() => navigate('/home/myevents')}>My Events</li>
+          <li onClick={() => navigate('/home/myevent')}>My Events</li>
           <li onClick={() => navigate('/home/events')}>Events</li>
           <li onClick={() => navigate('/home/listevent')}>List Events</li>
         </ul>
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
       <h1>Schedule</h1>
-      <p>This is the Schedule page where you can view your scheduled events.</p>
+      <p>Filter: {filter.charAt(0).toUpperCase() + filter.slice(1)}</p> {/* Display the current filter */}
       <div className="calendar-section">
         <h2>{monthYear}</h2>
         <div className="calendar-header">
@@ -153,6 +178,12 @@ function Schedule() {
           ))}
         </div>
       </div>
+      {selectedDate && (
+        <div className="filtered-events">
+          <h3>Events for {selectedDate} {monthYear}</h3>
+          <p>{filteredEvents()}</p>
+        </div>
+      )}
     </div>
   );
 }

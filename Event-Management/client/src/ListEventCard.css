@@ -13,12 +13,12 @@
 }
 
 .list-event-cards-scrollable {
-  max-height: 400px; /* Limit the height of the scrollable area */
-  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 400px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding-right: 10px; /* Add padding for scrollbar space */
+  gap: 10px;
+  padding-right: 10px;
 }
 
 .list-event-cards-scrollable::-webkit-scrollbar {
@@ -34,55 +34,84 @@
   background-color: #aaa;
 }
 
-.list-event-card {
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.event-card {
   display: flex;
-  flex-direction: column;
-  padding: 15px; /* Add padding to ensure the button is visible */
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.event-image img {
+.blue-border {
+  border: 2px solid blue;
+}
+
+.red-border {
+  border: 2px solid red;
+}
+
+.event-image-placeholder {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.event-image-placeholder img {
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
 }
 
 .event-details {
-  padding: 15px;
+  flex: 1;
 }
 
 .event-title {
-  font-size: 1.2rem;
   color: #333;
-  margin-bottom: 10px;
+  margin: 0 0 5px;
+  font-size: 1.2rem;
 }
 
 .event-description {
+  margin: 0 0 10px;
   font-size: 0.9rem;
-  color: #666;
-  margin-bottom: 10px;
+  color: #555;
 }
 
-.event-date-time,
-.event-location {
+.event-date-time {
   font-size: 0.9rem;
   color: #999;
   margin-bottom: 10px;
 }
 
+.event-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 .join-button {
+  padding: 5px 10px;
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px;
   border-radius: 5px;
   cursor: pointer;
-  text-align: center;
-  margin-top: auto; /* Push the button to the bottom of the card */
 }
 
 .join-button:hover {
   background-color: #45a049;
+}
+
+.details-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.details-button:hover {
+  background-color: #0056b3;
 }

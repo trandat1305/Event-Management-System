@@ -82,17 +82,14 @@ function Home() {
 
   useEffect(() => {
     const calendarNode = calendarRef.current;
-    document.addEventListener('click', (event) => {
+    const handleClickOutside = (event) => {
       if (calendarNode && !calendarNode.contains(event.target)) {
         setSelectedDate(null); // Unselect the date if clicked outside
       }
-    });
+    };
+    document.addEventListener('click', handleClickOutside);
     return () => {
-      document.removeEventListener('click', (event) => {
-        if (calendarNode && !calendarNode.contains(event.target)) {
-          setSelectedDate(null); // Unselect the date if clicked outside
-        }
-      });
+      document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
@@ -133,7 +130,9 @@ function Home() {
           </button>
         </div>
         <div className="header-right">
-          <button className="icon-button"><FaMoon /></button>
+          <button className="icon-button">
+            <FaMoon />
+          </button>
           <button className="icon-button" onClick={() => navigate('/home/notification')}>
             <FaBell />
             <span className="notification-dot"></span>
@@ -156,7 +155,9 @@ function Home() {
           <li onClick={() => navigate('/home/listevent')}>List Events</li>
         </ul>
       </div>
-      {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
+      {isSidePanelOpen && (
+        <div className={`overlay ${isSidePanelOpen ? 'visible' : ''}`} onClick={toggleSidePanel}></div>
+      )}
       <div className="welcome-section">
         <h1 className="welcome-message">WELCOME to homepage</h1>
       </div>
@@ -166,7 +167,9 @@ function Home() {
           <div className="calendar-section">
             <h2>
               <FaCalendarAlt className="calendar-icon" /> Schedule:
-              <Link to="/home/schedule" className="schedule-link">View Full Schedule</Link>
+              <Link to="/home/schedule" className="schedule-link">
+                View Full Schedule
+              </Link>
             </h2>
             <div className="calendar-header">
               <button className="calendar-nav" onClick={handlePreviousMonth}>

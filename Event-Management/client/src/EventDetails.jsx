@@ -1,6 +1,8 @@
 import React from 'react';
 import './EventDetails.css';
 
+import DiscussionBoard from './DiscussionBoard'; // Import the DiscussionBoard component
+
 function EventDetails({ event, onClose, onJoin }) {
   return (
     <div className="event-details-modal">

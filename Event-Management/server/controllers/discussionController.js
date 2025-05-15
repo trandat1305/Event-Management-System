@@ -5,9 +5,9 @@ const Event = require('../models/Event');
 // Post message
 exports.postMessage = async (req, res) => {
   try {
-    const { eventId } = req.params;
+    const { eventId } = req.params; // Event ID from the route
     const userId = req.user._id; // Get user ID from the authenticated user
-    const { message } = req.body;
+    const { message } = req.body; // Message content from the request body
     const imageURL = req.file ? req.file.path : null;
 
     // Validate message length
@@ -15,6 +15,7 @@ exports.postMessage = async (req, res) => {
       return res.status(400).json({ error: 'Message exceeds 900 characters' });
     }
 
+    // Create a new message in the database
     const newMessage = await Discussion.create({
       eventId: eventId,
       userId: userId,
@@ -33,7 +34,7 @@ exports.replyToMessage = async (req, res) => {
     const { eventId, messageId } = req.params;
     const userId = req.user._id; // Get user ID from the authenticated user
 
-    const { message } = req.body;
+    const { message } = req.body; // Reply content from the request body
     const imageURL = req.file ? req.file.path : null;
 
     // Validate message length
@@ -46,7 +47,7 @@ exports.replyToMessage = async (req, res) => {
     if (!originalMessage) {
       return res.status(404).json({ error: 'Original message not found' });
     }
-
+    // Create a new reply linked to the original message
     const newReply = await Discussion.create({
       eventId: eventId,
       userId: userId,
@@ -159,7 +160,7 @@ exports.getAllMessages = async (req, res) => {
     const { eventId } = req.params;
     const messages = await Discussion.find({ event: eventId, replyToMessageId: null })
       .populate('userId', 'username') // Corrected field name
-      .sort({ timestamp: 1 });
+      .sort({ timestamp: 1 }); 
 
     res.status(200).json(messages);
   } catch (err) {

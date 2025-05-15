@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Event = require('./Event');
 const User = require('./User');
+const Participant = require('./Participants');
 
 const eventOrganizerSchema = new mongoose.Schema({
     eventId: { 

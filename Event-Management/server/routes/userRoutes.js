@@ -16,13 +16,7 @@ userRouter.put('/profile/', upload.single("avatar"), userController.updateProfil
 
 userRouter.get('/profile/', userController.getProfile);
 
-userRouter.get('/profile/:userId', userController.getUserProfileById);
-
-userRouter.get('/notifications', notificationController.getNotification); // get all notifications of a user
-
-userRouter.delete('/notifications/:notificationId', notificationController.deleteNotification) // delete a notification
-
-userRouter.delete('/notifications/all', notificationController.deleteAllNotifications) // delete all notifications
+userRouter.get('/notifications', notificationController.getNotifs); // get all notifications of a user
 
 userRouter.get('/events', userController.getUserEvents); // get all events that a person is attending
 

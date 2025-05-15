@@ -9,7 +9,7 @@ function ListEventCard({ events, onJoin, onSelectEvent }) {
         {events.map((event, index) => (
           <div
             key={index}
-            className={`event-card ${index % 2 === 0 ? 'blue-border' : 'red-border'}`}
+            className="event-card blue-border"
           >
             <div className="event-image-placeholder">
               <img src={event.imageURL} alt={event.title} style={{ width: '50px', height: '50px' }} />

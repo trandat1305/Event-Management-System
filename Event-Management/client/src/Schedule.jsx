@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import './Schedule.css';
-import EventList from './EventList'; // Import EventList component
+import EventList from './EventList';
 
 function Schedule() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
@@ -14,14 +14,13 @@ function Schedule() {
   const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
-  const [filter, setFilter] = useState('all'); // Add filter state
-  const [events, setEvents] = useState([]); // State to hold events
+  const [filter, setFilter] = useState('all');
+  const [events, setEvents] = useState([]);
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Sample events
   const allEvents = [
     { title: 'Meeting', description: 'Team meeting at office', time: '10:00 AM', date: '2025-05-01', isMyEvent: true },
     { title: 'Lunch', description: 'Lunch with client', time: '1:00 PM', date: '2025-05-01', isMyEvent: false },
@@ -30,7 +29,6 @@ function Schedule() {
     { title: 'Cooking Workshop', description: 'Learn to cook Italian dishes', time: '5:00 PM', date: '2025-05-04', isMyEvent: false },
   ];
 
-  // Set filter based on the URL path
   useEffect(() => {
     const path = location.pathname;
     if (path === '/home/schedule') {
@@ -46,23 +44,36 @@ function Schedule() {
     setIsSidePanelOpen(!isSidePanelOpen);
   };
 
-  const handleDateClick = (day) => {
-    setSelectedDate(day);
+  const filterEventsForDate = (day, filterValue) => {
     const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const filteredEvents = allEvents.filter((event) => event.date === formattedDate);
 
-    // Apply filter
-    if (filter === 'myevent') {
-      setEvents(filteredEvents.filter((event) => event.isMyEvent));
-    } else if (filter === 'events') {
-      setEvents(filteredEvents.filter((event) => !event.isMyEvent));
+    if (filterValue === 'myevent') {
+      return filteredEvents.filter((event) => event.isMyEvent);
+    } else if (filterValue === 'events') {
+      return filteredEvents.filter((event) => !event.isMyEvent);
     } else {
+      return filteredEvents;
+    }
+  };
+
+  const handleDateClick = (day) => {
+    setSelectedDate(day);
+    const filteredEvents = filterEventsForDate(day, filter);
+    setEvents(filteredEvents);
+  };
+
+  const handleFilterChange = (e) => {
+    const newFilter = e.target.value;
+    setFilter(newFilter);
+    if (selectedDate) {
+      const filteredEvents = filterEventsForDate(selectedDate, newFilter);
       setEvents(filteredEvents);
     }
   };
 
   const getEventIndicatorClass = (day) => {
-    if (!day) return ''; // Return empty if the day is null (e.g., padding days in the calendar)
+    if (!day) return '';
 
     const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const eventsForDay = allEvents.filter((event) => event.date === formattedDate);
@@ -71,22 +82,21 @@ function Schedule() {
       const hasMyEvent = eventsForDay.some((event) => event.isMyEvent);
       const hasOtherEvent = eventsForDay.some((event) => !event.isMyEvent);
 
-      // Apply filter logic
       if (filter === 'myevent') {
-        return hasMyEvent ? 'red-indicator' : ''; // Only "My Event" in red
+        return hasMyEvent ? 'red-indicator' : '';
       } else if (filter === 'events') {
-        return hasOtherEvent ? 'blue-indicator' : ''; // Only "Event" in blue
+        return hasOtherEvent ? 'blue-indicator' : '';
       } else if (filter === 'all') {
         if (hasMyEvent && hasOtherEvent) {
-          return 'purple-indicator'; // Both "My Event" and "Event"
+          return 'purple-indicator';
         } else if (hasMyEvent) {
-          return 'red-indicator'; // Only "My Event"
+          return 'red-indicator';
         } else if (hasOtherEvent) {
-          return 'blue-indicator'; // Only "Event"
+          return 'blue-indicator';
         }
       }
     }
-    return ''; // No events
+    return '';
   };
 
   const generateCalendar = React.useCallback(() => {
@@ -97,10 +107,10 @@ function Schedule() {
 
     const daysArray = [];
     for (let i = 0; i < firstDayOfMonth; i++) {
-      daysArray.push(null); // Empty cells for alignment
+      daysArray.push(null);
     }
     for (let i = 1; i <= daysInMonth; i++) {
-      daysArray.push(i); // Actual days of the month
+      daysArray.push(i);
     }
     setCalendarDays(daysArray);
   }, [currentMonth, currentYear]);
@@ -141,7 +151,7 @@ function Schedule() {
     const calendarNode = calendarRef.current;
     const handleClickOutside = (event) => {
       if (calendarNode && !calendarNode.contains(event.target)) {
-        setSelectedDate(null); // Unselect the date if clicked outside
+        setSelectedDate(null);
       }
     };
 
@@ -171,7 +181,21 @@ function Schedule() {
       </div>
       {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
       <h1>Schedule</h1>
-      <p>Filter: {filter.charAt(0).toUpperCase() + filter.slice(1)}</p> {/* Display the current filter */}
+      <div className="filter-container mb-6">
+        <label htmlFor="filter-select" className="mr-2 text-lg font-medium text-gray-700">
+          Filter:
+        </label>
+        <select
+          id="filter-select"
+          value={filter}
+          onChange={handleFilterChange}
+          className="border border-gray-300 rounded-md p-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="all">All Events</option>
+          <option value="myevent">My Events</option>
+          <option value="events">Events</option>
+        </select>
+      </div>
       <div className="calendar-section">
         <h2>{monthYear}</h2>
         <div className="calendar-header">

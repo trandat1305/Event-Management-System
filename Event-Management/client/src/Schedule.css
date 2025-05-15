@@ -1,6 +1,6 @@
 .schedule-container {
   padding: 20px;
-  background-color: #f9f9f9; /* Light background color */
+  background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +21,7 @@
 
 .calendar-section {
   width: 100%;
-  max-width: 400px; /* Limit the calendar section width */
+  max-width: 400px;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -52,7 +52,7 @@
 
 .calendar-days {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
+  grid-template-columns: repeat(7, 1fr);
   text-align: center;
   font-weight: bold;
   font-size: 0.9rem;
@@ -61,10 +61,10 @@
 
 .calendar {
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 columns for the calendar dates */
+  grid-template-columns: repeat(7, 1fr);
   gap: 2px;
-  width: 100%; /* Make the calendar fit within the container */
-  aspect-ratio: 1 / 1; /* Force a square ratio */
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
 .calendar-date {
@@ -73,7 +73,7 @@
   justify-content: center;
   width: 100%;
   height: 60px;
-  background-color: #f0f0f0; /* Default background */
+  background-color: #f0f0f0;
   border: 1px solid #ccc;
   border-radius: 5px;
   cursor: pointer;
@@ -82,17 +82,17 @@
 }
 
 .red-indicator {
-  background-color: red !important; /* Only "My Event" */
+  background-color: red !important;
   color: white;
 }
 
 .blue-indicator {
-  background-color: blue !important; /* Only "Event" */
+  background-color: blue !important;
   color: white;
 }
 
 .purple-indicator {
-  background-color: purple !important; /* Both "My Event" and "Event" */
+  background-color: purple !important;
   color: white;
 }
 
@@ -106,4 +106,10 @@
 
 .current-day {
   border: 2px solid green;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

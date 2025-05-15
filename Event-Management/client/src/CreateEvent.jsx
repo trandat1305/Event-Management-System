@@ -25,14 +25,20 @@ function CreateEvent() {
     setIsSidePanelOpen(!isSidePanelOpen);
   };
 
-  const handleDateClick = (date) => {
-    setSelectedDate(date);
-    // Fetch events for the selected date (mock data for now)
-    const mockEvents = [
-      { title: 'Meeting', description: 'Team meeting at office', time: '10:00 AM' },
-      { title: 'Lunch', description: 'Lunch with client', time: '1:00 PM' },
-    ];
-    setEvents(mockEvents);
+  // Sample events with different dates
+  const allEvents = [
+    { title: 'Meeting', description: 'Team meeting at office', time: '10:00 AM', date: '2025-05-01', isMyEvent: true },
+    { title: 'Lunch', description: 'Lunch with client', time: '1:00 PM', date: '2025-05-01', isMyEvent: false },
+    { title: 'Yoga Session', description: 'Morning yoga session', time: '7:00 AM', date: '2025-05-02', isMyEvent: false },
+    { title: 'Tech Meetup', description: 'Discuss latest tech trends', time: '3:00 PM', date: '2025-05-03', isMyEvent: true },
+    { title: 'Cooking Workshop', description: 'Learn to cook Italian dishes', time: '5:00 PM', date: '2025-05-04', isMyEvent: false },
+  ];
+
+  const handleDateClick = (day) => {
+    setSelectedDate(day);
+    const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const filteredEvents = allEvents.filter((event) => event.date === formattedDate);
+    setEvents(filteredEvents);
   };
 
   const handleCreateEvent = (newEvent) => {
@@ -72,6 +78,27 @@ function CreateEvent() {
     } else {
       setCurrentMonth((prevMonth) => prevMonth + 1);
     }
+  };
+
+  const getEventIndicatorClass = (day) => {
+    if (!day) return ''; // Return empty if the day is null (e.g., padding days in the calendar)
+
+    const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const eventsForDay = allEvents.filter((event) => event.date === formattedDate);
+
+    if (eventsForDay.length > 0) {
+      const hasMyEvent = eventsForDay.some((event) => event.isMyEvent);
+      const hasOtherEvent = eventsForDay.some((event) => !event.isMyEvent);
+
+      if (hasMyEvent && hasOtherEvent) {
+        return 'purple-indicator'; // Both "My Event" and "Event"
+      } else if (hasMyEvent) {
+        return 'red-indicator'; // Only "My Event"
+      } else if (hasOtherEvent) {
+        return 'blue-indicator'; // Only "Event"
+      }
+    }
+    return ''; // No events
   };
 
   useEffect(() => {
@@ -152,7 +179,7 @@ function CreateEvent() {
           {calendarDays.map((day, index) => (
             <div
               key={index}
-              className={`calendar-date ${
+              className={`calendar-date ${getEventIndicatorClass(day)} ${
                 day && selectedDate === day ? 'selected' : ''
               } ${
                 day &&

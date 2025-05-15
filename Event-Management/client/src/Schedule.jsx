@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaBars } from 'react-icons/fa';
 import './Schedule.css';
+import EventList from './EventList'; // Import EventList component
 
 function Schedule() {
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
@@ -14,10 +15,20 @@ function Schedule() {
   const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
   const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
   const [filter, setFilter] = useState('all'); // Add filter state
+  const [events, setEvents] = useState([]); // State to hold events
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Sample events
+  const allEvents = [
+    { title: 'Meeting', description: 'Team meeting at office', time: '10:00 AM', date: '2025-05-01', isMyEvent: true },
+    { title: 'Lunch', description: 'Lunch with client', time: '1:00 PM', date: '2025-05-01', isMyEvent: false },
+    { title: 'Yoga Session', description: 'Morning yoga session', time: '7:00 AM', date: '2025-05-02', isMyEvent: false },
+    { title: 'Tech Meetup', description: 'Discuss latest tech trends', time: '3:00 PM', date: '2025-05-03', isMyEvent: true },
+    { title: 'Cooking Workshop', description: 'Learn to cook Italian dishes', time: '5:00 PM', date: '2025-05-04', isMyEvent: false },
+  ];
 
   // Set filter based on the URL path
   useEffect(() => {
@@ -35,8 +46,47 @@ function Schedule() {
     setIsSidePanelOpen(!isSidePanelOpen);
   };
 
-  const handleDateClick = (date) => {
-    setSelectedDate(date);
+  const handleDateClick = (day) => {
+    setSelectedDate(day);
+    const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const filteredEvents = allEvents.filter((event) => event.date === formattedDate);
+
+    // Apply filter
+    if (filter === 'myevent') {
+      setEvents(filteredEvents.filter((event) => event.isMyEvent));
+    } else if (filter === 'events') {
+      setEvents(filteredEvents.filter((event) => !event.isMyEvent));
+    } else {
+      setEvents(filteredEvents);
+    }
+  };
+
+  const getEventIndicatorClass = (day) => {
+    if (!day) return ''; // Return empty if the day is null (e.g., padding days in the calendar)
+
+    const formattedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const eventsForDay = allEvents.filter((event) => event.date === formattedDate);
+
+    if (eventsForDay.length > 0) {
+      const hasMyEvent = eventsForDay.some((event) => event.isMyEvent);
+      const hasOtherEvent = eventsForDay.some((event) => !event.isMyEvent);
+
+      // Apply filter logic
+      if (filter === 'myevent') {
+        return hasMyEvent ? 'red-indicator' : ''; // Only "My Event" in red
+      } else if (filter === 'events') {
+        return hasOtherEvent ? 'blue-indicator' : ''; // Only "Event" in blue
+      } else if (filter === 'all') {
+        if (hasMyEvent && hasOtherEvent) {
+          return 'purple-indicator'; // Both "My Event" and "Event"
+        } else if (hasMyEvent) {
+          return 'red-indicator'; // Only "My Event"
+        } else if (hasOtherEvent) {
+          return 'blue-indicator'; // Only "Event"
+        }
+      }
+    }
+    return ''; // No events
   };
 
   const generateCalendar = React.useCallback(() => {
@@ -101,17 +151,6 @@ function Schedule() {
     };
   }, []);
 
-  // Dummy logic to demonstrate filtering (replace with actual event data filtering)
-  const filteredEvents = () => {
-    if (filter === 'all') {
-      return 'Showing all events for the selected date.';
-    } else if (filter === 'myevent') {
-      return 'Showing only your events for the selected date.';
-    } else if (filter === 'events') {
-      return 'Showing other events for the selected date.';
-    }
-  };
-
   return (
     <div className="schedule-container">
       <header className="header">
@@ -161,7 +200,7 @@ function Schedule() {
           {calendarDays.map((day, index) => (
             <div
               key={index}
-              className={`calendar-date ${
+              className={`calendar-date ${getEventIndicatorClass(day)} ${
                 day && selectedDate === day ? 'selected' : ''
               } ${
                 day &&
@@ -179,10 +218,19 @@ function Schedule() {
         </div>
       </div>
       {selectedDate && (
-        <div className="filtered-events">
-          <h3>Events for {selectedDate} {monthYear}</h3>
-          <p>{filteredEvents()}</p>
-        </div>
+        <>
+          <div className="filtered-events">
+            <h3>Events for {selectedDate} {monthYear}</h3>
+            <p>{events.length > 0 ? events.map(event => event.title).join(', ') : 'No events for this day.'}</p>
+          </div>
+          <EventList
+            selectedDate={selectedDate}
+            events={events}
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            onCreateButtonClick={() => console.log('Create Event Clicked')}
+          />
+        </>
       )}
     </div>
   );

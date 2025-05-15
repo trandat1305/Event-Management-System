@@ -100,7 +100,31 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s ease;
+}
+
+.red-indicator {
+  color: red;
+}
+
+.blue-indicator {
+  color: blue;
+}
+
+.purple-indicator {
+  color: purple;
+}
+
+.calendar-date:hover {
+  background-color: #ddd;
+}
+
+.selected {
+  border: 2px solid #333;
+}
+
+.current-day {
+  border: 2px solid green;
 }
 
 .calendar-date.empty {

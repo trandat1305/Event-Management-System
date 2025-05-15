@@ -39,6 +39,8 @@ const invitationSchema = new mongoose.Schema({
 }, { timestamps: true 
 });
 
+invitationSchema.index({ eventId: 1, userId: 1 }, { unique: true });
+
 // Auto set timeResponded when RSVP status changes
 invitationSchema.pre('save', function(next) {
   if (this.isModified('rsvpStatus') && this.rsvpStatus !== 'pending' && !this.timeResponded) {
@@ -57,6 +59,18 @@ invitationSchema.methods.softDelete = async function() {
   return await this.save();
 };
 
+invitationSchema.methods.acceptInvitation = async function() {
+  this.rsvpStatus = 'accepted';
+  this.timeResponded = new Date();
+  return await this.save();
+}
+
+invitationSchema.methods.rejectInvitation = async function() {
+  this.rsvpStatus = 'declined';
+  this.timeResponded = new Date();
+  return await this.save();
+}
+
 invitationSchema.pre('findOneAndUpdate', function(next) {
   const update = this.getUpdate();
   if (update.rsvpStatus && update.rsvpStatus !== 'pending' && !update.timeResponded) {
@@ -67,7 +81,5 @@ invitationSchema.pre('findOneAndUpdate', function(next) {
   }
   next();
 });
-
-invitationSchema.index({ eventId: 1, userId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Invitation', invitationSchema);

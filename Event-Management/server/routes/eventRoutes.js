@@ -1,13 +1,12 @@
-const express = require('express');
-const eventRouter = express.eventRouter();
+const eventRouter = require('express').Router();
 const eventController = require('../controllers/eventController');
 const participantController = require('../controllers/participantController');
 const invitationController = require('../controllers/invitationController');
 
 const upload = require('../middlewares/uploadImages'); // Import Multer
-const authMiddleware = require('../middlewares/authentication'); // Import authentication middleware
+const authenticateUser = require('../middlewares/authentication'); // Import authentication middleware
 
-eventRouter.use(authMiddleware); // Protect all routes below this line
+eventRouter.use(authenticateUser); // Protect all routes below this line
 
 // Event data routes
 eventRouter.get('/:eventId', eventController.getEventById); // get an event by ID

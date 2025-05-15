@@ -1,9 +1,9 @@
 const invitationRouter = require('express').Router();
 const invitationController = require('../controllers/invitationController');
 
-const authMiddleware = require('../middlewares/authMiddleware');
+const authenticateUser = require('../middlewares/authentication');
 
-invitationRouter.use(authMiddleware);
+invitationRouter.use(authenticateUser);
 
 invitationRouter.post('/send/:eventId/:inviteeId', invitationController.sendInvitation); // send an invitation to a user
 

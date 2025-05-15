@@ -36,6 +36,7 @@ function App() {
         <Route path="/admin" element={<Admin />} /> {/* Admin route */}
         <Route path="/admin/users" element={<User />} /> {/* User route */}
         <Route path="/admin/events" element={<AdminEvents />} /> {/* Updated route */}
+        <Route path="/admin/notification" element={<Notification />} /> {/* Admin Notification route */}
       </Routes>
     </Router>
   );

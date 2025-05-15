@@ -12,8 +12,6 @@ adminRouter.get('/allUsers', userController.getAllUsers);
 
 adminRouter.get('/allUsersWithDeleted', userController.getAllUsersIncludingDeleted);
 
-adminRouter.get('/profile/:userId', userController.getUserProfileById);
-
 adminRouter.put('/updateUser/:userId', userController.updateUserById);
 
 adminRouter.delete('/deleteUser/:userId', userController.deleteUserById);

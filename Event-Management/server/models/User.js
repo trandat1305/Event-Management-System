@@ -73,6 +73,18 @@ userSchema.pre('findOneAndUpdate', async function(next) {
   next();
 });
 
+userSchema.pre('findByIdAndUpdate', async function(next) {
+  const update = this.getUpdate();
+
+  // Check if the password is being updated
+  if (update.password) {
+    const salt = await bcrypt.genSalt(10);
+    update.password = await bcrypt.hash(update.password, salt);
+  }
+
+  next();
+});
+
 userSchema.statics.insertManyWithHashing = async function(users) {
   const hashedUsers = await Promise.all(
     users.map(async (user) => {

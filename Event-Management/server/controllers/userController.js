@@ -9,7 +9,13 @@ require('dotenv').config();
 exports.registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    const user = await User.create({ username, email, password });
+
+    // Create a new user instance
+    const user = new User({ username, email, password });
+
+    // Save the user to the database
+    await user.save();
+
     res.status(201).json({ message: 'User registered', userId: user.id });
   } catch (err) {
     if (err.code === 11000) { // MongoDB duplicate key error
@@ -28,7 +34,7 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    res.json({ token });
+    res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -152,9 +158,9 @@ exports.updateProfile = async (req, res) => {
 exports.updateUserById = async (req, res) => {
   try {
     const userId = req.params.userId; // Get user ID from the request parameters
-    const { username, email, isAdmin } = req.body;
+    const { username, email, password } = req.body;
 
-    const user = await User.findByIdAndUpdate(userId, { username, email, isAdmin }, { new: true });
+    const user = await User.findByIdAndUpdate(userId, { username, email, password }, { new: true });
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.status(200).json({ message: 'User updated successfully', user });
   } catch (err) {

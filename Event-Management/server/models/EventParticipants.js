@@ -36,14 +36,27 @@ participationSchema.methods.isActive = function () {
     return !this.isDeleted;
 }; 
 
-// Get all active participants for an event
-participationSchema.statics.getActiveParticipants = async function (eventId) {
-    return this.find({ event: eventId, isDeleted: { $ne: true } }).populate('user');
+participationSchema.statics.getParticipants = async function (eventId) {
+  return this.find({ event: eventId, isDeleted: { $ne: true } })
+    .populate('user', 'username _id');
+};
+
+participationSchema.statics.getParticipantCount = async function (eventId) {
+    return this.countDocuments({ event: eventId, isDeleted: { $ne: true } });
 };
   
 // Check if a user is already participating in an event
 participationSchema.statics.isUserParticipating = async function (eventId, userId) {
     return await this.exists({ event: eventId, user: userId, isDeleted: { $ne: true } });
+};
+
+// Remove a participant from an event
+participationSchema.statics.removeParticipant = async function (eventId, userId) {
+    const participant = await this.findOne({ event: eventId, user: userId, isDeleted: { $ne: true } });
+    if (participant) {
+        return await participant.softDelete();
+    }
+    return null;
 };
     
 module.exports = mongoose.model('Participant', participationSchema);

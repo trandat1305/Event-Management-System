@@ -1,0 +1,242 @@
+.auth-container {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f05537 0%, #ff6b6b 100%);
+  padding: 0;
+  margin: 0;
+}
+
+.auth-card {
+  width: 62.5vw; /* 5/8 of viewport width */
+  max-width: 900px;
+  min-width: 320px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  padding: 2rem 3rem; /* reduced vertical padding */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: slideUp 0.5s ease;
+  position: relative;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+  color: #2e2e2e;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.auth-header p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group,
+.input-icon {
+  width: 100%;
+}
+
+.input-icon {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: #fff;
+}
+
+.input-icon svg {
+  color: #666;
+  font-size: 1.3rem;
+  margin-right: 0.75rem;
+  position: static;
+}
+
+.input-icon input {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1.1rem;
+  padding: 1.1rem 1.1rem;
+  border-radius: 12px;
+  border: 2px solid #e1e1e1;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.input-icon input:focus {
+  border-color: #f05537;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(240, 85, 55, 0.1);
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #f05537;
+}
+
+.forgot-password {
+  color: #f05537;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+  color: #d94426;
+}
+
+.auth-button {
+  width: 100%;
+  font-size: 1.1rem;
+  padding: 1rem 0;
+  background: linear-gradient(135deg, #f05537 0%, #ff6b6b 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 85, 55, 0.3);
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+}
+
+.auth-footer a {
+  color: #f05537;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-footer a:hover {
+  color: #d94426;
+}
+
+/* Dark Mode */
+.dark-mode .auth-card {
+  background: #1a1a1a;
+}
+
+.dark-mode .auth-header h1 {
+  color: white;
+}
+
+.dark-mode .auth-header p,
+.dark-mode .input-icon svg,
+.dark-mode .remember-me,
+.dark-mode .social-login p {
+  color: #ccc;
+}
+
+.dark-mode .input-icon input {
+  background: #2a2a2a;
+  border-color: #333;
+  color: white;
+}
+
+.dark-mode .input-icon input:focus {
+  border-color: #f05537;
+}
+
+.dark-mode .social-button {
+  background: #2a2a2a;
+  border-color: #333;
+  color: #ccc;
+}
+
+.dark-mode .social-button:hover {
+  background: #333;
+  border-color: #444;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
+  .auth-card {
+    width: 90vw;
+    padding: 1.5rem 0.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .auth-card {
+    width: 100vw;
+    border-radius: 0;
+    padding: 1rem 0.25rem;
+  }
+}
+
+/* Remove social-login and social-buttons styles */
+.social-login, .social-buttons, .social-button { display: none !important; }
+
+.back-btn {
+  position: absolute;
+  top: 1.2rem;
+  left: 1.2rem;
+  margin: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #f05537;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #d94426;
+  text-decoration: underline;
+} 

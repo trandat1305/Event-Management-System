@@ -1,41 +1,70 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import './App.css';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaEnvelope, FaLock, FaHome } from 'react-icons/fa';
+import './Login.css';
 
 function Login() {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
-  const handleLogin = () => {
-    navigate('/home'); // Navigate to the homepage
-  };
-
-  const handleAdminLogin = () => {
-    navigate('/admin'); // Navigate to the admin page
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle login logic here
+    console.log('Login attempt:', formData);
   };
 
   return (
-    <div className="login-container">
-      <h1>Login</h1>
-      <form>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input type="email" id="email" placeholder="Enter your email" />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input type="password" id="password" placeholder="Enter your password" />
-        </div>
-        <button type="button" onClick={handleLogin}>
-          Login
+    <div className="auth-container">
+      <div className="auth-card">
+        <button className="back-btn" type="button" onClick={() => navigate('/home')}>
+          <FaHome style={{ marginRight: '0.5rem' }} /> Home
         </button>
-        <button type="button" onClick={handleAdminLogin} className="admin-login-button">
-          Log in as Admin
-        </button>
-      </form>
-      <p>
-        Don't have an account?{' '}
-        <button className="signup-button" onClick={() => navigate('/signup')}>Sign Up</button>
-      </p>
+        <div className="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to continue to Eventer</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="form-group">
+            <div className="input-icon">
+              <FaEnvelope />
+              <input
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <div className="input-icon">
+              <FaLock />
+              <input
+                type="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-options">
+            <Link to="/forgot-password" className="forgot-password">Forgot Password?</Link>
+          </div>
+
+          <button type="submit" className="auth-button">Sign In</button>
+        </form>
+
+        <div className="auth-footer">
+          <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
+        </div>
+      </div>
     </div>
   );
 }

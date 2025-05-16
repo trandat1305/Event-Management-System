@@ -4,9 +4,10 @@ import './EditEventDetails.css';
 function EditEventDetails({ event, onClose, onSave }) {
   const [title, setTitle] = useState(event.title);
   const [description, setDescription] = useState(event.description);
-  const [startTime, setStartTime] = useState(event.startTime);
-  const [endTime, setEndTime] = useState(event.endTime);
+  const [startTime, setStartTime] = useState(event.startTime.slice(0, 16));
+  const [endTime, setEndTime] = useState(event.endTime.slice(0, 16));
   const [location, setLocation] = useState(event.location);
+  const [imageURL, setImageURL] = useState(event.imageURL || '');
   const [isPublic, setIsPublic] = useState(event.isPublic);
 
   const handleSubmit = (e) => {
@@ -17,8 +18,13 @@ function EditEventDetails({ event, onClose, onSave }) {
       return;
     }
 
-    if (startTime >= endTime) {
+    if (new Date(startTime) >= new Date(endTime)) {
       alert('End time must be after start time.');
+      return;
+    }
+
+    if (!imageURL.trim()) {
+      alert('Image URL is required.');
       return;
     }
 
@@ -26,9 +32,10 @@ function EditEventDetails({ event, onClose, onSave }) {
       ...event,
       title,
       description,
-      startTime,
-      endTime,
+      startTime: new Date(startTime).toISOString(),
+      endTime: new Date(endTime).toISOString(),
       location,
+      imageURL,
       isPublic,
     };
 
@@ -39,65 +46,97 @@ function EditEventDetails({ event, onClose, onSave }) {
   return (
     <div className="edit-event-details-overlay">
       <div className="edit-event-details">
+        <button className="close-button" onClick={onClose}>
+          Close
+        </button>
         <h2>Edit Event</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
+            <label>
+              <strong>Title</strong>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="form-input"
+                required
+              />
+            </label>
           </div>
           <div className="form-group">
-            <label>Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            ></textarea>
+            <label>
+              <strong>Description</strong>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="form-textarea"
+              />
+            </label>
           </div>
           <div className="form-group">
-            <label>Start Time</label>
-            <input
-              type="time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              required
-            />
+            <label>
+              <strong>Start Time</strong>
+              <input
+                type="datetime-local"
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
+                className="form-input"
+                required
+              />
+            </label>
           </div>
           <div className="form-group">
-            <label>End Time</label>
-            <input
-              type="time"
-              value={endTime}
-              onChange={(e) => setEndTime(e.target.value)}
-              required
-            />
+            <label>
+              <strong>End Time</strong>
+              <input
+                type="datetime-local"
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
+                className="form-input"
+                required
+              />
+            </label>
           </div>
           <div className="form-group">
-            <label>Location</label>
-            <input
-              type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              required
-            />
+            <label>
+              <strong>Location</strong>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="form-input"
+                required
+              />
+            </label>
           </div>
           <div className="form-group">
-            <label>Public or Private</label>
-            <select
-              value={isPublic}
-              onChange={(e) => setIsPublic(e.target.value === 'true')}
-              required
-            >
-              <option value="true">Public</option>
-              <option value="false">Private</option>
-            </select>
+            <label>
+              <strong>Image URL</strong>
+              <input
+                type="url"
+                value={imageURL}
+                onChange={(e) => setImageURL(e.target.value)}
+                className="form-input"
+                required
+              />
+            </label>
+          </div>
+          <div className="form-group">
+            <label className="checkbox-label">
+              <strong>Public</strong>
+              <input
+                type="checkbox"
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+                className="form-checkbox"
+              />
+            </label>
           </div>
           <div className="form-actions">
-            <button type="submit">Save</button>
-            <button type="button" onClick={onClose}>
+            <button type="submit" className="save-button">
+              Save
+            </button>
+            <button type="button" className="cancel-button" onClick={onClose}>
               Cancel
             </button>
           </div>

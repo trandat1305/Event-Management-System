@@ -1,9 +1,9 @@
 import React from 'react';
 import './EventDetails.css';
 
-import DiscussionBoard from './DiscussionBoard'; // Import the DiscussionBoard component
+import DiscussionBoard from './DiscussionBoard'; // Kept as in original, though unused
 
-function EventDetails({ event, onClose, onJoin }) {
+function EventDetails({ event, onClose, onJoin, isAdminView = false }) {
   return (
     <div className="event-details-modal">
       <div className="event-details-content">
@@ -34,9 +34,11 @@ function EventDetails({ event, onClose, onJoin }) {
           <button className="back-button" onClick={onClose}>
             Back
           </button>
-          <button className="join-button" onClick={() => onJoin(event.id)}>
-            Join
-          </button>
+          {!isAdminView && (
+            <button className="join-button" onClick={() => onJoin(event.id)}>
+              Join
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -129,13 +129,14 @@ exports.getUserProfileById = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user._id; // Get user ID from the authenticated user
-    const { username, email } = req.body;
+    const { username, email, password } = req.body;
     const avatarPath = req.file ? req.file.path : null; // Check if an avatar file is uploaded
 
     // Prepare the update object
     const updateData = {};
     if (username) updateData.username = username;
     if (email) updateData.email = email;
+    if (password) updateData.password = password;
     if (avatarPath) updateData.avatar = avatarPath;
 
     // Update the user

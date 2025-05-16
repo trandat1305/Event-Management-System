@@ -88,6 +88,10 @@ exports.deleteParticipant = async (req, res) => {
         }
         
         await participant.softDelete();
+
+        
+
+
         res.status(200).json({ message: 'Participant deleted successfully.' });
     } catch (err) {
         res.status(500).json({ error: 'Failed to delete participant', errorMessage: err.message });

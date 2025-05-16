@@ -1,11 +1,13 @@
 const Invitation = require('../models/Invitation');
 const User = require('../models/User');
 const Event = require('../models/Event');
-const eventOrganizer = require('../models/EventOrganizers');
+const notificationController = require('./notificationController');
+const { isOrganizer } = require('./EventOrganizerController');
 
 exports.sendInvitation = async (req, res) => {
     try {
-        const { eventId, userId } = req.body;
+        const { eventId, username, email } = req.body;
+
         const senderId = req.user._id; // Get user ID from the authenticated user
     
         // Check if the event exists
@@ -14,11 +16,17 @@ exports.sendInvitation = async (req, res) => {
             return res.status(404).json({ error: 'Event not found' });
         }
 
-        // Check if the user exists
-        const user = await User.findById(userId);
+        const query = {};
+        if (username) query.username = username;
+        if (email) query.email = email;
+
+        // Find the user based on the query
+        const user = await User.findOne(query);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
+
+        const userId = user._id; // Get the user ID from the found user
 
         // Check if the invitation already exists
         const existingInvitation = await Invitation.findOne({
@@ -39,6 +47,14 @@ exports.sendInvitation = async (req, res) => {
         });
 
         await invitation.save();
+
+        // Create a notification for the invited user
+        await notificationController.createNotification({
+            userId: userId,
+            eventId: eventId,
+            message: `You have been invited to the event "${event.title}" by ${req.user.username}`,
+            type: 'invitation'
+        });
 
         // Optionally, you can send a notification to the invited user
         res.status(201).json({ message: 'Invitation sent successfully', invitation });
@@ -62,6 +78,17 @@ exports.acceptInvitation = async (req, res) => {
         // Update the RSVP status to 'accepted'
         await invitation.acceptInvitation();
 
+        // notify the sender of the invitation
+        const event = await Event.findById(invitation.eventId);
+
+        const sender = await User.findById(invitation.senderId);
+        await notificationController.createNotification({
+            userId: sender._id,
+            eventId: invitation.eventId,
+            message: `${req.user.username} has accepted your invitation to the event "${event.title}"`,
+            type: 'invitation',
+        });
+
         res.status(200).json({ message: 'Invitation accepted successfully', invitation });
     } catch (err) {
         res.status(500).json({ error: 'Failed to accept invitation', errorMessage: err.message });
@@ -82,6 +109,17 @@ exports.rejectInvitation = async (req, res) => {
 
         // Update the RSVP status to 'rejected'
         await invitation.rejectInvitation();
+
+        // notify the sender of the invitation
+        const event = await Event.findById(invitation.eventId);
+
+        const sender = await User.findById(invitation.senderId);
+        await notificationController.createNotification({
+            userId: sender._id,
+            eventId: invitation.eventId,
+            message: `${req.user.username} has denied your invitation to the event "${event.title}"`,
+            type: 'invitation',
+        });
 
         res.status(200).json({ message: 'Invitation rejected successfully', invitation });
     } catch (err) {
@@ -133,9 +171,8 @@ exports.getAllInvitationsForEvent = async (req, res) => {
         const userId = req.user._id; // Get user ID from the authenticated user
 
         // Check if the user is the organizer of the event
-        const isOrganizer = await eventOrganizer.findOne({ eventId: eventId, userId: userId });
-        if (!isOrganizer) {
-            return res.status(403).json({ error: 'You are not authorized to view invitations for this event' });
+        if (!await isOrganizer(userId, eventId)) {
+            return res.status(403).json({ error: 'User is not authorized to view invitations for this event.' });
         }
 
         // Find all invitations for the specified event

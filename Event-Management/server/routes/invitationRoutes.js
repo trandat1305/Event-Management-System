@@ -5,7 +5,7 @@ const authenticateUser = require('../middlewares/authentication');
 
 invitationRouter.use(authenticateUser);
 
-invitationRouter.post('/send/:eventId/:inviteeId', invitationController.sendInvitation); // send an invitation to a user
+invitationRouter.post('/:eventId/send/:inviteeId', invitationController.sendInvitation); // send an invitation to a user
 
 invitationRouter.post('/:inviteId/accept', invitationController.acceptInvitation); // accept an invitation
 

@@ -1,221 +1,147 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaBars, FaMoon, FaBell, FaUserCircle, FaCalendarAlt } from 'react-icons/fa';
-import Profile from './Profile';
-import UpcomingEventCard from './UpcomingEventCard'; // Import the UpcomingEventCard component
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaSearch, FaBell, FaUserCircle, FaCalendarAlt, FaMapMarkerAlt, FaFilter } from 'react-icons/fa';
 import './Home.css';
 
 function Home() {
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [calendarDays, setCalendarDays] = useState([]);
-  const [monthYear, setMonthYear] = useState('');
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [realCurrentDay, setRealCurrentDay] = useState(new Date().getDate());
-  const [realCurrentMonth, setRealCurrentMonth] = useState(new Date().getMonth());
-  const [realCurrentYear, setRealCurrentYear] = useState(new Date().getFullYear());
-  const calendarRef = useRef(null);
-
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const toggleSidePanel = () => {
-    setIsSidePanelOpen(!isSidePanelOpen);
-  };
-
-  const toggleProfile = () => {
-    setIsProfileOpen(!isProfileOpen);
-  };
-
-  const handleDateClick = (date) => {
-    setSelectedDate(date);
-  };
-
-  const generateCalendar = React.useCallback(() => {
-    const firstDayOfMonth = (new Date(currentYear, currentMonth, 1).getDay() + 6) % 7;
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-
-    setMonthYear(`${new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long' })} ${currentYear}`);
-
-    const daysArray = [];
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      daysArray.push(null); // Empty cells for alignment
-    }
-    for (let i = 1; i <= daysInMonth; i++) {
-      daysArray.push(i); // Actual days of the month
-    }
-    setCalendarDays(daysArray);
-  }, [currentMonth, currentYear]);
-
-  const handlePreviousMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear((prevYear) => prevYear - 1);
-    } else {
-      setCurrentMonth((prevMonth) => prevMonth - 1);
-    }
-  };
-
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear((prevYear) => prevYear + 1);
-    } else {
-      setCurrentMonth((prevMonth) => prevMonth + 1);
-    }
-  };
-
-  useEffect(() => {
-    generateCalendar();
-  }, [currentMonth, currentYear, generateCalendar]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      setRealCurrentDay(now.getDate());
-      setRealCurrentMonth(now.getMonth());
-      setRealCurrentYear(now.getFullYear());
-    }, 60000); // Update every minute
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const calendarNode = calendarRef.current;
-    const handleClickOutside = (event) => {
-      if (calendarNode && !calendarNode.contains(event.target)) {
-        setSelectedDate(null); // Unselect the date if clicked outside
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
-
-  // Sample event data for UpcomingEventCard
-  const events = [
+  const featuredEvents = [
     {
-      title: 'Event 1',
-      description: 'Description for Event 1',
-      date: '2025-05-20',
+      id: 1,
+      title: 'Tech Conference 2024',
+      date: 'May 20, 2024',
       time: '10:00 AM',
-      image: 'https://via.placeholder.com/300x150',
-      type: 'my-event', // This is a "My Event"
+      location: 'San Francisco, CA',
+      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      price: '$299',
+      category: 'Technology'
     },
     {
-      title: 'Event 2',
-      description: 'Description for Event 2',
-      date: '2025-05-22',
+      id: 2,
+      title: 'Summer Music Festival',
+      date: 'June 15, 2024',
       time: '2:00 PM',
-      image: 'https://via.placeholder.com/300x150',
-      type: 'participating-event', // This is a "Participating Event"
+      location: 'Los Angeles, CA',
+      image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      price: '$199',
+      category: 'Music'
     },
     {
-      title: 'Event 3',
-      description: 'Description for Event 3',
-      date: '2025-05-25',
+      id: 3,
+      title: 'Food & Wine Expo',
+      date: 'July 10, 2024',
       time: '6:00 PM',
-      image: 'https://via.placeholder.com/300x150',
-      type: 'my-event', // This is a "My Event"
-    },
+      location: 'New York, NY',
+      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      price: '$149',
+      category: 'Food & Drink'
+    }
   ];
 
   return (
-    <div className="home-container">
-      <header className="header">
-        <div className="header-left">
-          <button className="toggle-button" onClick={toggleSidePanel}>
-            <FaBars />
-          </button>
+    <div className={`home-container ${isDarkMode ? 'dark-mode' : ''}`}>
+      {/* Navigation Bar */}
+      <nav className="nav-bar">
+        <div className="nav-left">
+          <h1 className="logo">Eventer</h1>
         </div>
-        <div className="header-right">
-          <button className="icon-button">
-            <FaMoon />
-          </button>
-          <button className="icon-button" onClick={() => navigate('/home/notification')}>
-            <FaBell />
-            <span className="notification-dot"></span>
-          </button>
-          <button className="create-button" onClick={() => navigate('/home/createevent')}>
-            + Create
-          </button>
-          <button className="icon-button" onClick={toggleProfile}>
-            <FaUserCircle />
-          </button>
+        <div className="nav-right">
+          <button className="nav-btn" onClick={() => navigate('/login')}>Login</button>
+          <button className="nav-btn signup-btn" onClick={() => navigate('/signup')}>Sign Up</button>
         </div>
-      </header>
-      <Profile isProfileOpen={isProfileOpen} toggleProfile={toggleProfile} />
-      <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
-        <h2>Side Panel</h2>
-        <ul>
-          <li onClick={() => navigate('/home')}>Home</li>
-          <li onClick={() => navigate('/home/myevents')}>My Events</li>
-          <li onClick={() => navigate('/home/events')}>Events</li>
-          <li onClick={() => navigate('/home/listevent')}>List Events</li>
-        </ul>
-      </div>
-      {isSidePanelOpen && (
-        <div className={`overlay ${isSidePanelOpen ? 'visible' : ''}`} onClick={toggleSidePanel}></div>
-      )}
-      <div className="welcome-section">
-        <h1 className="welcome-message">WELCOME to homepage</h1>
-      </div>
-      <div className="content">
-        <div className="main-content">
-          <UpcomingEventCard events={events} /> {/* Add UpcomingEventCard here */}
-          <div className="calendar-section">
-            <h2>
-              <FaCalendarAlt className="calendar-icon" /> Schedule:
-              <Link to="/home/schedule" className="schedule-link">
-                View Full Schedule
-              </Link>
-            </h2>
-            <div className="calendar-header">
-              <button className="calendar-nav" onClick={handlePreviousMonth}>
-                &lt; Previous
-              </button>
-              <h2>{monthYear}</h2>
-              <button className="calendar-nav" onClick={handleNextMonth}>
-                Next &gt;
-              </button>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <h1>Discover Events That Matter to You</h1>
+          <p>Find and create events that bring people together</p>
+          <div className="search-container">
+            <div className="search-box">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Search events..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-            <table className="calendar-table">
-              <thead>
-                <tr>
-                  <th>Mon</th>
-                  <th>Tue</th>
-                  <th>Wed</th>
-                  <th>Thu</th>
-                  <th>Fri</th>
-                  <th>Sat</th>
-                  <th>Sun</th>
-                </tr>
-              </thead>
-            </table>
-            <div className="calendar" ref={calendarRef}>
-              {calendarDays.map((day, index) => (
-                <div
-                  key={index}
-                  className={`calendar-date ${
-                    day && selectedDate === day ? 'selected' : ''
-                  } ${
-                    day &&
-                    day === realCurrentDay &&
-                    currentMonth === realCurrentMonth &&
-                    currentYear === realCurrentYear
-                      ? 'current-day'
-                      : ''
-                  } ${day === null ? 'empty' : ''}`}
-                  onClick={() => day && handleDateClick(day)}
-                >
-                  {day || ''}
-                </div>
-              ))}
-            </div>
+            <button className="create-event-btn" onClick={() => navigate('/create-event')}>
+              Create Event
+            </button>
           </div>
         </div>
-      </div>
+      </section>
+
+      {/* About Section */}
+      <section className="about-section">
+        <h2>About Eventer</h2>
+        <div className="about-content">
+          <div className="about-card">
+            <h3>Discover Events</h3>
+            <p>Find the perfect events that match your interests. From tech conferences to music festivals, we've got you covered.</p>
+          </div>
+          <div className="about-card">
+            <h3>Create & Share</h3>
+            <p>Host your own events and share them with the world. Our platform makes event creation and management simple.</p>
+          </div>
+          <div className="about-card">
+            <h3>Connect & Network</h3>
+            <p>Meet like-minded people and build your network. Join communities and stay updated with upcoming events.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Events Section */}
+      <section className="featured-events">
+        <div className="section-header">
+          <h2>Featured Events</h2>
+          <button className="view-all-btn">View All</button>
+        </div>
+        <div className="events-grid">
+          {featuredEvents.map((event) => (
+            <div key={event.id} className="event-card">
+              <div className="event-image">
+                <img src={event.image} alt={event.title} />
+                <span className="event-category">{event.category}</span>
+              </div>
+              <div className="event-details">
+                <h3>{event.title}</h3>
+                <div className="event-info">
+                  <span><FaCalendarAlt /> {event.date}</span>
+                  <span><FaMapMarkerAlt /> {event.location}</span>
+                </div>
+                <div className="event-footer">
+                  <span className="event-price">{event.price}</span>
+                  <button className="book-now-btn">Book Now</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Upcoming Events Section */}
+      <section className="upcoming-events">
+        <div className="section-header">
+          <h2>Upcoming Events</h2>
+          <div className="filter-container">
+            <FaFilter className="filter-icon" />
+            <select className="filter-select">
+              <option value="all">All Events</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+            </select>
+          </div>
+        </div>
+        <div className="events-list">
+          {/* Similar event cards as featured events */}
+        </div>
+      </section>
     </div>
   );
 }

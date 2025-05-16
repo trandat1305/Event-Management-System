@@ -34,9 +34,9 @@ app.get("/hello", (req, res) => {
 
 app.use("/api", apiRouter);
 
-app.get('/*splat', (req, res) => {
+/*app.get('/*splat', (req, res) => {
   res.sendFile(path.join(buildPath, 'index.html'));
-});
+}); */
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}, http://localhost:${PORT}`);

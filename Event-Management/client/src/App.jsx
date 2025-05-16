@@ -18,6 +18,7 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/home/notification" element={<Notification />} /> {/* Home Notification route */}
@@ -30,13 +31,13 @@ function App() {
         <Route path="/home/createevent" element={<CreateEvent />} />
         <Route path="/home/schedule" element={<Schedule />} />
         <Route path="/home/listevent" element={<ListEvent />} /> {/* New Route */}
-        <Route path="*" element={<Login />} />
         <Route path="/myaccount" element={<MyAccount />} /> {/* My Account route */}
         <Route path="/signup" element={<SignUp />} />
         <Route path="/admin" element={<Admin />} /> {/* Admin route */}
         <Route path="/admin/users" element={<User />} /> {/* User route */}
         <Route path="/admin/events" element={<AdminEvents />} /> {/* Updated route */}
         <Route path="/admin/notification" element={<Notification />} /> {/* Admin Notification route */}
+        <Route path="*" element={<Home />} />
       </Routes>
     </Router>
   );

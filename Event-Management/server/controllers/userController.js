@@ -5,7 +5,6 @@ const eventParticipants = require('../models/EventParticipants');
 const eventOrganizers = require('../models/EventOrganizers');
 require('dotenv').config();
 
-// Register user
 exports.registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -25,7 +24,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login user
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;

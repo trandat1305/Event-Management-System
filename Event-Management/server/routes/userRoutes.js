@@ -12,18 +12,21 @@ userRouter.post('/auth/login', userController.loginUser);
 
 userRouter.use(authenticateUser);
 
-userRouter.put('/profile/', upload.single("avatar"), userController.updateProfile);
-
+// Profile related routes
 userRouter.get('/profile/', userController.getProfile);
 
 userRouter.get('/profile/:userId', userController.getUserProfileById);
 
+userRouter.put('/profile/', upload.single("avatar"), userController.updateProfile);
+
+// Notification related routes
 userRouter.get('/notifications', notificationController.getNotification); // get all notifications of a user
 
 userRouter.delete('/notifications/:notificationId', notificationController.deleteNotification) // delete a notification
 
 userRouter.delete('/notifications/all', notificationController.deleteAllNotifications) // delete all notifications
 
+// Event related routes
 userRouter.get('/events', userController.getUserEvents); // get all events that a person is attending
 
 userRouter.get('/organizedEvents', userController.getUserOrganizedEvents); // get all events that a person is organizing

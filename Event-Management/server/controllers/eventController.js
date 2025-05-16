@@ -1,5 +1,4 @@
 const Event = require('../models/Event');
-const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
 const EventParticipants = require('../models/EventParticipants');
 
@@ -79,18 +78,37 @@ exports.updateEvent = async (req, res) => {
         event.imageURL = req.file.path;
       }
 
+      const participants = await EventParticipants.getParticipants(event._id);
+
       // Handle status updates (e.g., cancellation)
       if (status === 'cancelled') {
         event.status = 'cancelled';
 
         // Notify attendees about cancellation
-        // Remove all participants from the Eventparticipants collection
+        const notifications = participants.map(participant => ({
+          userId: participant.user._id,
+          eventId: event._id,
+          message: `The event "${event.title}" has been cancelled.`,
+          type: 'event',
+        }));
+
+        await Notification.insertMany(notifications);
+        await event.save();
+        return res.status(200).json({ message: 'Event cancelled successfully' });
       }
-  
-      // Create a notification for the event update
-  
+
       // Save the updated event
       await event.save();
+  
+      // Create a notification for the event update
+      const notifications = participants.map(participant => ({
+        userId: participant.user._id,
+        eventId: event._id,
+        message: `One or more details of the event "${event.title}" have been updated.`,
+        type: 'event',
+      }));
+      
+      await Notification.insertMany(notifications);
   
       res.json(event);
     } catch (err) {
@@ -116,9 +134,10 @@ exports.deleteEvent = async (req, res) => {
       
       // Notify attendees about cancellation
       const notifications = participants.map(participant => ({
-        userId: participant.userId,
+        userId: participant.user,
         eventId: eventId,
         message: `The event "${event.title}" has been deleted.`,
+        type: 'event',
       }));
       await Notification.insertMany(notifications);
 
@@ -150,5 +169,18 @@ exports.getAllPublicEvents = async (req, res) => {
     res.status(200).json(updatedEvents);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+exports.eventExists = async (eventId) => {
+  try {
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return null; // Return null if the event is not found
+    }
+    return event; // Return the event if it exists
+  } catch (err) {
+    console.error('Error checking event existence:', err);
+    throw new Error('Failed to check event existence: '); // Throw the error to the caller
   }
 };

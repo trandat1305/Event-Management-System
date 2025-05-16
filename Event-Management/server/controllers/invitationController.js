@@ -2,7 +2,7 @@ const Invitation = require('../models/Invitation');
 const User = require('../models/User');
 const Event = require('../models/Event');
 const notificationController = require('./notificationController');
-const { isOrganizer } = require('./EventOrganizerController');
+const eventOrganizer = require('../models/EventOrganizers');
 
 exports.sendInvitation = async (req, res) => {
     try {
@@ -117,7 +117,7 @@ exports.rejectInvitation = async (req, res) => {
         await notificationController.createNotification({
             userId: sender._id,
             eventId: invitation.eventId,
-            message: `${req.user.username} has denied your invitation to the event "${event.title}"`,
+            message: `${req.user.username} has rejected your invitation to the event "${event.title}"`,
             type: 'invitation',
         });
 
@@ -171,7 +171,7 @@ exports.getAllInvitationsForEvent = async (req, res) => {
         const userId = req.user._id; // Get user ID from the authenticated user
 
         // Check if the user is the organizer of the event
-        if (!await isOrganizer(userId, eventId)) {
+        if (!await eventOrganizer.isOrganizer(eventId, userId)) {
             return res.status(403).json({ error: 'User is not authorized to view invitations for this event.' });
         }
 

@@ -1,6 +1,9 @@
 const Discussion = require('../models/EventDiscussion');
 const eventOrganizer = require('../models/EventOrganizers');
 const Event = require('../models/Event');
+const Notification = require('../models/Notification');
+const EventParticipants = require('../models/EventParticipants');
+const { eventExists } = require('../controllers/eventController');
 
 // Post message
 exports.postMessage = async (req, res) => {
@@ -10,12 +13,12 @@ exports.postMessage = async (req, res) => {
     const { message } = req.body; // Message content from the request body
     const imageURL = req.file ? req.file.path : null;
 
-    // Validate message length
-    if (message.length > 900) {
-      return res.status(400).json({ error: 'Message exceeds 900 characters' });
+    // Create a new message in the database
+    const event = await eventExists(eventId);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
     }
 
-    // Create a new message in the database
     const newMessage = await Discussion.create({
       eventId: eventId,
       userId: userId,
@@ -23,46 +26,23 @@ exports.postMessage = async (req, res) => {
       imageURL: imageURL,
     });
 
+    // Create a notification for the event
+    // Get all participants of the event except the sender
+    const participants = await EventParticipants.find({ event: eventId });
+    const participantIds = participants.map(participant => participant.userId.toString()).filter(id => id !== userId.toString());
+    const notifications = participantIds.map(participantId => ({
+      userId: participantId,
+      eventId: eventId,
+      message: `There's a new message in event "${event.title}!"`,
+      type: 'message',
+    }));
+
+    await Notification.insertMany(notifications);
+
     res.status(201).json(newMessage);
   } catch (err) {
     res.status(500).json({ error: 'Failed to post message' });
   }
-};
-
-exports.replyToMessage = async (req, res) => {
-  try {
-    const { eventId, messageId } = req.params;
-    const userId = req.user._id; // Get user ID from the authenticated user
-
-    const { message } = req.body; // Reply content from the request body
-    const imageURL = req.file ? req.file.path : null;
-
-    // Validate message length
-    if (message.length > 900) {
-      return res.status(400).json({ error: 'Message exceeds 900 characters' });
-    }
-
-    // Find the original message to reply to
-    const originalMessage = await Discussion.findById(messageId);
-    if (!originalMessage) {
-      return res.status(404).json({ error: 'Original message not found' });
-    }
-    // Create a new reply linked to the original message
-    const newReply = await Discussion.create({
-      eventId: eventId,
-      userId: userId,
-      content: message,
-      imageURL: imageURL,
-      replyToMessageId: messageId, // Link to the original message
-    });
-
-    // notify the original messages to indicate they have a reply
-
-
-    res.status(201).json(newReply);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to reply to message', errorMessage: err.message });
-  } 
 };
 
 exports.deleteMessage = async (req, res) => {
@@ -158,65 +138,11 @@ exports.editMessage = async (req, res) => {
 exports.getAllMessages = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const messages = await Discussion.find({ event: eventId, replyToMessageId: null })
+    const messages = await Discussion.find({ event: eventId})
       .populate('userId', 'username') // Corrected field name
       .sort({ timestamp: 1 }); 
 
     res.status(200).json(messages);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch messages', errorMessage: err.message });
-  }
-};
-
-const getMessageWithReplies = async (messageId) => {
-  const message = await Discussion.findById(messageId)
-    .populate('userId', 'username') // Populate userId with username
-    .lean();
-
-  if (!message) return null;
-
-  /*
-  if (message.isDeleted) {
-    return {
-      _id: message._id,
-      content: 'Message deleted',
-      imageURL: null,
-      createdAt: message.createdAt,
-      updatedAt: message.updatedAt,
-      replies: []
-    };
-  }
-  */
-
-  // Fetch replies for the current message and sort by timestamp
-  const replies = await Discussion.find({ replyToMessageId: message._id })
-    .populate('userId', 'username') // Populate userId with username
-    .sort({ createdAt: 1 }) // Sort replies by timestamp (ascending)
-    .lean();
-
-  // Recursively fetch nested replies
-  const nestedReplies = await Promise.all(replies.map(reply => getMessageWithReplies(reply._id)));
-
-  return {
-    ...message,
-    replies: nestedReplies
-  };
-};
-
-exports.getAllMessagesWithReplies = async (req, res) => {
-  try {
-    const { eventId } = req.params;
-
-    // Fetch all top-level messages for the event, sorted by timestamp
-    const topLevelMessages = await Discussion.find({ eventId: eventId, replyToMessageId: null })
-      .populate('userId', 'username') // Populate userId with username
-      .sort({ createdAt: 1 }) // Sort top-level messages by timestamp (ascending)
-      .lean();
-
-    // Fetch nested replies for each top-level message
-    const messagesWithReplies = await Promise.all(topLevelMessages.map(msg => getMessageWithReplies(msg._id)));
-
-    res.status(200).json(messagesWithReplies);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch messages', errorMessage: err.message });
   }

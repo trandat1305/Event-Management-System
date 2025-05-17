@@ -45,7 +45,7 @@ function User() {
           </div>
           <div className="nav-right">
             <button className="icon-btn" onClick={() => navigate('/home/notification')}><FaBell /></button>
-            <button className="create-event-btn" onClick={() => navigate('/createevent')}><FaPlus /> Create Event</button>
+            <button className="create-event-btn" onClick={() => navigate('/createevent')}>+ Create Event</button>
             <div className="user-profile">
               <span className="user-avatar"><FaUserCircle /></span>
               <span className="user-name">{user.username}</span>

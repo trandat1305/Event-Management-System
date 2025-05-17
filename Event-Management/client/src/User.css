@@ -176,10 +176,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: var(--transition);
 }
+
 .create-event-btn:hover {
-  background: #f05537;
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(240, 85, 55, 0.15);
 }
 

@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaBell, FaUserCircle, FaCalendarAlt, FaMapMarkerAlt, FaFilter } from 'react-icons/fa';
 import './Home.css';
 
 function Home() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const featuredEvents = [
     {
@@ -42,7 +39,7 @@ function Home() {
   ];
 
   return (
-    <div className={`home-container ${isDarkMode ? 'dark-mode' : ''}`}>
+    <div className={`home-container`}>
       {/* Navigation Bar */}
       <nav className="nav-bar">
         <div className="nav-left">
@@ -51,8 +48,9 @@ function Home() {
         <div className="nav-right">
           <button className="nav-btn" onClick={() => navigate('/login')}>Login</button>
           <button className="nav-btn signup-btn" onClick={() => navigate('/signup')}>Sign Up</button>
-          <button className="nav-btn" onClick={() => navigate('/user')} title="User Page">
-            <FaUserCircle style={{ fontSize: '1.5rem', marginRight: '0.5rem' }} /> User Page
+          <button className="nav-btn" onClick={() => navigate('/user')} title="User Page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <FaUserCircle style={{ fontSize: '1.5rem', marginRight: '0.5rem' }} />
+            <span style={{ display: 'inline-block' }}>User Page</span>
           </button>
         </div>
       </nav>
@@ -62,20 +60,9 @@ function Home() {
         <div className="hero-content">
           <h1>Discover Events That Matter to You</h1>
           <p>Find and create events that bring people together</p>
-          <div className="search-container">
-            <div className="search-box">
-              <FaSearch className="search-icon" />
-              <input
-                type="text"
-                placeholder="Search events..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <button className="create-event-btn" onClick={() => navigate('/createevent')}>
+            <button className="home-create-event-btn" onClick={() => navigate('/createevent')}>
               Create Event
             </button>
-          </div>
         </div>
       </section>
 

@@ -1,15 +1,18 @@
-const express = require('express');
-const router = express.Router();
+const centralRouter = require("express").Router();
+const userRouter = require("./userRoutes");
+const adminRouter = require("./adminRoutes");
+const eventRouter = require("./eventRoutes");
+const discussionRouter = require("./discussionRoutes");
+const invitationRouter = require("./invitationRoutes");
 
-const authRoutes = require('./authRoutes');
-const eventRoutes = require('./eventRoutes');
-const discussionRoutes = require('./discussionRoutes');
-const notificationRoutes = require('./notificationRoutes');
+centralRouter.use("/users", userRouter);
 
-// Mount routes
-router.use('/auth', authRoutes);
-router.use('/events', eventRoutes);
-router.use('/discussions', discussionRoutes);
-router.use('/notifications', notificationRoutes);
+centralRouter.use("/admins", adminRouter);
 
-module.exports = router;
+centralRouter.use("/events", eventRouter);
+
+centralRouter.use("/discussions", discussionRouter);
+
+centralRouter.use('/invitations', invitationRouter);
+
+module.exports = centralRouter;

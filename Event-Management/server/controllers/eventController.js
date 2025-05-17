@@ -1,193 +1,172 @@
 const Event = require('../models/Event');
-const User = require('../models/User');
 const Notification = require('../models/Notification');
 const EventParticipants = require('../models/EventParticipants');
 const EventOrganizers = require('../models/EventOrganizers');
 
 exports.createEvent = async (req, res) => {
     try {
-      const {
+      const { title, description, isPublic, location, startTime, endTime } = req.body;
+      const creator = req.user._id;
+
+      // Validate required fields
+      if (!title || !startTime || !endTime || !location) {
+        return res.status(400).json({ error: 'Title, startTime, endTime, and location are required' });
+      }
+
+      // Handle optional fields with default values
+      const isPublicValue = isPublic !== undefined ? isPublic : false; // Default to false
+      const descriptionValue = description || ''; // Default to an empty string
+      const imageUrl = req.file?.path || null; // Default to null if no file is uploaded
+
+      // Initialize event data
+      const eventData = {
         title,
-        description,
-        startDate,
-        endDate,
-        location,
-        isPublic,
-        maxParticipants,
-        category
-      } = req.body;
+        description: descriptionValue,
+        isPublic: isPublicValue,
+        startTime,
+        endTime,
+        creator: creator,
+        imageUrl,
+        location
+      };
 
-      const event = new Event({
-        title,
-        description,
-        startDate,
-        endDate,
-        location,
-        isPublic,
-        maxParticipants,
-        category,
-        organizer: req.user.userId
+      // Create and save the event
+      const event = new Event(eventData);
+      const newEvent = await event.save();
+
+      // Add the creator to the EventParticipants and EventOrgnizers collection
+      const participant = new EventParticipants({
+        event: newEvent._id,
+        user: creator,
       });
+      await participant.save();
 
-      await event.save();
-
-      // Add event to organizer's events
-      await User.findByIdAndUpdate(req.user.userId, {
-        $push: { events: event._id }
+      const eventOrganizer = new EventOrganizers({
+        eventId: newEvent._id,
+        userId: creator,
       });
+      await eventOrganizer.save();
 
-      res.status(201).json({
-        message: 'Event created successfully',
-        event
-      });
-    } catch (error) {
-      res.status(500).json({ message: 'Error creating event', error: error.message });
+      res.status(201).json(event);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to create event', errorMessage: err.message });
     }
-};
-
-exports.getPublicEvents = async (req, res) => {
-  try {
-    const events = await Event.find({ isPublic: true })
-      .populate('organizer', 'username email')
-      .sort({ startDate: 1 });
-    res.json(events);
-  } catch (error) {
-    res.status(500).json({ message: 'Error getting events', error: error.message });
-  }
 };
 
 exports.getEventById = async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.id)
-      .populate('organizer', 'username email')
-      .populate('participants.user', 'username email');
-    
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
+    try {
+      const eventId = req.params.eventId;
+      const event = await Event.findById(eventId).populate('creator', 'username');
+      if (!event) return res.status(404).json({ error: 'Event not found' });
 
-    // Check if user has access to private event
-    if (!event.isPublic && 
-        event.organizer._id.toString() !== req.user.userId && 
-        !event.participants.some(p => p.user._id.toString() === req.user.userId)) {
-      return res.status(403).json({ message: 'Access denied' });
-    }
+      // Check if the user is the creator of the event
+      const isCreator = event.creator._id.toString() === req.user._id.toString();
+      if (isCreator) {
+        event.myEvent = true; // Add the `myEvent` key
+      }
 
-    res.json(event);
-  } catch (error) {
-    res.status(500).json({ message: 'Error getting event', error: error.message });
-  }
-};
-
+      res.status(200).json(event);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch event', errorMessage: err.message });
+}};
+  
 exports.updateEvent = async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.id);
-    
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+    try {
+      const event = await Event.findById(req.params.id);
+      if (!event) return res.status(404).json({ error: 'Event not found' });
+  
+      const oldEvent = event.toObject();
+
+      const { title, startTime, endTime, isPublic, location, description, status } = req.body;
+
+      // Update fields dynamically
+      const fieldsToUpdate = { title, startTime, endTime, isPublic, location, description };
+      for (const [key, value] of Object.entries(fieldsToUpdate)) {
+        if (value !== undefined) {
+          event[key] = value;
+        }
+      }
+
+      // Handle file upload for imageUrl
+      if (req.file?.path) {
+        event.imageURL = req.file.path;
+      }
+
+      const participants = await EventParticipants.getParticipants(event._id);
+
+      // Handle status updates (e.g., cancellation)
+      if (status === 'cancelled') {
+        event.status = 'cancelled';
+
+        // Notify attendees about cancellation
+        const notifications = participants.map(participant => ({
+          userId: participant.user._id,
+          eventId: event._id,
+          message: `The event "${event.title}" has been cancelled.`,
+          type: 'event',
+        }));
+
+        await Notification.insertMany(notifications);
+        await event.save();
+        return res.status(200).json({ message: 'Event cancelled successfully' });
+      }
+
+      // Save the updated event
+      await event.save();
+  
+      // Create a notification for the event update
+      const notifications = participants.map(participant => ({
+        userId: participant.user._id,
+        eventId: event._id,
+        message: `One or more details of the event "${event.title}" have been updated.`,
+        type: 'event',
+      }));
+      
+      await Notification.insertMany(notifications);
+  
+      res.json(event);
+    } catch (err) {
+      console.error('Error updating event:', err.message);
+      res.status(500).json({ error: 'Failed to update event', errorMessage: err.message });
     }
-
-    // Check if user is organizer
-    if (event.organizer.toString() !== req.user.userId) {
-      return res.status(403).json({ message: 'Only organizer can update event' });
-    }
-
-    const updatedEvent = await Event.findByIdAndUpdate(
-      req.params.id,
-      { ...req.body, updatedAt: Date.now() },
-      { new: true }
-    );
-
-    // Notify participants about update
-    const notification = new Notification({
-      recipient: req.user.userId,
-      event: event._id,
-      type: 'update',
-      message: `Event "${event.title}" has been updated`
-    });
-    await notification.save();
-
-    res.json({
-      message: 'Event updated successfully',
-      event: updatedEvent
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Error updating event', error: error.message });
-  }
 };
 
 exports.deleteEvent = async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.id);
-    
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
+    try {
+      const eventId = req.params.eventId;
+
+      const event = await Event.findById(eventId);
+      if (!event) return res.status(404).json({ error: 'Event not found' });
+      
+      await event.softDelete();
+
+      // Delete all attendees from the Eventparticipants collection
+      const participants = await EventParticipants.find({ event: eventId });
+      if (participants.length > 0) {
+        await Promise.all(participants.map(participant => participant.softDelete()));
+      }
+
+      // Delete all organizers from the EventOrganizers collection
+      const organizers = await EventOrganizers.find({ eventId: eventId });
+      if (organizers.length > 0) {
+        await Promise.all(organizers.map(organizer => organizer.softDelete()));
+      }
+      
+      // Notify attendees about cancellation
+      const notifications = participants.map(participant => ({
+        userId: participant.user,
+        eventId: eventId,
+        message: `The event "${event.title}" has been deleted.`,
+        type: 'event',
+      }));
+      await Notification.insertMany(notifications);
+
+      res.json({ message: 'Event deleted successfully' });
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to delete event', errorMessage: err.message });
     }
-
-    // Check if user is organizer
-    if (event.organizer.toString() !== req.user.userId) {
-      return res.status(403).json({ message: 'Only organizer can delete event' });
-    }
-
-    await Event.findByIdAndDelete(req.params.id);
-
-    // Remove event from organizer's events
-    await User.findByIdAndUpdate(req.user.userId, {
-      $pull: { events: event._id }
-    });
-
-    res.json({ message: 'Event deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting event', error: error.message });
-  }
 };
-
-exports.joinEvent = async (req, res) => {
-  try {
-    const event = await Event.findById(req.params.id);
-    
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    // Check if event is public
-    if (!event.isPublic) {
-      return res.status(403).json({ message: 'Cannot join private event' });
-    }
-
-    // Check if user is already a participant
-    if (event.participants.some(p => p.user.toString() === req.user.userId)) {
-      return res.status(400).json({ message: 'Already joined event' });
-    }
-
-    // Check if event is full
-    if (event.maxParticipants > 0 && 
-        event.participants.filter(p => p.status === 'accepted').length >= event.maxParticipants) {
-      return res.status(400).json({ message: 'Event is full' });
-    }
-
-    // Add user to participants
-    event.participants.push({
-      user: req.user.userId,
-      status: 'pending'
-    });
-    await event.save();
-
-    // Create notification for organizer
-    const notification = new Notification({
-      recipient: event.organizer,
-      event: event._id,
-      type: 'response',
-      message: `New join request for event "${event.title}"`
-    });
-    await notification.save();
-
-    res.json({ message: 'Join request sent successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error joining event', error: error.message });
-  }
-};
-
+  
 exports.getAllPublicEvents = async (req, res) => {
   try {
     const userId = req.user._id; // Get the authenticated user's ID

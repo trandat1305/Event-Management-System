@@ -1,101 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './EventDetails.css';
-import DiscussionBoard from './DiscussionBoard';
 
-function EventDetails({ event, onClose }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editEvent, setEditEvent] = useState({ ...event });
+import DiscussionBoard from './DiscussionBoard'; // Kept as in original, though unused
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditEvent((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = () => {
-    // Ở đây bạn có thể gọi API cập nhật event nếu muốn
-    setIsEditing(false);
-    // Có thể gọi callback để cập nhật event ở ngoài nếu cần
-  };
-
+function EventDetails({ event, onClose, onJoin, isAdminView = false }) {
   return (
-    <div className="event-details-modal float-in">
+    <div className="event-details-modal">
       <div className="event-details-content">
         <button className="close-button" onClick={onClose}>
           Close
         </button>
-        {isEditing ? (
-          <>
-            <input
-              className="event-edit-input"
-              name="title"
-              value={editEvent.title}
-              onChange={handleEditChange}
-              placeholder="Title"
-            />
-            <textarea
-              className="event-edit-input"
-              name="description"
-              value={editEvent.description}
-              onChange={handleEditChange}
-              placeholder="Description"
-            />
-            <input
-              className="event-edit-input"
-              name="startTime"
-              type="datetime-local"
-              value={editEvent.startTime?.slice(0, 16) || ''}
-              onChange={handleEditChange}
-            />
-            <input
-              className="event-edit-input"
-              name="endTime"
-              type="datetime-local"
-              value={editEvent.endTime?.slice(0, 16) || ''}
-              onChange={handleEditChange}
-            />
-            <input
-              className="event-edit-input"
-              name="location"
-              value={editEvent.location}
-              onChange={handleEditChange}
-              placeholder="Location"
-            />
-            <div className="event-details-buttons">
-              <button className="join-button" onClick={handleSave}>Save</button>
-              <button className="back-button" onClick={() => setIsEditing(false)}>Cancel</button>
-            </div>
-          </>
-        ) : (
-          <>
-            <h2>{editEvent.title}</h2>
-            {editEvent.imageURL && <img src={editEvent.imageURL} alt={editEvent.title} className="event-image" />}
-            <p>
-              <strong>Description:</strong> {editEvent.description}
-            </p>
-            <p>
-              <strong>Start Time:</strong> {new Date(editEvent.startTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>End Time:</strong> {new Date(editEvent.endTime).toLocaleString()}
-            </p>
-            <p>
-              <strong>Location:</strong> {editEvent.location}
-            </p>
-            <p>
-              <strong>Public:</strong> {editEvent.isPublic ? 'Yes' : 'No'}
-            </p>
-            <p>
-              <strong>Creator:</strong> {editEvent.creator}
-            </p>
-            {event.type === 'organizer' && (
-              <div className="event-details-buttons">
-                <button className="join-button" onClick={() => setIsEditing(true)}>Edit</button>
-              </div>
-            )}
-          </>
-        )}
-        <div className="event-details-discussion-wrapper">
-          <DiscussionBoard eventId={event.id} />
+        <h2>{event.title}</h2>
+        <img src={event.imageURL} alt={event.title} className="event-image" />
+        <p>
+          <strong>Description:</strong> {event.description}
+        </p>
+        <p>
+          <strong>Start Time:</strong> {new Date(event.startTime).toLocaleString()}
+        </p>
+        <p>
+          <strong>End Time:</strong> {new Date(event.endTime).toLocaleString()}
+        </p>
+        <p>
+          <strong>Location:</strong> {event.location}
+        </p>
+        <p>
+          <strong>Public:</strong> {event.isPublic ? 'Yes' : 'No'}
+        </p>
+        <p>
+          <strong>Creator:</strong> {event.creator}
+        </p>
+        <div className="event-details-buttons">
+          <button className="back-button" onClick={onClose}>
+            Back
+          </button>
+          {!isAdminView && (
+            <button className="join-button" onClick={() => onJoin(event.id)}>
+              Join
+            </button>
+          )}
         </div>
       </div>
     </div>

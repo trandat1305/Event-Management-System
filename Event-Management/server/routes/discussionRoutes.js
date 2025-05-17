@@ -1,11 +1,18 @@
 const express = require('express');
-const router = express.Router();
+const discussionRouter = express.Router();
 const discussionController = require('../controllers/discussionController');
-const auth = require('../middlewares/auth');
 
-// Protected routes
-router.post('/', auth, discussionController.createDiscussion);
-router.get('/event/:eventId', auth, discussionController.getEventDiscussions);
-router.post('/:discussionId/reply', auth, discussionController.addReply);
+const authenticateUser = require('../middlewares/authentication');
+const upload = require('../middlewares/uploadImages');
 
-module.exports = router;
+discussionRouter.use(authenticateUser);
+
+discussionRouter.get('/:eventId/messages', discussionController.getAllMessages); // get all messages for an event
+
+discussionRouter.post('/:eventId/messages', upload.single('image'), discussionController.postMessage); // create a new message
+
+discussionRouter.delete('/:eventId/messages/:messageId', discussionController.deleteMessage); // delete a message
+
+discussionRouter.put('/:eventId/messages/:messageId', upload.single("image"), discussionController.editMessage); // edit a message
+
+module.exports = discussionRouter;

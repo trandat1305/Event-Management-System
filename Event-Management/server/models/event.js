@@ -2,70 +2,27 @@ const mongoose = require('mongoose');
 const User = require('./User');
 
 const eventSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
+  title: { 
+    type: String, 
+    required: true 
   },
-  description: {
-    type: String,
-    required: true
+  description: { 
+    type: String 
   },
-  startDate: {
-    type: Date,
-    required: true
+  isPublic: { 
+    type: Boolean, default: true 
   },
-  endDate: {
-    type: Date,
-    required: true
+  startTime: { 
+    type: Date, 
+    required: true 
   },
-  location: {
-    type: String,
-    required: true
+  endTime: { 
+    type: Date, 
+    required: true 
   },
-  isPublic: {
-    type: Boolean,
-    default: true
-  },
-  organizer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  participants: [{
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'accepted', 'declined'],
-      default: 'pending'
-    }
-  }],
-  maxParticipants: {
-    type: Number,
-    default: 0 // 0 means unlimited
-  },
-  category: {
-    type: String,
-    required: true
-  },
-  image: {
-    type: String,
-    default: ''
-  },
-  discussions: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Discussion'
-  }],
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  creator: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', required: true 
   },
   imageURL: { 
     type: String,
@@ -82,6 +39,10 @@ const eventSchema = new mongoose.Schema({
     type: String, 
     enum: ['active','cancelled', "finished"],
     default: 'active'
+  },
+  location: {
+      type: String,
+      required: true
   },
   isDeleted: { 
     type: Boolean, 
@@ -112,20 +73,14 @@ eventSchema.statics.findByIdIfExists = async function (id) {
 };
 
 // Schema-level validator for startTime and endTime
-eventSchema.path('endDate').validate(function(value) {
+eventSchema.path('endTime').validate(function(value) {
   // `this` refers to the document
-  return this.startDate && value > this.startDate;
-}, 'End date must be after start date');
+  return this.startTime && value > this.startTime;
+}, 'End time must be after start time');
 
 // Another schema-level validator for startTime being in future
-eventSchema.path('startDate').validate(function(value) {
+eventSchema.path('startTime').validate(function(value) {
   return value > Date.now();
-}, 'Start date must be in the future');
-
-// Update the updatedAt timestamp before saving
-eventSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
+}, 'Start time must be in the future');
 
 module.exports = mongoose.model('Event', eventSchema);

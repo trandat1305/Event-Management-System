@@ -1,0 +1,131 @@
+/* Overlay for the popup */
+.edit-user-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay for emphasis */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup container */
+.edit-user-modal {
+  background-color: #fff;
+  border-radius: 10px; /* Slightly larger radius for prominence */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+  padding: 24px; /* Slightly more padding */
+  margin: 10px;
+  animation: popIn 0.3s ease-in-out; /* Enhanced animation */
+  position: relative;
+  min-width: 400px; /* Minimum width for usability */
+}
+
+/* Close button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #b02a37;
+}
+
+/* Header styling */
+.edit-user-modal h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+  color: #000; /* Black text */
+  text-align: center;
+}
+
+/* Form styling */
+.edit-user-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+}
+
+/* Form group styling */
+.edit-user-modal .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-user-modal .form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.edit-user-modal .form-group input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-user-modal .form-group input:disabled {
+  background-color: #f0f0f0;
+  color: #666;
+}
+
+/* Action buttons */
+.edit-user-modal .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.edit-user-modal .form-actions button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-user-modal .save-button {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.edit-user-modal .save-button:hover {
+  background-color: #45a049;
+}
+
+.edit-user-modal .cancel-button {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.edit-user-modal .cancel-button:hover {
+  background-color: #5a6268;
+}
+
+/* Enhanced pop-in animation */
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-20px); /* Start smaller and slightly above */
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0); /* Full size, centered */
+  }
+}

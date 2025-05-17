@@ -1,0 +1,500 @@
+.events-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto; /* Center the container horizontally */
+  background-color: #F5FFFA;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.events-container.dark-mode {
+  background-color: #000000;
+  filter: brightness(0.7); /* Dim the background in dark mode */
+}
+
+.toggle-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  background: none;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+.toggle-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.profile-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 50%; /* Make it circular like an avatar */
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.profile-button:hover {
+  background-color: #535bf2;
+}
+.side-panel {
+  width: 250px;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: -250px;
+  height: 100%;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.side-panel.open {
+  left: 0;
+}
+
+.side-panel h2 {
+  margin-top: 0;
+}
+.side-panel ul {
+  padding: 0;
+}
+
+.side-panel ul li {
+  margin: 10px 0;
+  color: black;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.side-panel ul li:hover {
+  color: #646cff;
+  text-decoration: underline;
+}
+
+.dark-mode .side-panel {
+  background-color: #2a2a2a;
+}
+
+.dark-mode .side-panel ul li {
+  color: white;
+}
+
+.dark-mode .side-panel ul li:hover {
+  color: #a0a0ff;
+}
+
+/* Remove the close button styles */
+.close-button {
+  display: none;
+}
+
+/* Overlay to tone down brightness */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  z-index: 500; /* Below the side panel but above the content */
+}
+
+/* Dim the content when the side panel is open */
+.content {
+  flex: 1;
+  margin-left: 20px;
+  padding: 20px;
+  transition: filter 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.events-container .side-panel.open ~ .content {
+  filter: brightness(0.5); /* Reduce brightness */
+}
+
+.Events-welcome-section {
+  width: 100%;
+  height: 200px;
+  background: url('./assets/Eventsbackground.jpg') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-message {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+.sections-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Align items at the top */
+  width: 100%;
+  margin-top: 20px;
+}
+.create-button {
+  padding: 5px 15px;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.create-button:hover {
+   background-color: #535bf2;
+}
+.events-section {
+  width: 50%;
+  margin-right: 20px;
+}
+.events-section h2 {
+  font-size: 1.5rem;
+  color: black;
+  margin-bottom: 10px;
+}
+
+.dark-mode .events-section h2 {
+  color: white;
+}
+
+.event-card {
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .event-card {
+  background-color: #2a2a2a;
+  box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.event-image-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #e0e0e0;
+  margin-right: 10px;
+}
+
+.dark-mode .event-image-placeholder {
+  background-color: #4a4a4a;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.event-details h3 {
+  color: black; /* Ensure the title is black */
+  margin: 0 0 5px;
+  font-size: 1.2rem;
+}
+
+.dark-mode .event-details h3 {
+  color: white;
+}
+
+.event-details p {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.dark-mode .event-details p {
+  color: #ccc;
+}
+
+.event-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.complete-button {
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.complete-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background-color: #b02a37;
+}
+/* Calendar Section */
+.calendar-section {
+  width: 40%;
+  margin-left: auto; /* Push to the right within flex container */
+}
+
+.calendar-section h2 {
+  font-size: 1.5rem;
+  color: black;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.dark-mode .calendar-section h2 {
+  color: white;
+}
+
+.calendar-icon {
+  margin-right: 5px;
+  font-size: 1.2rem;
+}
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 300px; /* Increased width to match image */
+  margin: 0 auto; /* Center the header horizontally */
+}
+
+.calendar-header h2 {
+  font-size: 1rem; /* Scale down the font size */
+  margin: 0;
+}
+
+.dark-mode .calendar-header h2 {
+  color: white;
+}
+
+.calendar-nav {
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.8rem; /* Scale down the font size */
+}
+.calendar-nav:hover {
+  background-color: #535bf2;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 columns for days of the week */
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.7rem; /* Scale down the font size */
+  margin-bottom: 10px;
+  width: 300px; /* Increased width to match image */
+  margin: 0 auto; /* Center the days horizontally */
+}
+
+.dark-mode .calendar-days span {
+  color: white;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7 columns for a week */
+  gap: 2px; /* Reduce gap between dates */
+  width: 300px; /* Increased width to match image */
+  height: 300px; /* Increased height to match image */
+  margin: 0 auto; /* Center the calendar horizontally */
+}
+.calendar-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Make the date fill its grid cell */
+  height: 100%; /* Make the date fill its grid cell */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px; /* Slightly round the corners */
+  cursor: pointer;
+  color: black; /* Set default text color to black */
+  font-size: 0.7rem; /* Scale down the font size */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode .calendar-date {
+  background-color: #3a3a3a;
+  border-color: #555;
+  color: white;
+}
+
+.calendar-date.empty {
+  background-color: transparent;
+  border: none;
+  cursor: default; /* Prevent pointer cursor for empty boxes */
+  pointer-events: none; /* Disable all interactions for empty boxes */
+}
+.calendar-date:hover {
+  background-color: #e0e0ff; /* Change background color on hover */
+  color: #646cff; /* Change text color on hover */
+}
+
+.dark-mode .calendar-date:hover {
+  background-color: #5050ff;
+  color: white;
+}
+
+.calendar-date.selected {
+  border: 2px solid red;
+  border-radius: 50%;
+  background-color: #646cff; /* Change background color when selected */
+  color: white; /* Change text color when selected */
+}
+.calendar-date.current-day {
+  border: 2px solid red;
+  border-radius: 50%;
+  background-color: #ffcccb; /* Highlight current day */
+  color: black;
+  font-weight: bold;
+  cursor: pointer; /* Ensure the current day is clickable */
+}
+
+.dark-mode .calendar-date.current-day {
+  background-color: #ff6666;
+}
+
+.calendar-date.current-day.selected {
+  background-color: #646cff; /* Same background color as other selected dates */
+  color: white; /* Same text color as other selected dates */
+}
+
+.calendar-date.current-day:hover {
+  background-color: #e0e0ff; /* Same hover effect as other dates */
+  color: #646cff; /* Same hover text color as other dates */
+}
+
+.dark-mode .calendar-date.current-day:hover {
+  background-color: #5050ff;
+}
+
+.calendar-date.event-day {
+  border: 2px solid blue;
+  border-radius: 50%;
+}
+@media (max-width: 768px) {
+  .sections-wrapper {
+    flex-direction: column;
+  }
+  .events-section, .calendar-section {
+    width: 100%;
+  }
+  .calendar {
+    width: 100%;
+    height: auto;
+  }
+  .calendar-days {
+    width: 100%;
+  }
+  .calendar-header {
+    width: 100%;
+  }
+  .header-right {
+    gap: 10px; /* Reduce gap between elements */
+  }
+.icon-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem; /* Adjust font size to fit the container */
+  cursor: pointer;
+  padding: 5px; /* Add padding for better spacing */
+  display: flex; /* Ensure proper alignment */
+  align-items: center; /* Center icon vertically */
+  justify-content: center; /* Center icon horizontally */
+  max-width: 100%; /* Prevent overflow */
+  max-height: 100%; /* Prevent overflow */
+}
+  .create-button {
+    padding: 3px 10px; /* Reduce padding */
+    font-size: 0.8rem; /* Reduce font size */
+  }
+}
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: transparent;
+  z-index: 1000;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between icons */
+  margin-right: 20px; /* Space from the right edge */
+  justify-content: center; /* Centers items horizontally */
+}
+.icon-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.schedule-link {
+  margin-left: 10px;
+  font-size: 0.9rem;
+  color: #646cff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.schedule-link:hover {
+  text-decoration: underline;
+  color: #535bf2;
+}
+

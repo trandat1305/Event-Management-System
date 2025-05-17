@@ -13,15 +13,32 @@ function SignUp() {
   });
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
     setError('');
-    // Handle signup logic here
-    console.log('Signup attempt:', formData);
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        navigate('/home');
+      } else {
+        setError(data.message || 'Email is already registered');
+      }
+    } catch (err) {
+      setError('Server error. Please try again later.');
+    }
   };
 
   return (

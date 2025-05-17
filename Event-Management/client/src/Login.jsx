@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaEnvelope, FaLock, FaHome } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaHome, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Login.css';
 
 function Login() {
@@ -9,11 +9,27 @@ function Login() {
     email: '',
     password: ''
   });
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log('Login attempt:', formData);
+    setError('');
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      if (response.ok) {
+        navigate('/home');
+      } else {
+        setError(data.message || 'Invalid email or password');
+      }
+    } catch (err) {
+      setError('Server error. Please try again later.');
+    }
   };
 
   return (
@@ -42,15 +58,37 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <div className="input-icon">
+            <div className="input-icon" style={{ position: 'relative' }}>
               <FaLock />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
                 required
+                style={{ paddingRight: '2.5rem' }}
               />
+              <button
+                type="button"
+                className="show-password-btn"
+                onClick={() => setShowPassword((prev) => !prev)}
+                tabIndex={-1}
+                style={{
+                  position: 'absolute',
+                  right: '0.75rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: '#888',
+                  fontSize: '1.2rem',
+                  padding: 0
+                }}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
             </div>
           </div>
 
@@ -59,6 +97,9 @@ function Login() {
           </div>
 
           <button type="submit" className="auth-button">Sign In</button>
+          {error && (
+            <div style={{ color: 'red', marginTop: '0.75rem', textAlign: 'center' }}>{error}</div>
+          )}
         </form>
 
         <div className="auth-footer">

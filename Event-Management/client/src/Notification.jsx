@@ -1,82 +1,68 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import NotificationCard from './NotificationCard'; // Import the NotificationCard component
-import './Notification.css'; // Optional: Add styles for the Notification page
+import { FaArrowLeft, FaBell } from 'react-icons/fa';
+import './Notification.css';
 
 function Notification() {
-  const [isSidePanelOpen, setIsSidePanelOpen] = React.useState(false);
   const navigate = useNavigate();
-
-  const toggleSidePanel = () => {
-    setIsSidePanelOpen(!isSidePanelOpen);
-  };
-
-  const notifications = [
-    {
-      id: 1,
-      type: 'invitation',
-      inviterName: 'Phong',
-      eventTitle: 'Online Game',
-    },
-    {
-      id: 2,
-      type: 'discussion',
-      userName: 'Hung',
-      eventTitle: 'Gym',
-    },
-    {
-      id: 3,
-      type: 'event-update',
-      userName: 'Dat',
-      eventTitle: 'Deadline',
-    },
-    {
-      id: 4,
-      type: 'invitation',
-      inviterName: 'Linh',
-      eventTitle: 'Team Meeting',
-    },
-    {
-      id: 5,
-      type: 'event-update',
-      userName: 'Trang',
-      eventTitle: 'Project Launch',
-    },
+  // Sample notifications for attendee and organizer roles
+  const attendeeNotifications = [
+    { id: 1, title: 'Event Reminder', message: 'React Conference starts tomorrow!', time: '2 hours ago' },
+    { id: 2, title: 'New Comment', message: 'Someone commented on your event.', time: '5 hours ago' },
+  ];
+  const organizerNotifications = [
+    { id: 3, title: 'Event Update', message: 'Music Festival date changed.', time: '1 day ago' },
+    { id: 4, title: 'New Registration', message: 'A new user registered for your event.', time: '3 days ago' },
   ];
 
-  const handleAccept = (id) => {
-    console.log(`Accepted invitation with ID: ${id}`);
-  };
-
-  const handleDecline = (id) => {
-    console.log(`Declined invitation with ID: ${id}`);
-  };
-
   return (
-    <div className="notification-container">
-      <header className="header">
-        <div className="header-left">
-          <button className="toggle-button" onClick={toggleSidePanel}>
-            <span>☰</span>
-          </button>
+    <div className="notification-centered-page">
+      <header className="notification-top-nav">
+        <div className="notification-nav-left">
+          <button className="back-btn" onClick={() => navigate(-1)}><FaArrowLeft /> Back</button>
         </div>
+        <div className="notification-title-container">
+          <h1 className="notification-title"><FaBell style={{marginRight: '0.5rem'}}/> Notifications</h1>
+        </div>
+        {/* Optional: <div className="notification-nav-right"></div> */}
       </header>
-      <div className={`side-panel ${isSidePanelOpen ? 'open' : ''}`}>
-        <h2>Side Panel</h2>
-        <ul>
-          <li onClick={() => navigate('/home')}>Home</li>
-          <li onClick={() => navigate('/home/myevents')}>My Events</li>
-          <li onClick={() => navigate('/home/events')}>Events</li>
-          <li onClick={() => navigate('/home/listevent')}>List Events</li>
-        </ul>
-      </div>
-      {isSidePanelOpen && <div className="overlay" onClick={toggleSidePanel}></div>}
-      <div className="notification-page">
-        <NotificationCard
-          notifications={notifications}
-          onAccept={handleAccept}
-          onDecline={handleDecline}
-        />
+      <div className="notification-sections-wrapper">
+        <div className="notification-section">
+          <h2 className="notification-section-title">Attendee Notifications</h2>
+          <div className="notification-list">
+            {attendeeNotifications.length === 0 ? (
+              <div className="no-notifications">No attendee notifications yet.</div>
+            ) : (
+              attendeeNotifications.map(noti => (
+                <div key={noti.id} className="notification-card">
+                  <div className="notification-header">
+                    <span className="notification-card-title">{noti.title}</span>
+                    <span className="notification-time">{noti.time}</span>
+                  </div>
+                  <div className="notification-message">{noti.message}</div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+        <div className="notification-section">
+          <h2 className="notification-section-title">Organizer Notifications</h2>
+          <div className="notification-list">
+            {organizerNotifications.length === 0 ? (
+              <div className="no-notifications">No organizer notifications yet.</div>
+            ) : (
+              organizerNotifications.map(noti => (
+                <div key={noti.id} className="notification-card">
+                  <div className="notification-header">
+                    <span className="notification-card-title">{noti.title}</span>
+                    <span className="notification-time">{noti.time}</span>
+                  </div>
+                  <div className="notification-message">{noti.message}</div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

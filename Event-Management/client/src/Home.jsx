@@ -51,6 +51,9 @@ function Home() {
         <div className="nav-right">
           <button className="nav-btn" onClick={() => navigate('/login')}>Login</button>
           <button className="nav-btn signup-btn" onClick={() => navigate('/signup')}>Sign Up</button>
+          <button className="nav-btn" onClick={() => navigate('/user')} title="User Page">
+            <FaUserCircle style={{ fontSize: '1.5rem', marginRight: '0.5rem' }} /> User Page
+          </button>
         </div>
       </nav>
 

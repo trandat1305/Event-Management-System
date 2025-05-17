@@ -185,3 +185,215 @@
     font-size: 0.8rem;
   }
 }
+
+/* Modern MyAccount page styles */
+.myaccount-gradient-bg {
+  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #ff6b6b 0%, #fff6f3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.myaccount-profile-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(100, 108, 255, 0.10), 0 1.5px 6px rgba(0,0,0,0.04);
+  padding: 2.5rem 2.5rem 2rem 2.5rem;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.myaccount-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.myaccount-avatar-wrapper {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 0.7rem;
+}
+
+.myaccount-avatar-img {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 2px 12px rgba(100, 108, 255, 0.10);
+  background: #f3f3f3;
+}
+
+.myaccount-avatar-edit-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(135deg, #646cff 0%, #f05537 100%);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(100, 108, 255, 0.10);
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 1.1rem;
+}
+.myaccount-avatar-edit-btn:hover {
+  background: linear-gradient(135deg, #f05537 0%, #646cff 100%);
+}
+
+.myaccount-role {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #646cff;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.myaccount-info-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.myaccount-info-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  align-items: center;
+  width: 100%;
+}
+.myaccount-info-row label {
+  font-weight: 600;
+  color: #646cff;
+  margin-bottom: 0.1rem;
+  font-size: 1rem;
+}
+.myaccount-info-row span {
+  color: #222;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.myaccount-input {
+  width: 90%;
+  max-width: 350px;
+  margin: 0 auto;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #e3e6ff;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  color: #222;
+  background: #f8f9fa;
+  transition: border 0.2s;
+  outline: none;
+  text-align: center;
+}
+.myaccount-input:focus {
+  border: 1.5px solid #646cff;
+  background: #fff;
+}
+
+.myaccount-btn-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.2rem;
+  justify-content: center;
+}
+
+.myaccount-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(100, 108, 255, 0.07);
+}
+.myaccount-edit-btn {
+  background: linear-gradient(135deg, #646cff 0%, #f05537 100%);
+  color: #fff;
+}
+.myaccount-edit-btn:hover {
+  background: linear-gradient(135deg, #f05537 0%, #646cff 100%);
+}
+.myaccount-save-btn {
+  background: #4caf50;
+  color: #fff;
+}
+.myaccount-save-btn:hover {
+  background: #388e3c;
+}
+.myaccount-cancel-btn {
+  background: #f44336;
+  color: #fff;
+}
+.myaccount-cancel-btn:hover {
+  background: #b71c1c;
+}
+
+.myaccount-back-btn {
+  position: fixed;
+  top: 2.2rem;
+  left: 2.2rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  color: #ff6b6b;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.myaccount-back-btn:hover {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .myaccount-profile-card {
+    padding: 1.2rem 0.5rem 1.2rem 0.5rem;
+    max-width: 98vw;
+  }
+  .myaccount-gradient-bg {
+    padding: 1.2rem 0;
+  }
+}

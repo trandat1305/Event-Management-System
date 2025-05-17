@@ -1,4 +1,5 @@
 const Notification = require('../models/Notification');
+const User = require('../models/User');
 
 // Get notifications with pagination
 exports.getNotification = async (req, res) => {
@@ -33,22 +34,77 @@ exports.createNotification = async ({ userId, eventId, message, type }) => {
   }
 };
 
-exports.deleteNotification = async (req, res) => {
+// Get user notifications
+exports.getUserNotifications = async (req, res) => {
   try {
-    const notificationId = req.params.notificationId;
+    const notifications = await Notification.find({ recipient: req.user.userId })
+      .populate('event', 'title')
+      .sort({ createdAt: -1 });
 
-    const notification = await Notification.findById(notificationId);
+    res.json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting notifications', error: error.message });
+  }
+};
 
+// Mark notification as read
+exports.markAsRead = async (req, res) => {
+  try {
+    const notification = await Notification.findById(req.params.id);
+    
     if (!notification) {
-      return res.status(404).json({ error: 'Notification not found' });
+      return res.status(404).json({ message: 'Notification not found' });
     }
 
-    await notification.softDelete();
-    res.status(200).json({ message: 'Notification deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to delete notification', errorMessage: err.message });
+    // Check if user owns the notification
+    if (notification.recipient.toString() !== req.user.userId) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    notification.isRead = true;
+    await notification.save();
+
+    res.json({ message: 'Notification marked as read' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error marking notification as read', error: error.message });
   }
-}
+};
+
+// Mark all notifications as read
+exports.markAllAsRead = async (req, res) => {
+  try {
+    await Notification.updateMany(
+      { recipient: req.user.userId, isRead: false },
+      { isRead: true }
+    );
+
+    res.json({ message: 'All notifications marked as read' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error marking notifications as read', error: error.message });
+  }
+};
+
+// Delete notification
+exports.deleteNotification = async (req, res) => {
+  try {
+    const notification = await Notification.findById(req.params.id);
+    
+    if (!notification) {
+      return res.status(404).json({ message: 'Notification not found' });
+    }
+
+    // Check if user owns the notification
+    if (notification.recipient.toString() !== req.user.userId) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+
+    await notification.remove();
+
+    res.json({ message: 'Notification deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting notification', error: error.message });
+  }
+};
 
 exports.deleteAllNotifications = async (req, res) => {
   try {

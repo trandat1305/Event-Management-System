@@ -2,44 +2,46 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const app = express();
+const mongoose = require('mongoose');
 const path = require('path');
 const mongoSanitize = require('express-mongo-sanitize');
 
-const mongoose = require('mongoose');
+const app = express();
+
+// Connect to MongoDB
 mongoose.connect(process.env.MONGOURI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 const PORT = process.env.PORT || 3000;
 
-const apiRouter = require('./routes/centralRoute');
-
-// middleware
-app.use(cors()); // reminder to unuse this in production
+// Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize()); // prevent NoSQL injection
 
-const buildPath = path.join(__dirname, 'dist');
-app.use(express.static(buildPath)); // react folder
+// Serve static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // image upload folder
+// Routes
+const apiRouter = require('./routes/centralRoute');
+app.use('/api', apiRouter);
 
-// Middleware error handling
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Error!' });
+  res.status(500).json({ message: 'Something went wrong!' });
 });
 
 app.get("/hello", (req, res) => { 
     res.send("hello!");
 });
 
-app.use("/api", apiRouter);
-
 /*app.get('/*splat', (req, res) => {
   res.sendFile(path.join(buildPath, 'index.html'));
 }); */
 
 app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}, http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

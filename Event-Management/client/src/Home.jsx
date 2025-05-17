@@ -72,7 +72,7 @@ function Home() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <button className="create-event-btn" onClick={() => navigate('/create-event')}>
+            <button className="create-event-btn" onClick={() => navigate('/createevent')}>
               Create Event
             </button>
           </div>

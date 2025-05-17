@@ -16,19 +16,23 @@ function Login() {
     e.preventDefault();
     setError('');
     try {
-      const response = await fetch('/api/login', {
+      const response = await fetch('http://localhost:3000/api/users/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
       const data = await response.json();
       if (response.ok) {
-        navigate('/home');
+        navigate('/user');
+
+        // Store the token in local storage for later uses
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
       } else {
-        setError(data.message || 'Invalid email or password');
+        setError(data.error || 'Invalid email or password');
       }
     } catch (err) {
-      setError('Server error. Please try again later.');
+      setError('Server error. Please try again later.' + err.message);
     }
   };
 

@@ -21,11 +21,11 @@ function SignUp() {
     }
     setError('');
     try {
-      const response = await fetch('/api/signup', {
+      const response = await fetch('http://localhost:3000/api/users/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
+          username: formData.name,
           email: formData.email,
           password: formData.password
         })
@@ -34,10 +34,10 @@ function SignUp() {
       if (response.ok) {
         navigate('/home');
       } else {
-        setError(data.message || 'Email is already registered');
+        setError(data.error || 'Email is already registered');
       }
     } catch (err) {
-      setError('Server error. Please try again later.');
+      setError('Server error. Please try again later.' + err.message);
     }
   };
 

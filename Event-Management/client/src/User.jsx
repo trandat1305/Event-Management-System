@@ -7,7 +7,6 @@ function User() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // Sample user and events data
-  const user = { name: 'John Doe', avatar: '' };
   const participatingEvents = [
     { id: 1, title: 'React Conference', date: '2024-06-01', discussionId: 101 },
     { id: 2, title: 'Music Festival', date: '2024-06-10', discussionId: 102 },
@@ -16,6 +15,15 @@ function User() {
     { id: 3, title: 'Tech Meetup', date: '2024-06-15', discussionId: 103 },
     { id: 4, title: 'Startup Pitch', date: '2024-06-20', discussionId: 104 },
   ];
+
+  const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if (!token) {
+    // Redirect to login if token is not present
+    navigate('/login');
+    return null;
+  }
 
   return (
     <div className="dashboard-container">
@@ -37,10 +45,10 @@ function User() {
           </div>
           <div className="nav-right">
             <button className="icon-btn" onClick={() => navigate('/home/notification')}><FaBell /></button>
-            <button className="create-event-btn" onClick={() => navigate('/home/createevent')}><FaPlus /> Create Event</button>
+            <button className="create-event-btn" onClick={() => navigate('/createevent')}><FaPlus /> Create Event</button>
             <div className="user-profile">
               <span className="user-avatar"><FaUserCircle /></span>
-              <span className="user-name">{user.name}</span>
+              <span className="user-name">{user.username}</span>
               <button className="edit-profile-btn" onClick={() => navigate('/myaccount')}>Edit Profile</button>
             </div>
           </div>

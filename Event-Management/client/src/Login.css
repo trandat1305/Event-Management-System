@@ -90,6 +90,7 @@
   border: 2px solid #e1e1e1;
   transition: all 0.3s ease;
   background: #fff;
+  color: black;
 }
 
 .input-icon input:focus {

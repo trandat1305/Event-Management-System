@@ -21,7 +21,7 @@ const messageSchema = new mongoose.Schema({
     trim: true,
     maxlength: [1000, 'Message must not exceed 1000 characters']
   },
-  imageURL: [{ 
+  imageURL: { 
     type: String,
     default: null,
     validate: {
@@ -31,11 +31,6 @@ const messageSchema = new mongoose.Schema({
       },
       message: 'Invalid image URL'
     }
-  }],
-  replyToMessageId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Message', 
-    default: null  // Tracks if the message is a reply to another message
   },
   isEdited: { 
     type: Boolean, 
@@ -47,23 +42,6 @@ const messageSchema = new mongoose.Schema({
   }
 }, { timestamps: true }
 );
-
-// Return the full message unless it's deleted
-messageSchema.set('toJSON', {
-  transform: function(doc, ret) {
-    if (ret.isDeleted) {
-      return {
-        _id: ret._id,
-        content: 'Message deleted',
-        createdAt: ret.createdAt,
-        updatedAt: ret.updatedAt
-      };
-    }
-
-    // Otherwise, return the full message
-    return ret;
-  }
-});
 
 // Soft delete method
 messageSchema.methods.softDelete = async function() {

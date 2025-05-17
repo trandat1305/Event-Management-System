@@ -62,6 +62,16 @@ eventSchema.methods.softDelete = async function() {
   return await this.save();
 }
 
+eventSchema.statics.findByIdIfExists = async function (id) {
+  try {
+    const event = await this.findById(id);
+    return event || null; // Return the event if it exists, otherwise null
+  } catch (err) {
+    console.error('Error checking event existence:', err.message);
+    return null; // Return null in case of an error
+  }
+};
+
 // Schema-level validator for startTime and endTime
 eventSchema.path('endTime').validate(function(value) {
   // `this` refers to the document

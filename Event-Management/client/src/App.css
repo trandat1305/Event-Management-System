@@ -138,12 +138,11 @@ p button:hover {
 .admin-login-button:hover {
   background-color: #535bf2;
 }
-
-.admin-container {
+/*.admin-container {
   display: flex;
   height: 100vh;
   background-color: #f9f9f9;
-}
+}*/
 
 .header {
   display: flex;

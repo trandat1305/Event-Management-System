@@ -5,11 +5,16 @@ const eventParticipants = require('../models/EventParticipants');
 const eventOrganizers = require('../models/EventOrganizers');
 require('dotenv').config();
 
-// Register user
 exports.registerUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    const user = await User.create({ username, email, password });
+
+    // Create a new user instance
+    const user = new User({ username, email, password });
+
+    // Save the user to the database
+    await user.save();
+
     res.status(201).json({ message: 'User registered', userId: user.id });
   } catch (err) {
     if (err.code === 11000) { // MongoDB duplicate key error
@@ -19,7 +24,6 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// Login user
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -28,7 +32,7 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
-    res.json({ token });
+    res.status(200).json({ token });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -129,13 +133,14 @@ exports.getUserProfileById = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const userId = req.user._id; // Get user ID from the authenticated user
-    const { username, email } = req.body;
+    const { username, email, password } = req.body;
     const avatarPath = req.file ? req.file.path : null; // Check if an avatar file is uploaded
 
     // Prepare the update object
     const updateData = {};
     if (username) updateData.username = username;
     if (email) updateData.email = email;
+    if (password) updateData.password = password;
     if (avatarPath) updateData.avatar = avatarPath;
 
     // Update the user
@@ -151,9 +156,9 @@ exports.updateProfile = async (req, res) => {
 exports.updateUserById = async (req, res) => {
   try {
     const userId = req.params.userId; // Get user ID from the request parameters
-    const { username, email, isAdmin } = req.body;
+    const { username, email, password } = req.body;
 
-    const user = await User.findByIdAndUpdate(userId, { username, email, isAdmin }, { new: true });
+    const user = await User.findByIdAndUpdate(userId, { username, email, password }, { new: true });
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.status(200).json({ message: 'User updated successfully', user });
   } catch (err) {

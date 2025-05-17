@@ -1,7 +1,7 @@
 const Event = require('../models/Event');
-const invitation = require('../models/Invitation');
 const Notification = require('../models/Notification');
 const EventParticipants = require('../models/EventParticipants');
+const EventOrganizers = require('../models/EventOrganizers');
 
 exports.createEvent = async (req, res) => {
     try {
@@ -32,7 +32,20 @@ exports.createEvent = async (req, res) => {
 
       // Create and save the event
       const event = new Event(eventData);
-      await event.save();
+      const newEvent = await event.save();
+
+      // Add the creator to the EventParticipants and EventOrgnizers collection
+      const participant = new EventParticipants({
+        event: newEvent._id,
+        user: creator,
+      });
+      await participant.save();
+
+      const eventOrganizer = new EventOrganizers({
+        eventId: newEvent._id,
+        userId: creator,
+      });
+      await eventOrganizer.save();
 
       res.status(201).json(event);
     } catch (err) {
@@ -79,18 +92,37 @@ exports.updateEvent = async (req, res) => {
         event.imageURL = req.file.path;
       }
 
+      const participants = await EventParticipants.getParticipants(event._id);
+
       // Handle status updates (e.g., cancellation)
       if (status === 'cancelled') {
         event.status = 'cancelled';
 
         // Notify attendees about cancellation
-        // Remove all participants from the Eventparticipants collection
+        const notifications = participants.map(participant => ({
+          userId: participant.user._id,
+          eventId: event._id,
+          message: `The event "${event.title}" has been cancelled.`,
+          type: 'event',
+        }));
+
+        await Notification.insertMany(notifications);
+        await event.save();
+        return res.status(200).json({ message: 'Event cancelled successfully' });
       }
-  
-      // Create a notification for the event update
-  
+
       // Save the updated event
       await event.save();
+  
+      // Create a notification for the event update
+      const notifications = participants.map(participant => ({
+        userId: participant.user._id,
+        eventId: event._id,
+        message: `One or more details of the event "${event.title}" have been updated.`,
+        type: 'event',
+      }));
+      
+      await Notification.insertMany(notifications);
   
       res.json(event);
     } catch (err) {
@@ -113,12 +145,19 @@ exports.deleteEvent = async (req, res) => {
       if (participants.length > 0) {
         await Promise.all(participants.map(participant => participant.softDelete()));
       }
+
+      // Delete all organizers from the EventOrganizers collection
+      const organizers = await EventOrganizers.find({ eventId: eventId });
+      if (organizers.length > 0) {
+        await Promise.all(organizers.map(organizer => organizer.softDelete()));
+      }
       
       // Notify attendees about cancellation
       const notifications = participants.map(participant => ({
-        userId: participant.userId,
+        userId: participant.user,
         eventId: eventId,
         message: `The event "${event.title}" has been deleted.`,
+        type: 'event',
       }));
       await Notification.insertMany(notifications);
 

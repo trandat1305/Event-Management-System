@@ -3,23 +3,32 @@ const User = require('./User');
 const Event = require('./Event');
 
 const notificationSchema = new mongoose.Schema({
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
+  recipient: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
-  eventId: { 
-    type: mongoose.Schema.Types.ObjectId, 
+  event: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Event',
+    required: true
   },
-  message: { 
-    type: String, 
-    required: true 
+  type: {
+    type: String,
+    enum: ['invitation', 'reminder', 'update', 'response'],
+    required: true
   },
-  type: { 
-    type: String, 
-    enum: ['invitation', 'discussion', 'event'], 
-    default: 'null' 
+  message: {
+    type: String,
+    required: true
+  },
+  isRead: {
+    type: Boolean,
+    default: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   },
   isDeleted: { 
     type: Boolean, 

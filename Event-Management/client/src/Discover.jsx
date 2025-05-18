@@ -37,7 +37,7 @@ function Discover() {
   ];
 
   const handleJoin = (eventId) => {
-    alert('Bạn đã tham gia sự kiện! (Demo UI)');
+    alert('You have joined the event (Demo UI)');
   };
 
   return (
@@ -85,8 +85,7 @@ function Discover() {
                   <span><FaMapMarkerAlt /> {event.location}</span>
                 </div>
                 <div className="event-footer">
-                  <span className="event-price">{event.price ? `$${event.price}` : 'Free'}</span>
-                  <button className="book-now-btn" onClick={() => handleJoin(event._id)}>Tham gia</button>
+                  <button className="book-now-btn" onClick={() => handleJoin(event._id)}> Join </button>
                 </div>
               </div>
             </div>
@@ -97,4 +96,4 @@ function Discover() {
   );
 }
 
-export default Discover; 
+export default Discover;

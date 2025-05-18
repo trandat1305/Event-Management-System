@@ -305,14 +305,9 @@ html, body {
 
 .event-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 1rem;
-}
-
-.event-price {
-  font-weight: 600;
-  color: var(--primary-color);
 }
 
 .book-now-btn {

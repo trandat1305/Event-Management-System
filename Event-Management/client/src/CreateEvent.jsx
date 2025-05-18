@@ -14,10 +14,11 @@ function CreateEvent() {
     endTime: '',
     location: '',
     image: null,
-    isPublic: undefined // Changed to undefined to require explicit selection
+    isPublic: undefined
   });
   const [dateError, setDateError] = useState('');
   const [visibilityError, setVisibilityError] = useState('');
+  const [imageError, setImageError] = useState('');
 
   const validateDates = () => {
     if (formData.startDate && formData.endDate && formData.startTime && formData.endTime) {
@@ -55,11 +56,21 @@ function CreateEvent() {
     return true;
   };
 
+  const validateImage = () => {
+    if (!formData.image) {
+      setImageError('Please upload an event image');
+      return false;
+    }
+    setImageError('');
+    return true;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const isDatesValid = validateDates();
     const isVisibilityValid = validateVisibility();
-    if (isDatesValid && isVisibilityValid) {
+    const isImageValid = validateImage();
+    if (isDatesValid && isVisibilityValid && isImageValid) {
       console.log('Event creation:', formData);
       // Handle event creation logic here
     }
@@ -67,9 +78,8 @@ function CreateEvent() {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, image: file });
-    }
+    setFormData({ ...formData, image: file });
+    validateImage();
   };
 
   return (
@@ -82,7 +92,7 @@ function CreateEvent() {
 
         <form onSubmit={handleSubmit} className="create-event-form">
           <div className="form-group">
-            <label>Event Title</label>
+            <label>Event Title *</label>
             <input
               type="text"
               placeholder="Enter event title"
@@ -103,7 +113,7 @@ function CreateEvent() {
 
           <div className="form-row">
             <div className="form-group">
-              <label><FaCalendarAlt /> Start Date</label>
+              <label><FaCalendarAlt /> Start Date *</label>
               <input
                 type="date"
                 value={formData.startDate}
@@ -116,7 +126,7 @@ function CreateEvent() {
             </div>
 
             <div className="form-group">
-              <label><FaClock /> Start Time</label>
+              <label><FaClock /> Start Time *</label>
               <input
                 type="time"
                 value={formData.startTime}
@@ -131,7 +141,7 @@ function CreateEvent() {
 
           <div className="form-row">
             <div className="form-group">
-              <label><FaCalendarAlt /> End Date</label>
+              <label><FaCalendarAlt /> End Date *</label>
               <input
                 type="date"
                 value={formData.endDate}
@@ -144,7 +154,7 @@ function CreateEvent() {
             </div>
 
             <div className="form-group">
-              <label><FaClock /> End Time</label>
+              <label><FaClock /> End Time *</label>
               <input
                 type="time"
                 value={formData.endTime}
@@ -164,7 +174,7 @@ function CreateEvent() {
           )}
 
           <div className="form-group">
-            <label><FaMapMarkerAlt /> Location</label>
+            <label><FaMapMarkerAlt /> Location *</label>
             <input
               type="text"
               placeholder="Enter event location"
@@ -176,7 +186,7 @@ function CreateEvent() {
 
           <div className="form-group">
             <label>Event Visibility *</label>
-            <div className="visibility-toggle">
+            <div className={`visibility-toggle ${visibilityError ? 'invalid' : ''}`}>
               <label className="visibility-option">
                 <input
                   type="radio"
@@ -210,12 +220,13 @@ function CreateEvent() {
           </div>
 
           <div className="form-group">
-            <label><FaImage /> Event Image</label>
-            <div className="image-upload">
+            <label><FaImage /> Event Image *</label>
+            <div className={`image-upload ${imageError ? 'invalid' : ''}`}>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
+                required
               />
               {formData.image && (
                 <div className="image-preview">
@@ -223,6 +234,11 @@ function CreateEvent() {
                 </div>
               )}
             </div>
+            {imageError && (
+              <div className="error-message">
+                {imageError}
+              </div>
+            )}
           </div>
 
           <div className="form-actions">

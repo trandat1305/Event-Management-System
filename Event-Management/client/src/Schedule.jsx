@@ -130,6 +130,10 @@ function Schedule() {
   const tileClassName = ({ date, view }) => {
     if (view !== 'month') return '';
     const d = formatDate(date);
+    // Đánh dấu ngày có event
+    if (mockEvents.some(e => e.date === d)) {
+      return 'event-day';
+    }
     const hasOrg = mockEvents.some(e => e.date === d && e.type === 'organizer');
     const hasPar = mockEvents.some(e => e.date === d && e.type === 'participant');
     if (filter === 'all') {

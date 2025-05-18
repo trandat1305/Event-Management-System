@@ -523,7 +523,7 @@ html, body {
 .back-btn-discover {
   background: none;
   border: none;
-  color: #fff;
+  color: var(--primary-color);
   font-size: 1.1rem;
   cursor: pointer;
   display: flex;
@@ -532,7 +532,34 @@ html, body {
   padding: 6px 12px;
   border-radius: 6px;
   transition: background 0.2s;
+  font-weight: 600;
 }
 .back-btn-discover:hover {
   background: rgba(0,0,0,0.08);
+}
+
+.discover-nav-bar {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+.nav-back-logo {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  justify-content: flex-start;
+}
+@media (max-width: 600px) {
+  .nav-back-logo {
+    gap: 0.5rem;
+  }
+}
+
+.discover-logo-center {
+  color: var(--primary-color) !important;
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  cursor: pointer;
 }

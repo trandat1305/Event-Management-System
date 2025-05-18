@@ -42,17 +42,30 @@ function Discover() {
 
   return (
     <div className="home-container float-in-discover">
-      <nav className="nav-bar" style={{ position: 'relative' }}>
+      <nav className="nav-bar discover-nav-bar" style={{ position: 'relative' }}>
         <button
           className="back-btn-discover"
-          style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#fff', fontSize: '1.2rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+          style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)' }}
           onClick={() => navigate('/user')}
         >
           <FaArrowLeft style={{ marginRight: 6 }} /> Back
         </button>
-        <div className="nav-left" style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <h1 className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/home')}>Eventer</h1>
-        </div>
+        <h1
+          className="logo discover-logo-center"
+          style={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            margin: 0,
+            color: 'var(--primary-color)',
+            cursor: 'pointer',
+            fontWeight: 700
+          }}
+          onClick={() => navigate('/home')}
+        >
+          Eventer
+        </h1>
       </nav>
       <section className="featured-events">
         <div className="section-header" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

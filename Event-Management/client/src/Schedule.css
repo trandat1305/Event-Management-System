@@ -362,3 +362,10 @@ body, .schedule-container {
 .react-calendar__month-view__days__day--weekend {
   color: #ff6b6b !important;
 }
+
+.event-day {
+  background: #ffe0b2 !important;
+  color: #f05537 !important;
+  border-radius: 50% !important;
+  font-weight: bold;
+}

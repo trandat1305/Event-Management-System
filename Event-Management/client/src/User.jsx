@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBell, FaUserCircle, FaPlus, FaCalendarAlt, FaCompass, FaBars } from 'react-icons/fa';
+import { FaBell, FaUserCircle, FaPlus, FaCalendarAlt, FaCompass, FaBars, FaUsers } from 'react-icons/fa';
 import './User.css';
 
 function User() {
@@ -26,13 +26,14 @@ function User() {
   }
 
   return (
-    <div className="dashboard-container">
+    <div className="dashboard-container float-in-discover">
       {/* Sidebar */}
       <aside className={`sidebar${sidebarOpen ? ' open' : ''}`}>
         <div className="sidebar-logo">Eventer</div>
         <nav className="sidebar-nav">
           <button onClick={() => navigate('/home/schedule')}><FaCalendarAlt /> Schedule</button>
           <button onClick={() => navigate('/discover')}><FaCompass /> Discover</button>
+          <button onClick={() => navigate('/invitation')}><FaUsers /> Invitation</button>
         </nav>
       </aside>
       {/* Main Content */}

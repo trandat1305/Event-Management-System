@@ -11,6 +11,7 @@ import Admin from './Admin';
 import User from './User'; // Import the User page
 import AdminEvents from './AdminEvents'; // Updated import
 import Discover from './Discover';
+import Invitation from './Invitation';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/admin/events" element={<AdminEvents />} /> {/* Updated route */}
         <Route path="/user" element={<User />} /> {/* User dashboard/profile page */}
         <Route path="/discover" element={<Discover />} />
+        <Route path="/invitation" element={<Invitation />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </Router>

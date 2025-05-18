@@ -48,10 +48,6 @@ function Home() {
         <div className="nav-right">
           <button className="nav-btn" onClick={() => navigate('/login')}>Login</button>
           <button className="nav-btn signup-btn" onClick={() => navigate('/signup')}>Sign Up</button>
-          <button className="nav-btn" onClick={() => navigate('/user')} title="User Page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <FaUserCircle style={{ fontSize: '1.5rem', marginRight: '0.5rem' }} />
-            <span style={{ display: 'inline-block' }}>User Page</span>
-          </button>
         </div>
       </nav>
 

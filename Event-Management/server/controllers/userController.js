@@ -47,7 +47,7 @@ exports.loginUser = async (req, res) => {
     res.status(200).json({ token, user });
   } catch (err) {
     console.error(err);
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -79,8 +79,18 @@ exports.getUserEvents = async (req, res) => {
       return res.status(404).json({ error: 'No events found for this user' });
     }
 
+    //fetch organized event IDs
+    const organized = await eventOrganizers.find({ user: userId }).select('event');
+    const organizedEventIds = organized.map(o => o.eventId.toString());
+
+    // Filter out events where the user is the creator or organizer
+    const filteredEvents = events.filter(event =>
+      event.event.creator._id.toString() !== userId.toString() &&
+      !organizedEventIds.includes(event.event._id.toString())
+    );
+
     // Add the `myEvent` key to each event
-    const updatedEvents = events.map(event => {
+    const updatedEvents = filteredEvents.map(event => {
       const isMyEvent = event.event.creator._id.toString() === userId.toString();
       return {
         ...event.toObject(), // Convert Mongoose document to plain object

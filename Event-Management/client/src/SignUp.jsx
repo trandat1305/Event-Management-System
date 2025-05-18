@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock, FaGoogle, FaFacebook, FaHome } from 'react-icons/fa';
 import './Login.css'; // We'll reuse the same styles
+import { useSelector } from 'react-redux';
 
 function SignUp() {
   const navigate = useNavigate();
+  
+    const user = useSelector(state => state.auth.user);
+    const token = useSelector(state => state.auth.token);
+  
+    useEffect(() => {
+      if (user && token) {
+        navigate('/user');
+      }
+    }, [user, token, navigate]);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -32,7 +43,7 @@ function SignUp() {
       });
       const data = await response.json();
       if (response.ok) {
-        navigate('/home');
+        navigate('/login');
       } else {
         setError(data.error || 'Email is already registered');
       }

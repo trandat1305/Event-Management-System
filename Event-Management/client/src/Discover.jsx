@@ -14,7 +14,6 @@ function Discover() {
       location: 'Hà Nội',
       price: 0,
       imageURL: '',
-      category: 'Tech'
     },
     {
       _id: '2',
@@ -23,7 +22,6 @@ function Discover() {
       location: 'TP. HCM',
       price: 10,
       imageURL: '',
-      category: 'Music'
     },
     {
       _id: '3',
@@ -32,7 +30,6 @@ function Discover() {
       location: 'Đà Nẵng',
       price: 0,
       imageURL: '',
-      category: 'Art'
     }
   ];
 
@@ -76,7 +73,6 @@ function Discover() {
             <div key={event._id} className="event-card">
               <div className="event-image">
                 <img src={event.imageURL || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'} alt={event.title} />
-                <span className="event-category">{event.category || 'General'}</span>
               </div>
               <div className="event-details">
                 <h3>{event.title}</h3>

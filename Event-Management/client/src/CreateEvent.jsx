@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaImage, FaTag, FaDollarSign } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaImage } from 'react-icons/fa';
 import './CreateEvent.css';
 
 function CreateEvent() {
@@ -8,18 +8,48 @@ function CreateEvent() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    date: '',
-    time: '',
+    startDate: '',
+    endDate: '',
+    startTime: '',
+    endTime: '',
     location: '',
-    category: '',
-    price: '',
     image: null
   });
+  const [dateError, setDateError] = useState('');
+
+  const validateDates = () => {
+    if (formData.startDate && formData.endDate && formData.startTime && formData.endTime) {
+      const startDateTime = new Date(`${formData.startDate}T${formData.startTime}`);
+      const endDateTime = new Date(`${formData.endDate}T${formData.endTime}`);
+      
+      if (endDateTime <= startDateTime) {
+        if (formData.startDate === formData.endDate) {
+          const startTimeParts = formData.startTime.split(':').map(Number);
+          const endTimeParts = formData.endTime.split(':').map(Number);
+          
+          const startMinutes = startTimeParts[0] * 60 + startTimeParts[1];
+          const endMinutes = endTimeParts[0] * 60 + endTimeParts[1];
+          
+          if (startMinutes >= endMinutes) {
+            setDateError('End time must be after start time on the same day');
+            return false;
+          }
+        } else {
+          setDateError('End date must be after start date');
+          return false;
+        }
+      }
+    }
+    setDateError('');
+    return true;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle event creation logic here
-    console.log('Event creation:', formData);
+    if (validateDates()) {
+      console.log('Event creation:', formData);
+      // Handle event creation logic here
+    }
   };
 
   const handleImageChange = (e) => {
@@ -55,31 +85,70 @@ function CreateEvent() {
               placeholder="Describe your event..."
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
-              required
             />
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label><FaCalendarAlt /> Date</label>
+              <label><FaCalendarAlt /> Start Date</label>
               <input
                 type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({...formData, date: e.target.value})}
+                value={formData.startDate}
+                onChange={(e) => {
+                  setFormData({...formData, startDate: e.target.value});
+                  validateDates();
+                }}
                 required
               />
             </div>
 
             <div className="form-group">
-              <label><FaClock /> Time</label>
+              <label><FaClock /> Start Time</label>
               <input
                 type="time"
-                value={formData.time}
-                onChange={(e) => setFormData({...formData, time: e.target.value})}
+                value={formData.startTime}
+                onChange={(e) => {
+                  setFormData({...formData, startTime: e.target.value});
+                  validateDates();
+                }}
                 required
               />
             </div>
           </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label><FaCalendarAlt /> End Date</label>
+              <input
+                type="date"
+                value={formData.endDate}
+                onChange={(e) => {
+                  setFormData({...formData, endDate: e.target.value});
+                  validateDates();
+                }}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label><FaClock /> End Time</label>
+              <input
+                type="time"
+                value={formData.endTime}
+                onChange={(e) => {
+                  setFormData({...formData, endTime: e.target.value});
+                  validateDates();
+                }}
+                required
+              />
+            </div>
+          </div>
+
+          {dateError && (
+            <div className="error-message">
+              {dateError}
+            </div>
+          )}
 
           <div className="form-group">
             <label><FaMapMarkerAlt /> Location</label>
@@ -92,36 +161,6 @@ function CreateEvent() {
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label><FaTag /> Category</label>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData({...formData, category: e.target.value})}
-                required
-              >
-                <option value="">Select category</option>
-                <option value="music">Music</option>
-                <option value="technology">Technology</option>
-                <option value="food">Food & Drink</option>
-                <option value="sports">Sports</option>
-                <option value="arts">Arts</option>
-                <option value="business">Business</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label><FaDollarSign /> Price</label>
-              <input
-                type="number"
-                placeholder="Enter ticket price"
-                value={formData.price}
-                onChange={(e) => setFormData({...formData, price: e.target.value})}
-                required
-              />
-            </div>
-          </div>
-
           <div className="form-group">
             <label><FaImage /> Event Image</label>
             <div className="image-upload">
@@ -129,7 +168,6 @@ function CreateEvent() {
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                required
               />
               {formData.image && (
                 <div className="image-preview">

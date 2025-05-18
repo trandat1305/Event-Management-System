@@ -58,6 +58,32 @@
   text-decoration: underline;
 }
 
+.notification-back-btn {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  color: #ff6b6b;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.6rem 1.3rem;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  margin-right: 1.2rem;
+}
+
+.notification-back-btn:hover {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.notification-back-btn svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 .notification-title-container {
   flex: 1 1 0;
   display: flex;

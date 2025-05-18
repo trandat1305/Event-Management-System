@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBell, FaUserCircle, FaPlus, FaCalendarAlt, FaCompass, FaBars, FaUsers } from 'react-icons/fa';
+import { FaBell, FaUserCircle, FaPlus, FaCalendarAlt, FaCompass, FaBars, FaUsers, FaAt } from 'react-icons/fa';
 import './User.css';
 
 function User() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // Sample user and events data
+  
+  // Sample user and events data with locations
   const participatingEvents = [
-    { id: 1, title: 'React Conference', date: '2024-06-01', discussionId: 101 },
-    { id: 2, title: 'Music Festival', date: '2024-06-10', discussionId: 102 },
+    { id: 1, title: 'React Conference', date: '2024-06-01', location: 'Online', discussionId: 101, category: 'Tech' },
+    { id: 2, title: 'Music Festival', date: '2024-06-10', location: 'Central Park', discussionId: 102, category: 'Music' },
   ];
   const organizingEvents = [
-    { id: 3, title: 'Tech Meetup', date: '2024-06-15', discussionId: 103 },
-    { id: 4, title: 'Startup Pitch', date: '2024-06-20', discussionId: 104 },
+    { id: 3, title: 'Tech Meetup', date: '2024-06-15', location: 'Tech Hub', discussionId: 103, category: 'Tech' },
+    { id: 4, title: 'Startup Pitch', date: '2024-06-20', location: 'Innovation Center', discussionId: 104, category: 'Business' },
   ];
 
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user'));
 
   if (!token) {
-    // Redirect to login if token is not present
     navigate('/login');
     return null;
   }
@@ -54,25 +54,53 @@ function User() {
             </div>
           </div>
         </header>
-        {/* Two Columns */}
-        <div className="events-columns">
-          <div className="events-column">
-            <h2>Participating Events</h2>
-            {participatingEvents.map(event => (
-              <div key={event.id} className="event-card" onClick={() => navigate(`/event/${event.id}/discussion/${event.discussionId}`)}>
-                <h3>{event.title}</h3>
-                <p>Date: {event.date}</p>
-              </div>
-            ))}
-          </div>
-          <div className="events-column">
+        {/* Events Section */}
+        <div className="events-section">
+          {/* Organizing/Created Events */}
+          <div className="event-type">
             <h2>Organizing/Created Events</h2>
-            {organizingEvents.map(event => (
-              <div key={event.id} className="event-card" onClick={() => navigate(`/event/${event.id}/discussion/${event.discussionId}`)}>
-                <h3>{event.title}</h3>
-                <p>Date: {event.date}</p>
-              </div>
-            ))}
+            <div className="events-row">
+              {organizingEvents.map(event => (
+                <div key={event.id} className="event-card" onClick={() => navigate(`/event/${event.id}/discussion/${event.discussionId}`)}>
+                  <div className="event-image">
+                    <img
+                      src={event.imageURL || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'}
+                      alt={event.title}
+                    />
+                    <span className="event-category">{event.category || 'General'}</span>
+                  </div>
+                  <div className="event-details">
+                    <h3 className="event-title">{event.title}</h3>
+                    <p className="event-date">Date: {event.date}</p>
+                    <p className="event-location">Location: {event.location}</p>
+                    <button className="join-btn">Join</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Participating Events */}
+          <div className="event-type">
+            <h2>Participating Events</h2>
+            <div className="events-row">
+              {participatingEvents.map(event => (
+                <div key={event.id} className="event-card" onClick={() => navigate(`/event/${event.id}/discussion/${event.discussionId}`)}>
+                  <div className="event-image">
+                    <img
+                      src={event.imageURL || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'}
+                      alt={event.title}
+                    />
+                    <span className="event-category">{event.category || 'General'}</span>
+                  </div>
+                  <div className="event-details">
+                    <h3 className="event-title">{event.title}</h3>
+                    <p className="event-date">Date: {event.date}</p>
+                    <p className="event-location">Location: {event.location}</p>
+                    <button className="join-btn">Join</button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

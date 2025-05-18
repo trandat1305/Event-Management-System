@@ -242,7 +242,7 @@ function CreateEvent() {
           </div>
 
           <div className="form-actions">
-            <button type="button" className="cancel-button" onClick={() => navigate('/home')}>
+            <button type="button" className="cancel-button" onClick={() => navigate('/user')}>
               Cancel
             </button>
             <button type="submit" className="create-button">

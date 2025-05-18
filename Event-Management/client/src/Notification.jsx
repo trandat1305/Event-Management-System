@@ -19,7 +19,9 @@ function Notification() {
     <div className="notification-centered-page">
       <header className="notification-top-nav">
         <div className="notification-nav-left">
-          <button className="back-btn" onClick={() => navigate(-1)}><FaArrowLeft /> Back</button>
+          <button className="notification-back-btn" onClick={() => navigate(-1)}>
+            <FaArrowLeft style={{ marginRight: '0.5rem', fontSize: '1.1rem' }} /> Back
+          </button>     
         </div>
         <div className="notification-title-container">
           <h1 className="notification-title"><FaBell style={{marginRight: '0.5rem'}}/> Notifications</h1>

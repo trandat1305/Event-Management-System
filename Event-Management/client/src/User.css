@@ -218,50 +218,105 @@
   color: #fff;
 }
 
-.events-columns {
+/* Style for the events section to stack event types vertically */
+.events-section {
   display: flex;
-  gap: 2.5rem;
-  padding: 2.5rem 1rem 0 1rem;
+  flex-direction: column;
+  gap: 2rem; /* Space between the two event-type sections */
+  padding: 2.5rem 1rem 0 1rem; /* Consistent padding */
   width: 100%;
   box-sizing: border-box;
 }
+
+/* Each event-type section */
+.event-type {
+  width: 100%; /* Full width for vertical stacking */
+}
+
+/* Horizontal layout for event cards within each events-row */
+.events-row {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem; /* Space between event cards */
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+}
+
+/* Responsive design: no changes needed as vertical stacking is already mobile-friendly */
+@media (max-width: 900px) {
+  .events-row {
+    flex-wrap: wrap; /* Wrap cards on smaller screens if needed */
+  }
+}
+
+.events-columns {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
 .events-column {
   flex: 1;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  padding: 2rem 1.5rem;
   min-width: 0;
 }
-.events-column h2 {
-  font-size: 1.3rem;
-  font-weight: 700;
-  margin-bottom: 1.2rem;
-  color: #f05537;
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
+
 .event-card {
-  background: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  padding: 1.1rem 1.2rem;
-  margin-bottom: 1.2rem;
+  width: 100%;
+  max-width: 300px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
   cursor: pointer;
-  transition: box-shadow 0.2s, background 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
 }
+
 .event-card:hover {
-  background: #ffe5e0;
-  box-shadow: 0 4px 16px rgba(240, 85, 55, 0.10);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
 }
-.event-card h3 {
-  margin: 0 0 0.3rem 0;
+
+.event-image {
+  position: relative;
+  height: 200px;
+}
+
+.event-details {
+  padding: 1rem;
+}
+
+.event-title {
   font-size: 1.1rem;
   font-weight: 600;
   color: #2e2e2e;
+  margin-bottom: 0.5rem;
 }
-.event-card p {
-  margin: 0;
+
+.event-date,
+.event-location {
+  font-size: 0.9rem;
   color: #666;
-  font-size: 0.98rem;
+  margin-bottom: 0.5rem;
+}
+
+.join-btn {
+  background: linear-gradient(135deg, #f05537 0%, #ff6b6b 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.join-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 85, 55, 0.3);
 }
 
 .hamburger-btn {
@@ -315,14 +370,16 @@
     text-align: center;
     gap: 0.2rem;
   }
+  .events-section {
+    flex-direction: column;
+    padding: 1.2rem 0.5rem 0 0.5rem;
+  }
   .events-columns {
     flex-direction: column;
-    gap: 1.2rem;
-    padding: 1.2rem 0.5rem 0 0.5rem;
-    width: 100%;
+    gap: 2rem;
   }
-  .events-column {
-    padding: 1rem 0.5rem;
+  .event-card {
+    max-width: 100%;
   }
 }
 
@@ -340,8 +397,7 @@
   .top-nav {
     padding: 1rem 0.5rem;
   }
-  .events-columns {
+  .events-section {
     padding: 1rem 0.2rem 0 0.2rem;
-    width: 100%;
   }
 }

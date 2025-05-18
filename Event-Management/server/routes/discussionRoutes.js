@@ -21,17 +21,4 @@ discussionRouter.post('/:eventId/messages', messageValidator,
   discussionController.postMessage
 ); // post a new message
 
-discussionRouter.delete('/:eventId/messages/:messageId', discussionController.deleteMessage); // delete a message
-
-discussionRouter.put('/:eventId/messages/:messageId', messageValidator,
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ error: errors.array() });
-    }
-    next();
-  },
-  discussionController.editMessage
-); // edit a message
-
 module.exports = discussionRouter;

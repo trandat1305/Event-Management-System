@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaImage } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaImage, FaLock, FaGlobe } from 'react-icons/fa';
 import './CreateEvent.css';
 
 function CreateEvent() {
@@ -13,9 +13,11 @@ function CreateEvent() {
     startTime: '',
     endTime: '',
     location: '',
-    image: null
+    image: null,
+    isPublic: undefined // Changed to undefined to require explicit selection
   });
   const [dateError, setDateError] = useState('');
+  const [visibilityError, setVisibilityError] = useState('');
 
   const validateDates = () => {
     if (formData.startDate && formData.endDate && formData.startTime && formData.endTime) {
@@ -44,9 +46,20 @@ function CreateEvent() {
     return true;
   };
 
+  const validateVisibility = () => {
+    if (formData.isPublic === undefined) {
+      setVisibilityError('Please select event visibility (Public or Private)');
+      return false;
+    }
+    setVisibilityError('');
+    return true;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validateDates()) {
+    const isDatesValid = validateDates();
+    const isVisibilityValid = validateVisibility();
+    if (isDatesValid && isVisibilityValid) {
       console.log('Event creation:', formData);
       // Handle event creation logic here
     }
@@ -159,6 +172,41 @@ function CreateEvent() {
               onChange={(e) => setFormData({...formData, location: e.target.value})}
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label>Event Visibility *</label>
+            <div className="visibility-toggle">
+              <label className="visibility-option">
+                <input
+                  type="radio"
+                  name="visibility"
+                  checked={formData.isPublic === true}
+                  onChange={() => {
+                    setFormData({...formData, isPublic: true});
+                    validateVisibility();
+                  }}
+                />
+                <FaGlobe /> Public
+              </label>
+              <label className="visibility-option">
+                <input
+                  type="radio"
+                  name="visibility"
+                  checked={formData.isPublic === false}
+                  onChange={() => {
+                    setFormData({...formData, isPublic: false});
+                    validateVisibility();
+                  }}
+                />
+                <FaLock /> Private
+              </label>
+            </div>
+            {visibilityError && (
+              <div className="error-message">
+                {visibilityError}
+              </div>
+            )}
           </div>
 
           <div className="form-group">

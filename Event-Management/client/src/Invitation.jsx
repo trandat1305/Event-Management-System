@@ -83,14 +83,14 @@ function Invitation() {
             style={{ padding: '7px 28px', fontSize: 16, border: tab === 'received' ? 'none' : '1.5px solid #f05537', color: tab === 'received' ? '#fff' : '#f05537', background: tab === 'received' ? 'var(--primary-color)' : 'none', fontWeight: 600 }}
             onClick={() => setTab('received')}
           >
-            Received
+            Sent ({sentInvites.reduce((sum, event) => sum + event.recipients.length, 0)})
           </button>
           <button
             className={tab === 'sent' ? 'book-now-btn' : 'cancel-button'}
             style={{ padding: '7px 28px', fontSize: 16, border: tab === 'sent' ? 'none' : '1.5px solid #f05537', color: tab === 'sent' ? '#fff' : '#f05537', background: tab === 'sent' ? 'var(--primary-color)' : 'none', fontWeight: 600 }}
             onClick={() => setTab('sent')}
           >
-            Sent
+            Received ({attendeeInvites.length + organizerInvites.length})
           </button>
         </div>
         {tab === 'received' ? (

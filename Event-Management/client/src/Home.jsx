@@ -13,7 +13,6 @@ function Home() {
       time: '10:00 AM',
       location: 'San Francisco, CA',
       image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      price: '$299',
       category: 'Technology'
     },
     {
@@ -23,7 +22,6 @@ function Home() {
       time: '2:00 PM',
       location: 'Los Angeles, CA',
       image: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      price: '$199',
       category: 'Music'
     },
     {
@@ -33,7 +31,6 @@ function Home() {
       time: '6:00 PM',
       location: 'New York, NY',
       image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      price: '$149',
       category: 'Food & Drink'
     }
   ];

@@ -112,6 +112,19 @@
   margin-left: 0 !important;
   transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
 }
+.invite-btn {
+  background: var(--gradient);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.invite-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 85, 55, 0.3);}
 
 @media (min-width: 900px) {
   .main-content.shifted {
@@ -231,6 +244,7 @@
 /* Each event-type section */
 .event-type {
   width: 100%; /* Full width for vertical stacking */
+  margin-left: 0px; /* Add left margin */
 }
 
 /* Horizontal layout for event cards within each events-row */
@@ -240,6 +254,7 @@
   gap: 1.5rem; /* Space between event cards */
   overflow-x: auto; /* Allow horizontal scrolling if needed */
 }
+
 
 /* Responsive design: no changes needed as vertical stacking is already mobile-friendly */
 @media (max-width: 900px) {
@@ -329,6 +344,7 @@
   align-items: center;
   margin-right: 0.5rem;
 }
+
 
 @media (max-width: 900px) {
   .sidebar {

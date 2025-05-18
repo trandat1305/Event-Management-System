@@ -192,9 +192,9 @@ function Schedule() {
                 onChange={handleFilterChange}
                 className="filter-select"
               >
-                <option value="all">All Events (cả 2 loại)</option>
-                <option value="organizer">Organizer Events</option>
-                <option value="participant">Participant Events</option>
+                <option value="all">All Events</option>
+                <option value="organizer">Organzining Events</option>
+                <option value="participant">Attending Events</option>
               </select>
             </div>
           </div>

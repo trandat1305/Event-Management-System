@@ -4,7 +4,6 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const path = require('path');
-const mongoSanitize = require('express-mongo-sanitize');
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGOURI)
@@ -17,7 +16,6 @@ const apiRouter = require('./routes/centralRoute');
 app.use(cors()); // reminder to unuse this in production
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(mongoSanitize()); // prevent NoSQL injection
 
 const buildPath = path.join(__dirname, 'dist');
 app.use(express.static(buildPath)); // react folder

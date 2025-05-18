@@ -166,14 +166,7 @@ exports.getAllPublicEvents = async (req, res) => {
   try {
     const userId = req.user._id; // Get the authenticated user's ID
 
-    // Get limit from query, default to 0 (no limit) if not provided or invalid
-    let limit = parseInt(req.query.limit, 10);
-    if (isNaN(limit) || limit < 1) limit = 0;
-
-    // Use limit in the query
-    const eventsQuery = Event.find({ isPublic: true }).populate('creator', 'username _id');
-    if (limit > 0) eventsQuery.limit(limit);
-    const events = await eventsQuery;
+    const events = await Event.find({ isPublic: true }).populate('creator', 'username _id');
 
     if (!events || events.length === 0) {
       return res.status(404).json({ error: 'No events found' });

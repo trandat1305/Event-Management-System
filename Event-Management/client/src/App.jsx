@@ -10,6 +10,7 @@ import SignUp from './SignUp';
 import Admin from './Admin';
 import User from './User'; // Import the User page
 import AdminEvents from './AdminEvents'; // Updated import
+import Discover from './Discover';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/admin/users" element={<User />} /> {/* User route */}
         <Route path="/admin/events" element={<AdminEvents />} /> {/* Updated route */}
         <Route path="/user" element={<User />} /> {/* User dashboard/profile page */}
+        <Route path="/discover" element={<Discover />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </Router>

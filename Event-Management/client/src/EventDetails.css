@@ -110,3 +110,102 @@
     transform: translateY(0) scale(1);
   }
 }
+
+/* --- Edit Event Form Modern Style --- */
+.edit-event-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #f05537;
+}
+.edit-event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.form-group label {
+  color: #2e2e2e;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.event-edit-input,
+.edit-event-form input,
+.edit-event-form textarea {
+  padding: 0.8rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+.edit-event-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+.event-edit-input:focus,
+.edit-event-form input:focus,
+.edit-event-form textarea:focus {
+  border-color: #f05537;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(240, 85, 55, 0.1);
+}
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  justify-content: flex-end;
+}
+.save-button {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  color: #fff;
+  border: none;
+  padding: 0.8rem 2.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.save-button:hover {
+  background: linear-gradient(135deg, #219150 0%, #27ae60 100%);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.15);
+}
+.cancel-button {
+  background: none;
+  border: 2px solid #e1e1e1;
+  color: #666;
+  padding: 0.8rem 1.8rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.cancel-button:hover {
+  background: #f8f9fa;
+  border-color: #d1d1d1;
+}
+@media (max-width: 600px) {
+  .event-details-content {
+    padding: 10px 2px;
+    max-width: 99vw;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .edit-event-title {
+    font-size: 1.1rem;
+  }
+}

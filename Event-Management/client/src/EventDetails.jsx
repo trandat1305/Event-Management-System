@@ -25,45 +25,75 @@ function EventDetails({ event, onClose }) {
         </button>
         {isEditing ? (
           <>
-            <input
-              className="event-edit-input"
-              name="title"
-              value={editEvent.title}
-              onChange={handleEditChange}
-              placeholder="Title"
-            />
-            <textarea
-              className="event-edit-input"
-              name="description"
-              value={editEvent.description}
-              onChange={handleEditChange}
-              placeholder="Description"
-            />
-            <input
-              className="event-edit-input"
-              name="startTime"
-              type="datetime-local"
-              value={editEvent.startTime?.slice(0, 16) || ''}
-              onChange={handleEditChange}
-            />
-            <input
-              className="event-edit-input"
-              name="endTime"
-              type="datetime-local"
-              value={editEvent.endTime?.slice(0, 16) || ''}
-              onChange={handleEditChange}
-            />
-            <input
-              className="event-edit-input"
-              name="location"
-              value={editEvent.location}
-              onChange={handleEditChange}
-              placeholder="Location"
-            />
-            <div className="event-details-buttons">
-              <button className="join-button" onClick={handleSave}>Save</button>
-              <button className="back-button" onClick={() => setIsEditing(false)}>Cancel</button>
-            </div>
+            <h2 className="edit-event-title">Chỉnh sửa sự kiện</h2>
+            <form className="edit-event-form" onSubmit={e => { e.preventDefault(); handleSave(); }}>
+              <div className="form-group">
+                <label htmlFor="edit-title">Tên sự kiện</label>
+                <input
+                  id="edit-title"
+                  className="event-edit-input"
+                  name="title"
+                  value={editEvent.title}
+                  onChange={handleEditChange}
+                  placeholder="Nhập tên sự kiện"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="edit-description">Mô tả</label>
+                <textarea
+                  id="edit-description"
+                  className="event-edit-input"
+                  name="description"
+                  value={editEvent.description}
+                  onChange={handleEditChange}
+                  placeholder="Mô tả chi tiết sự kiện"
+                  required
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="edit-start">Thời gian bắt đầu</label>
+                  <input
+                    id="edit-start"
+                    className="event-edit-input"
+                    name="startTime"
+                    type="datetime-local"
+                    value={editEvent.startTime?.slice(0, 16) || ''}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="edit-end">Thời gian kết thúc</label>
+                  <input
+                    id="edit-end"
+                    className="event-edit-input"
+                    name="endTime"
+                    type="datetime-local"
+                    value={editEvent.endTime?.slice(0, 16) || ''}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label htmlFor="edit-location">Địa điểm</label>
+                <input
+                  id="edit-location"
+                  className="event-edit-input"
+                  name="location"
+                  value={editEvent.location}
+                  onChange={handleEditChange}
+                  placeholder="Nhập địa điểm"
+                  required
+                />
+              </div>
+              <div className="form-actions">
+                <button type="button" className="cancel-button" onClick={() => setIsEditing(false)}>Hủy</button>
+                <button type="submit" className="save-button">Lưu</button>
+              </div>
+            </form>
           </>
         ) : (
           <>

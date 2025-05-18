@@ -32,7 +32,7 @@ function User() {
         <div className="sidebar-logo">Eventer</div>
         <nav className="sidebar-nav">
           <button onClick={() => navigate('/home/schedule')}><FaCalendarAlt /> Schedule</button>
-          <button onClick={() => navigate('/home/discover')}><FaCompass /> Discover</button>
+          <button onClick={() => navigate('/discover')}><FaCompass /> Discover</button>
         </nav>
       </aside>
       {/* Main Content */}

@@ -23,7 +23,11 @@ const invitationSchema = new mongoose.Schema({
     enum: ['pending', 'accepted', 'declined'], 
     default: 'pending' 
   },
-
+  type: { 
+    type: String, 
+    enum: ['attendee', 'organizer'], 
+    required: true 
+  },
   timeSent: { 
     type: Date, 
     default: Date.now 

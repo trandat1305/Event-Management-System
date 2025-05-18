@@ -44,7 +44,6 @@ body, .schedule-container {
 }
 
 .schedule-gradient-bg {
-  /* Remove background and border-radius, just use for centering */
   min-height: unset;
   background: none;
   border-radius: 0;
@@ -84,36 +83,6 @@ body, .schedule-container {
   color: #333;
   font-size: 2rem;
   margin: 0;
-}
-
-.filter-container {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  margin-top: 15px;
-}
-
-.filter-container label {
-  color: #666;
-  font-size: 1rem;
-}
-
-.filter-select {
-  padding: 0.5rem 1rem;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  color: #333;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-select:focus {
-  border-color: #646cff;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
 }
 
 .calendar-section,
@@ -184,63 +153,6 @@ body, .schedule-container {
   margin: 0;
 }
 
-.calendar-date {
-  min-width: 38px;
-  min-height: 38px;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #333;
-  background: #f8f9fa;
-  transition: background 0.2s, color 0.2s;
-  border: 1px solid #e0e0e0;
-}
-
-.calendar-date.red-indicator {
-  background: #ff6b6b;
-  color: #fff;
-}
-
-.calendar-date.blue-indicator {
-  background: #646cff;
-  color: #fff;
-}
-
-.calendar-date.purple-indicator {
-  background: linear-gradient(135deg, #ff6b6b 0%, #646cff 100%);
-  color: #fff;
-}
-
-.calendar-date.red-indicator::after,
-.calendar-date.blue-indicator::after,
-.calendar-date.purple-indicator::after {
-  display: none !important;
-}
-
-.calendar-date:hover:not(.empty) {
-  background: rgba(100, 108, 255, 0.1);
-}
-
-.calendar-date.selected {
-  background: #646cff;
-  color: white;
-}
-
-.calendar-date.current-day {
-  border: 2px solid #ff6b6b;
-}
-
-.calendar-date.empty {
-  background: transparent;
-  border: none;
-  cursor: default;
-  pointer-events: none;
-  box-shadow: none;
-}
-
 .events-section {
   background: #f8f9fa;
   border-radius: 12px;
@@ -283,10 +195,6 @@ body, .schedule-container {
     align-items: flex-start;
   }
 
-  .calendar-date {
-    font-size: 0.875rem;
-  }
-
   .calendar-section, .calendar, .calendar-days {
     max-width: 98vw;
   }
@@ -316,11 +224,51 @@ body, .schedule-container {
 }
 
 .react-calendar__tile {
+  position: relative;
   border-radius: 12px !important;
   margin: 2px;
   transition: background 0.2s, color 0.2s;
   font-size: 1.1rem;
   height: 48px !important;
+}
+
+.react-calendar__tile.red-indicator::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.react-calendar__tile.blue-indicator::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #646cff;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.react-calendar__tile.purple-indicator::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b6b 0%, #646cff 100%);
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .react-calendar__tile--now {
@@ -345,6 +293,7 @@ body, .schedule-container {
   border: none;
   margin-bottom: 10px;
 }
+
 .react-calendar__navigation button {
   border-radius: 8px;
   background: #f8f9fa;
@@ -354,6 +303,7 @@ body, .schedule-container {
   margin: 0 2px;
   transition: background 0.2s, color 0.2s;
 }
+
 .react-calendar__navigation button:enabled:hover {
   background: #ff6b6b22;
   color: #ff6b6b;
@@ -361,11 +311,4 @@ body, .schedule-container {
 
 .react-calendar__month-view__days__day--weekend {
   color: #ff6b6b !important;
-}
-
-.event-day {
-  background: #ffe0b2 !important;
-  color: #f05537 !important;
-  border-radius: 50% !important;
-  font-weight: bold;
 }

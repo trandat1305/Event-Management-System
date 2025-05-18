@@ -97,66 +97,34 @@ const mockEvents = [
 
 function Schedule() {
   const [value, setValue] = useState(new Date());
-  const [filter, setFilter] = useState('all');
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const navigate = useNavigate();
 
   // Helper: format date to yyyy-mm-dd
   const formatDate = (date) => {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   // Get events for a date
   const getEventsForDate = (date) => {
     const d = formatDate(date);
-    if (filter === 'all') {
-      // Only show days that have both types
-      const hasOrg = mockEvents.some(e => e.date === d && e.type === 'organizer');
-      const hasPar = mockEvents.some(e => e.date === d && e.type === 'participant');
-      if (hasOrg && hasPar) {
-        return mockEvents.filter(e => e.date === d);
-      }
-      return [];
-    } else if (filter === 'organizer') {
-      return mockEvents.filter(e => e.date === d && e.type === 'organizer');
-    } else if (filter === 'participant') {
-      return mockEvents.filter(e => e.date === d && e.type === 'participant');
-    }
-    return [];
+    return mockEvents.filter(e => e.date === d);
   };
 
   // Calendar tile coloring
   const tileClassName = ({ date, view }) => {
     if (view !== 'month') return '';
     const d = formatDate(date);
-    // Đánh dấu ngày có event
-    if (mockEvents.some(e => e.date === d)) {
-      return 'event-day';
-    }
     const hasOrg = mockEvents.some(e => e.date === d && e.type === 'organizer');
     const hasPar = mockEvents.some(e => e.date === d && e.type === 'participant');
-    if (filter === 'all') {
-      if (hasOrg && hasPar) return 'purple-indicator';
-      return '';
-    }
-    if (filter === 'organizer') {
-      if (hasOrg && hasPar) return 'purple-indicator';
-      if (hasOrg) return 'red-indicator';
-      return '';
-    }
-    if (filter === 'participant') {
-      if (hasOrg && hasPar) return 'purple-indicator';
-      if (hasPar) return 'blue-indicator';
-      return '';
-    }
+    if (hasOrg && hasPar) return 'purple-indicator';
+    if (hasOrg) return 'red-indicator';
+    if (hasPar) return 'blue-indicator';
     return '';
-  };
-
-  // Handle filter change
-  const handleFilterChange = (e) => {
-    setFilter(e.target.value);
-    setSelectedDate(null);
   };
 
   // Handle date click
@@ -188,19 +156,6 @@ function Schedule() {
         <div className="schedule-card">
           <div className="schedule-header">
             <h1>Schedule</h1>
-            <div className="filter-container">
-              <label htmlFor="filter-select">Filter:</label>
-              <select
-                id="filter-select"
-                value={filter}
-                onChange={handleFilterChange}
-                className="filter-select"
-              >
-                <option value="all">All Events</option>
-                <option value="organizer">Organzining Events</option>
-                <option value="participant">Attending Events</option>
-              </select>
-            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
             <Calendar

@@ -94,11 +94,6 @@ exports.editMessage = async (req, res) => {
     const { message } = req.body;
     const imageURL = req.file ? req.file.path : null;
 
-    // Validate message length
-    if (message.length > 900) {
-      return res.status(400).json({ error: 'Message exceeds 900 characters' });
-    }
-
     // Find the message to edit
     const messageToEdit = await Discussion.findById(messageId);
     if (!messageToEdit) {

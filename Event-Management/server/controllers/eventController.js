@@ -8,11 +8,6 @@ exports.createEvent = async (req, res) => {
       const { title, description, isPublic, location, startTime, endTime } = req.body;
       const creator = req.user._id;
 
-      // Validate required fields
-      if (!title || !startTime || !endTime || !location) {
-        return res.status(400).json({ error: 'Title, startTime, endTime, and location are required' });
-      }
-
       // Handle optional fields with default values
       const isPublicValue = isPublic !== undefined ? isPublic : false; // Default to false
       const descriptionValue = description || ''; // Default to an empty string
@@ -171,7 +166,14 @@ exports.getAllPublicEvents = async (req, res) => {
   try {
     const userId = req.user._id; // Get the authenticated user's ID
 
-    const events = await Event.find().populate('creator', 'username _id');
+    // Get limit from query, default to 0 (no limit) if not provided or invalid
+    let limit = parseInt(req.query.limit, 10);
+    if (isNaN(limit) || limit < 1) limit = 0;
+
+    // Use limit in the query
+    const eventsQuery = Event.find({ isPublic: true }).populate('creator', 'username _id');
+    if (limit > 0) eventsQuery.limit(limit);
+    const events = await eventsQuery;
 
     if (!events || events.length === 0) {
       return res.status(404).json({ error: 'No events found' });

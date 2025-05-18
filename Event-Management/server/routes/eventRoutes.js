@@ -6,6 +6,8 @@ const organizerController = require('../controllers/EventOrganizerController');
 
 const upload = require('../middlewares/uploadImages'); // Import Multer
 const authenticateUser = require('../middlewares/authentication'); // Import authentication middleware
+const { createEventValidator, updateEventValidator } = require('../middlewares/eventValidator'); // Import event validation middleware
+const { validationResult } = require('express-validator');
 
 eventRouter.use(authenticateUser); // Protect all routes below this line
 
@@ -15,9 +17,25 @@ eventRouter.get('/:eventId', eventController.getEventById); // get an event by I
 eventRouter.get('/public', eventController.getAllPublicEvents); // get all public events regardless of attendance
 
 // Event creation and modification routes
-eventRouter.post('/', upload.single('image'), eventController.createEvent); // create a new event
+eventRouter.post('/', upload.single('image'), createEventValidator,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: errors.array() });
+    }
+    next();
+  },
+  eventController.createEvent); // create a new event
 
-eventRouter.put('/:eventId', upload.single('image'), eventController.updateEvent); // update an event
+eventRouter.put('/:eventId', upload.single('image'), updateEventValidator,
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+        return res.status(400).json({ error: errors.array() });
+        }
+        next();
+    },
+    eventController.updateEvent); // update an event
 
 eventRouter.delete('/:eventId', eventController.deleteEvent); // delete an event
 

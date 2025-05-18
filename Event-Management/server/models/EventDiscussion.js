@@ -21,17 +21,6 @@ const messageSchema = new mongoose.Schema({
     trim: true,
     maxlength: [1000, 'Message must not exceed 1000 characters']
   },
-  imageURL: { 
-    type: String,
-    default: null,
-    validate: {
-      validator: function(v) {
-        if (!v) return true;  
-        return /^(http|https):\/\/\S+\.(jpg|jpeg|png|webp)$/.test(v);
-      },
-      message: 'Invalid image URL'
-    }
-  },
   isEdited: { 
     type: Boolean, 
     default: false 

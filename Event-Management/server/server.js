@@ -14,8 +14,8 @@ const apiRouter = require('./routes/centralRoute');
 
 // middleware
 app.use(cors()); // reminder to unuse this in production
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 const buildPath = path.join(__dirname, 'dist');
 app.use(express.static(buildPath)); // react folder

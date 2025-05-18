@@ -12,12 +12,28 @@ const authenticateUser = require('../middlewares/authentication');
 // Register route with validation
 userRouter.post(
   '/auth/register',
+  registerValidator,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: errors.array() });
+    }
+    next();
+  },
   userController.registerUser
 );
 
 // Login route with validation
 userRouter.post(
   '/auth/login',
+  loginValidator,
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ error: errors.array() });
+    }
+    next();
+  },
   userController.loginUser
 );
 

@@ -25,7 +25,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // image u
 // Middleware error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Error!' });
+  res.status(500).json({ error: err.stack });
 });
 
 app.get("/hello", (req, res) => { 

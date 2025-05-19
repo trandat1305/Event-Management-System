@@ -4,6 +4,7 @@ import { FaBell, FaUserCircle, FaPlus, FaCalendarAlt, FaCompass, FaBars, FaUsers
 import './User.css';
 import EventDetails from './EventDetails';
 import Invite from './Invite';
+import { useSelector } from 'react-redux';
 
 function User() {
   const navigate = useNavigate();
@@ -13,8 +14,8 @@ function User() {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [selectedEventForInvite, setSelectedEventForInvite] = useState(null);
 
-  const user = JSON.parse(localStorage.getItem('user'));
-  const token = localStorage.getItem('token');
+  const user = useSelector((state) => state.auth.user);
+  const token = useSelector((state) => state.auth.token);
 
   const participatingEvents = [
     {
@@ -106,6 +107,11 @@ function User() {
           <button onClick={() => navigate('/home/schedule')}><FaCalendarAlt /> Schedule</button>
           <button onClick={() => navigate('/discover')}><FaCompass /> Discover</button>
           <button onClick={() => navigate('/invitation')}><FaUsers /> Invitation</button>
+          {user.isAdmin === true && (
+              <button onClick={() => navigate('/admin')}>
+                <FaUserCircle /> Admin
+              </button>
+            )}
         </nav>
       </aside>
       <div className={`main-content${sidebarOpen ? ' shifted' : ''}`}>

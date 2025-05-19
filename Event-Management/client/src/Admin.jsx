@@ -1,635 +1,113 @@
 import React, { useState } from 'react';
-import { FaUser, FaCalendarAlt, FaUserTie, FaSignOutAlt, FaTachometerAlt, FaUsers, FaCog, FaEdit, FaTrash, FaTimes, FaCalendar } from 'react-icons/fa';
+import { FaUser, FaCalendarAlt, FaUserTie, FaSignOutAlt, FaTachometerAlt, FaUsers, FaBell, FaCog, FaEnvelopeOpenText, FaListAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
 import './Admin.css';
-
-// Register Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const pages = [
   { key: 'dashboard', label: 'Dashboard', icon: <FaTachometerAlt /> },
   { key: 'users', label: 'Users', icon: <FaUsers /> },
   { key: 'events', label: 'Events', icon: <FaCalendarAlt /> },
+  { key: 'invitations', label: 'Invitations', icon: <FaEnvelopeOpenText /> },
+  { key: 'notifications', label: 'Notifications', icon: <FaBell /> },
   { key: 'settings', label: 'Settings', icon: <FaCog /> },
 ];
 
 function Admin() {
   const [stats] = useState({ users: 120, organizers: 8, events: 31 });
   const [page, setPage] = useState('dashboard');
-  const [config, setConfig] = useState({
-    maxActiveEvents: 5,
-    maxInvitations: 100
-  });
-  const [users, setUsers] = useState([
-    { id: 1, username: 'john_doe', email: 'john@example.com', password: 'pass123', eventsParticipated: 5, eventsOrganized: 2 },
-    { id: 2, username: 'jane_smith', email: 'jane@example.com', password: 'secure456', eventsParticipated: 3, eventsOrganized: 0 },
-    { id: 3, username: 'bob_jones', email: 'bob@example.com', password: 'mypassword', eventsParticipated: 8, eventsOrganized: 4 },
-    { id: 4, username: 'alice_brown', email: 'alice@example.com', password: 'alice789', eventsParticipated: 1, eventsOrganized: 1 },
-  ]);
-  const [events, setEvents] = useState([
-    { id: 1, name: 'Tech Conference 2025', date: '2025-06-01', location: 'New York', participants: 150, organizer: 'john_doe' },
-    { id: 2, name: 'Art Workshop', date: '2025-07-15', location: 'Los Angeles', participants: 45, organizer: 'jane_smith' },
-    { id: 3, name: 'Music Festival', date: '2025-08-20', location: 'Chicago', participants: 200, organizer: 'bob_jones' },
-    { id: 4, name: 'Charity Run', date: '2025-09-10', location: 'Boston', participants: 80, organizer: 'alice_brown' },
-  ]);
-  const [announcements, setAnnouncements] = useState([
-    { id: 1, title: 'System Update v2.1', message: 'New features added to event management.', date: '2025-05-10' },
-    { id: 2, title: 'Maintenance Notice', message: 'Scheduled downtime on May 20.', date: '2025-05-15' },
-  ]);
-  const [newAnnouncement, setNewAnnouncement] = useState({ title: '', message: '', date: '' });
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [editingUser, setEditingUser] = useState(null);
-  const [editingEvent, setEditingEvent] = useState(null);
   const navigate = useNavigate();
 
-  // Mock data for upcoming events (for dashboard chart)
-  const upcomingEvents = [
-    { name: 'Tech Conference 2025', participants: 150 },
-    { name: 'Art Workshop', participants: 45 },
-    { name: 'Music Festival', participants: 200 },
-    { name: 'Charity Run', participants: 80 },
-    { name: 'Coding Bootcamp', participants: 60 },
-  ];
-
-  // Chart data and options
-  const chartData = {
-    labels: upcomingEvents.map(event => event.name),
-    datasets: [
-      {
-        label: 'Number of Participants',
-        data: upcomingEvents.map(event => event.participants),
-        backgroundColor: '#f05537',
-        borderColor: '#ff6b6b',
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          color: '#333',
-          font: { size: 14 },
-        },
-      },
-      title: {
-        display: true,
-        text: 'Participants in Upcoming Events',
-        color: '#f05537',
-        font: { size: 18, weight: '600' },
-        padding: { bottom: 20 },
-      },
-    },
-    scales: {
-      x: {
-        ticks: { color: '#333', font: { size: 12 }, maxRotation: 45, minRotation: 45 },
-        grid: { display: false },
-      },
-      y: {
-        beginAtZero: true,
-        ticks: { color: '#333', font: { size: 12 }, stepSize: 50 },
-        grid: { color: 'rgba(0,0,0,0.1)' },
-      },
-    },
-  };
-
-  const handleConfigChange = (e) => {
-    const { name, value } = e.target;
-    setConfig(prev => ({
-      ...prev,
-      [name]: parseInt(value) || 0
-    }));
-  };
-
-  const handleConfigSave = (e) => {
-    e.preventDefault();
-    console.log('Saving configuration:', config);
-    alert('Configuration saved successfully!');
-  };
-
-  // Announcement Management
-  const handleAnnouncementChange = (e) => {
-    const { name, value } = e.target;
-    setNewAnnouncement(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handlePostAnnouncement = (e) => {
-    e.preventDefault();
-    if (!newAnnouncement.title || !newAnnouncement.message || !newAnnouncement.date) {
-      alert('Please fill in all fields.');
-      return;
-    }
-    const selectedDate = new Date(newAnnouncement.date);
-    const today = new Date('2025-05-19');
-    if (selectedDate < today.setHours(0, 0, 0, 0)) {
-      alert('Cannot select a past date.');
-      return;
-    }
-    const newId = announcements.length > 0 ? Math.max(...announcements.map(a => a.id)) + 1 : 1;
-    setAnnouncements([...announcements, { id: newId, ...newAnnouncement }]);
-    setNewAnnouncement({ title: '', message: '', date: '' });
-    setShowDatePicker(false);
-    console.log('Posted announcement:', newAnnouncement);
-    alert('Announcement posted successfully!');
-  };
-
-  const toggleDatePicker = () => {
-    setShowDatePicker(prev => !prev);
-  };
-
-  // User Management
-  const handleEditUser = (user) => {
-    setEditingUser({ ...user });
-  };
-
-  const handleDeleteUser = (username) => {
-    if (window.confirm(`Are you sure you want to delete ${username}?`)) {
-      setUsers(users.filter(user => user.username !== username));
-      console.log(`Deleted user: ${username}`);
-    }
-  };
-
-  const handleSaveEditUser = (e) => {
-    e.preventDefault();
-    setUsers(users.map(user => 
-      user.id === editingUser.id ? { ...editingUser } : user
-    ));
-    setEditingUser(null);
-    console.log('Saved user:', editingUser);
-  };
-
-  const handleEditUserChange = (e) => {
-    const { name, value } = e.target;
-    setEditingUser(prev => ({
-      ...prev,
-      [name]: name === 'eventsParticipated' || name === 'eventsOrganized' ? parseInt(value) || 0 : value
-    }));
-  };
-
-  const handleCloseUserModal = () => {
-    setEditingUser(null);
-  };
-
-  // Event Management
-  const handleEditEvent = (event) => {
-    setEditingEvent({ ...event });
-  };
-
-  const handleDeleteEvent = (name) => {
-    if (window.confirm(`Are you sure you want to delete ${name}?`)) {
-      setEvents(events.filter(event => event.name !== name));
-      console.log(`Deleted event: ${name}`);
-    }
-  };
-
-  const handleSaveEditEvent = (e) => {
-    e.preventDefault();
-    setEvents(events.map(event => 
-      event.id === editingEvent.id ? { ...editingEvent } : event
-    ));
-    setEditingEvent(null);
-    console.log('Saved event:', editingEvent);
-  };
-
-  const handleEditEventChange = (e) => {
-    const { name, value } = e.target;
-    setEditingEvent(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleCloseEventModal = () => {
-    setEditingEvent(null);
-  };
-
+  // Mock content for each page
   const renderContent = () => {
     switch (page) {
       case 'dashboard':
         return (
           <div className="admin-dashboard-main float-in-discover">
-            <h1 className="admin-dashboard-title">Admin Dashboard</h1>
-            <div className="admin-dashboard-stats">
-              <div className="admin-dashboard-stat admin-dashboard-stat-users">
-                <FaUser className="admin-dashboard-icon admin-dashboard-icon-users" />
+            <h1 style={{ color: '#f05537', fontWeight: 700, fontSize: '2rem', textAlign: 'center', margin: 0, letterSpacing: 1 }}>Admin Dashboard</h1>
+            <div className="admin-dashboard-stats" style={{ display: 'flex', gap: 24, width: '100%', justifyContent: 'center', margin: '2.5rem 0' }}>
+              <div className="admin-dashboard-stat" style={{ background: '#fff7f2', borderRadius: 16, boxShadow: '0 2px 8px rgba(240,85,55,0.07)', padding: '1.2rem 1.5rem', display: 'flex', alignItems: 'center', gap: 16, minWidth: 120 }}>
+                <FaUser className="admin-dashboard-icon" style={{ color: '#f05537', fontSize: 32 }} />
                 <div>
-                  <div className="admin-dashboard-stat-label">Total Users</div>
-                  <div className="admin-dashboard-stat-value admin-dashboard-stat-value-users">{stats.users}</div>
+                  <div className="admin-dashboard-stat-label" style={{ color: '#888', fontWeight: 600 }}>Total Users</div>
+                  <div className="admin-dashboard-stat-value" style={{ color: '#f05537', fontWeight: 700, fontSize: 22 }}>{stats.users}</div>
                 </div>
               </div>
-              <div className="admin-dashboard-stat admin-dashboard-stat-organizers">
-                <FaUserTie className="admin-dashboard-icon admin-dashboard-icon-organizers" />
+              <div className="admin-dashboard-stat" style={{ background: '#f6f7ff', borderRadius: 16, boxShadow: '0 2px 8px rgba(100,108,255,0.07)', padding: '1.2rem 1.5rem', display: 'flex', alignItems: 'center', gap: 16, minWidth: 120 }}>
+                <FaUserTie className="admin-dashboard-icon" style={{ color: '#646cff', fontSize: 32 }} />
                 <div>
-                  <div className="admin-dashboard-stat-label">Organizers</div>
-                  <div className="admin-dashboard-stat-value admin-dashboard-stat-value-organizers">{stats.organizers}</div>
+                  <div className="admin-dashboard-stat-label" style={{ color: '#888', fontWeight: 600 }}>Organizers</div>
+                  <div className="admin-dashboard-stat-value" style={{ color: '#646cff', fontWeight: 700, fontSize: 22 }}>{stats.organizers}</div>
                 </div>
               </div>
-              <div className="admin-dashboard-stat admin-dashboard-stat-events">
-                <FaCalendarAlt className="admin-dashboard-icon admin-dashboard-icon-events" />
+              <div className="admin-dashboard-stat" style={{ background: '#fffbe6', borderRadius: 16, boxShadow: '0 2px 8px rgba(255,193,7,0.07)', padding: '1.2rem 1.5rem', display: 'flex', alignItems: 'center', gap: 16, minWidth: 120 }}>
+                <FaCalendarAlt className="admin-dashboard-icon" style={{ color: '#ffc107', fontSize: 32 }} />
                 <div>
-                  <div className="admin-dashboard-stat-label">Total Events</div>
-                  <div className="admin-dashboard-stat-value admin-dashboard-stat-value-events">{stats.events}</div>
+                  <div className="admin-dashboard-stat-label" style={{ color: '#888', fontWeight: 600 }}>Total Events</div>
+                  <div className="admin-dashboard-stat-value" style={{ color: '#ffc107', fontWeight: 700, fontSize: 22 }}>{stats.events}</div>
                 </div>
               </div>
             </div>
-            <div className="admin-dashboard-welcome">
-              <b>Welcome, Admin!</b> Here you can manage users, events, and system settings.
-            </div>
-            <div className="admin-dashboard-chart-container">
-              <Bar data={chartData} options={chartOptions} />
-            </div>
-            <div className="admin-announcement-container">
-              <h3 className="admin-announcement-title">Post Update Announcement</h3>
-              <form className="admin-announcement-form" onSubmit={handlePostAnnouncement}>
-                <label className="admin-announcement-label">
-                  <span>Title</span>
-                  <input
-                    type="text"
-                    name="title"
-                    value={newAnnouncement.title}
-                    onChange={handleAnnouncementChange}
-                    className="admin-announcement-input"
-                    required
-                  />
-                </label>
-                <label className="admin-announcement-label">
-                  <span>Message</span>
-                  <textarea
-                    name="message"
-                    value={newAnnouncement.message}
-                    onChange={handleAnnouncementChange}
-                    className="admin-announcement-textarea"
-                    rows="4"
-                    required
-                  />
-                </label>
-                <label className="admin-announcement-label">
-                  <span>Date</span>
-                  <div className="admin-announcement-date-field">
-                    <input
-                      type="date"
-                      name="date"
-                      value={newAnnouncement.date}
-                      onChange={handleAnnouncementChange}
-                      className="admin-announcement-date-input"
-                      min="2025-05-19"
-                      style={{ display: showDatePicker ? 'block' : 'none' }}
-                      required
-                    />
-                    <button
-                      type="button"
-                      className="admin-announcement-date-btn"
-                      onClick={toggleDatePicker}
-                    >
-                      <FaCalendar /> {showDatePicker ? 'Close Calendar' : 'Select Date'}
-                    </button>
-                  </div>
-                </label>
-                <button type="submit" className="admin-announcement-submit-btn">Post Announcement</button>
-              </form>
-              <div className="admin-announcements-list">
-                <h3 className="admin-announcements-list-title">Posted Announcements</h3>
-                {announcements.length === 0 ? (
-                  <p className="admin-announcements-empty">No announcements posted yet.</p>
-                ) : (
-                  announcements.map(announcement => (
-                    <div key={announcement.id} className="admin-announcement-card">
-                      <h4 className="admin-announcement-card-title">{announcement.title}</h4>
-                      <p className="admin-announcement-card-message">{announcement.message}</p>
-                      <p className="admin-announcement-card-date">Posted on: {announcement.date}</p>
-                    </div>
-                  ))
-                )}
-              </div>
+            <div style={{ margin: '2rem 0', textAlign: 'center', color: '#888' }}>
+              <b>Welcome, Admin!</b> Here you can manage users, events, invitations, notifications, and system settings.
             </div>
           </div>
         );
       case 'users':
-        return (
-          <div className="admin-dashboard-main float-in-discover">
-            <h2 className="admin-page-title">User Management</h2>
-            <div className="admin-users-table-container">
-              <table className="admin-users-table">
-                <thead>
-                  <tr>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Events Participated</th>
-                    <th>Events Organized</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.map(user => (
-                    <tr key={user.id}>
-                      <td>{user.username}</td>
-                      <td>{user.email}</td>
-                      <td>***</td>
-                      <td>{user.eventsParticipated}</td>
-                      <td>{user.eventsOrganized}</td>
-                      <td>
-                        <button
-                          className="admin-users-edit-btn"
-                          onClick={() => handleEditUser(user)}
-                          title="Edit User"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          className="admin-users-delete-btn"
-                          onClick={() => handleDeleteUser(user.username)}
-                          title="Delete User"
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {editingUser && (
-              <div className="admin-modal-overlay">
-                <div className="admin-modal">
-                  <button className="admin-modal-close" onClick={handleCloseUserModal}>
-                    <FaTimes />
-                  </button>
-                  <h3 className="admin-modal-title">Edit User</h3>
-                  <form className="admin-modal-form" onSubmit={handleSaveEditUser}>
-                    <label className="admin-modal-label">
-                      <span>Username</span>
-                      <input
-                        type="text"
-                        name="username"
-                        value={editingUser.username}
-                        onChange={handleEditUserChange}
-                        className="admin-modal-input"
-                        required
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Email</span>
-                      <input
-                        type="email"
-                        name="email"
-                        value={editingUser.email}
-                        onChange={handleEditUserChange}
-                        className="admin-modal-input"
-                        required
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Password</span>
-                      <input
-                        type="password"
-                        name="password"
-                        value={editingUser.password}
-                        onChange={handleEditUserChange}
-                        className="admin-modal-input"
-                        required
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Events Participated</span>
-                      <input
-                        type="number"
-                        name="eventsParticipated"
-                        value={editingUser.eventsParticipated}
-                        onChange={handleEditUserChange}
-                        min="0"
-                        className="admin-modal-input"
-                        required
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Events Organized</span>
-                      <input
-                        type="number"
-                        name="eventsOrganized"
-                        value={editingUser.eventsOrganized}
-                        onChange={handleEditUserChange}
-                        min="0"
-                        className="admin-modal-input"
-                        required
-                      />
-                    </label>
-                    <div className="admin-modal-actions">
-                      <button type="submit" className="admin-modal-save-btn">Save</button>
-                      <button type="button" className="admin-modal-cancel-btn" onClick={handleCloseUserModal}>Cancel</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-          </div>
-        );
+        return <div className="admin-dashboard-main float-in-discover"><h2 style={{ color: '#f05537' }}>User Management</h2><div style={{color:'#888'}}>List, search, and manage all users here. (UI demo)</div></div>;
       case 'events':
-        return (
-          <div className="admin-dashboard-main float-in-discover">
-            <h2 className="admin-page-title">Event Management</h2>
-            <div className="admin-events-table-container">
-              <table className="admin-events-table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Date</th>
-                    <th>Location</th>
-                    <th>Participants</th>
-                    <th>Organizer</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {events.map(event => (
-                    <tr key={event.id}>
-                      <td>{event.name}</td>
-                      <td>{event.date}</td>
-                      <td>{event.location}</td>
-                      <td>{event.participants}</td>
-                      <td>{event.organizer}</td>
-                      <td>
-                        <button
-                          className="admin-events-edit-btn"
-                          onClick={() => handleEditEvent(event)}
-                          title="Edit Event"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          className="admin-events-delete-btn"
-                          onClick={() => handleDeleteEvent(event.name)}
-                          title="Delete Event"
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {editingEvent && (
-              <div className="admin-modal-overlay">
-                <div className="admin-modal">
-                  <button className="admin-modal-close" onClick={handleCloseEventModal}>
-                    <FaTimes />
-                  </button>
-                  <h3 className="admin-modal-title">Edit Event</h3>
-                  <form className="admin-modal-form" onSubmit={handleSaveEditEvent}>
-                    <label className="admin-modal-label">
-                      <span>Name</span>
-                      <input
-                        type="text"
-                        name="name"
-                        value={editingEvent.name}
-                        onChange={handleEditEventChange}
-                        className="admin-modal-input"
-                        required
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Date</span>
-                      <input
-                        type="text"
-                        name="date"
-                        value={editingEvent.date}
-                        onChange={handleEditEventChange}
-                        className="admin-modal-input"
-                        placeholder="YYYY-MM-DD"
-                        required
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Location</span>
-                      <input
-                        type="text"
-                        name="location"
-                        value={editingEvent.location}
-                        onChange={handleEditEventChange}
-                        className="admin-modal-input"
-                        required
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Participants</span>
-                      <input
-                        type="number"
-                        name="participants"
-                        value={editingEvent.participants}
-                        className="admin-modal-input"
-                        readOnly
-                      />
-                    </label>
-                    <label className="admin-modal-label">
-                      <span>Organizer</span>
-                      <input
-                        type="text"
-                        name="organizer"
-                        value={editingEvent.organizer}
-                        className="admin-modal-input"
-                        readOnly
-                      />
-                    </label>
-                    <div className="admin-modal-actions">
-                      <button type="submit" className="admin-modal-save-btn">Save</button>
-                      <button type="button" className="admin-modal-cancel-btn" onClick={handleCloseEventModal}>Cancel</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            )}
-          </div>
-        );
+        return <div className="admin-dashboard-main float-in-discover"><h2 style={{ color: '#f05537' }}>Event Management</h2><div style={{color:'#888'}}>List, search, and manage all events here. (UI demo)</div></div>;
+      case 'invitations':
+        return <div className="admin-dashboard-main float-in-discover"><h2 style={{ color: '#f05537' }}>Invitations</h2><div style={{color:'#888'}}>View all invitations, recipients, and RSVP status. (UI demo)</div></div>;
+      case 'notifications':
+        return <div className="admin-dashboard-main float-in-discover"><h2 style={{ color: '#f05537' }}>Notifications</h2><div style={{color:'#888'}}>View and manage all system notifications. (UI demo)</div></div>;
       case 'settings':
-        return (
-          <div className="admin-dashboard-main float-in-discover">
-            <h2 className="admin-page-title">System Settings</h2>
-            <div className="settings-form">
-              <h3 className="settings-form-title">Event & Invitation Limits</h3>
-              <div className="settings-form-content">
-                <label className="settings-form-label">
-                  <span className="settings-form-label-text">Maximum Active Events per User</span>
-                  <input
-                    type="number"
-                    name="maxActiveEvents"
-                    value={config.maxActiveEvents}
-                    onChange={handleConfigChange}
-                    min="1"
-                    className="settings-form-input"
-                  />
-                </label>
-                <label className="settings-form-label">
-                  <span className="settings-form-label-text">Maximum Invitations per Event</span>
-                  <input
-                    type="number"
-                    name="maxInvitations"
-                    value={config.maxInvitations}
-                    onChange={handleConfigChange}
-                    min="1"
-                    className="settings-form-input"
-                  />
-                </label>
-                <button
-                  onClick={handleConfigSave}
-                  className="settings-form-button"
-                >
-                  Save Configuration
-                </button>
-              </div>
-            </div>
-          </div>
-        );
+        return <div className="admin-dashboard-main float-in-discover"><h2 style={{ color: '#f05537' }}>Settings</h2><div style={{color:'#888'}}>System settings and configuration. (UI demo)</div></div>;
       default:
         return null;
     }
   };
 
   return (
-    <div className="admin-dashboard-layout">
-      <aside className="admin-sidebar">
-        <div className="admin-sidebar-title">Admin Panel</div>
+    <div className="admin-dashboard-layout" style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #ff6b6b 0%, #646cff 100%)', display: 'flex' }}>
+      {/* Sidebar */}
+      <aside className="admin-sidebar" style={{ width: 220, background: '#fff', boxShadow: '2px 0 12px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2.5rem 0 1.5rem 0', gap: 18 }}>
+        <div style={{ fontWeight: 700, fontSize: 22, color: '#f05537', marginBottom: 32, letterSpacing: 1 }}>Admin Panel</div>
         {pages.map(item => (
           <button
             key={item.key}
             className={page === item.key ? 'admin-sidebar-btn active' : 'admin-sidebar-btn'}
+            style={{
+              background: page === item.key ? 'linear-gradient(135deg, #f05537 0%, #ff6b6b 100%)' : 'none',
+              color: page === item.key ? '#fff' : '#f05537',
+              fontWeight: 600,
+              fontSize: 16,
+              border: 'none',
+              borderRadius: 8,
+              padding: '0.8rem 1.2rem',
+              marginBottom: 6,
+              width: 170,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              cursor: 'pointer',
+              boxShadow: page === item.key ? '0 2px 8px rgba(240,85,55,0.10)' : 'none',
+              transition: 'background 0.2s, color 0.2s',
+            }}
             onClick={() => setPage(item.key)}
           >
             {item.icon} {item.label}
           </button>
         ))}
         <button
-          className="admin-sidebar-btn admin-sidebar-logout"
+          className="admin-sidebar-btn"
+          style={{ background: '#fff', color: '#f05537', border: '2px solid #f05537', fontWeight: 700, fontSize: 16, borderRadius: 8, padding: '0.8rem 1.2rem', marginTop: 18, width: 170, cursor: 'pointer' }}
           onClick={() => navigate('/login')}
         >
-          <FaSignOutAlt className="admin-sidebar-logout-icon" /> Logout
+          <FaSignOutAlt style={{ marginRight: 8 }} /> Logout
         </button>
       </aside>
-      <main className="admin-dashboard-content">
+      {/* Main content */}
+      <main className="admin-dashboard-content" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', padding: '3.5rem 2rem 2rem 2rem' }}>
         {renderContent()}
       </main>
     </div>

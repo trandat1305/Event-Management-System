@@ -1,40 +1,92 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaBars, FaMoon, FaBell, FaSignOutAlt, FaCamera, FaEdit, FaSave, FaTimes, FaEye, FaArrowLeft } from 'react-icons/fa';
+import { GrLogout } from "react-icons/gr";
 import defaultAvatar from './assets/default-avatar.png';
 import './MyAccount.css';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { clearAuth } from './store/authSlice';
+import { useEffect } from 'react';
 
 function MyAccount() {
-  const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  // const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const user = useSelector(state => state.auth.user);
+  const token = useSelector(state => state.auth.token);
+  const dispatch = useDispatch();
+
+
   const [userInfo, setUserInfo] = useState({
-    name: 'John Doe',
-    username: 'JohnDoe123',
-    email: 'johndoe@example.com',
+    name: user?.name || '',
+    username: user?.username || '',
+    email: user?.email || '',
     password: '********',
-    avatar: defaultAvatar,
+    avatar: user?.avatar || defaultAvatar,
   });
+
   const [tempInfo, setTempInfo] = useState({ ...userInfo });
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
+  /**
   const toggleSidePanel = () => {
     setIsSidePanelOpen(!isSidePanelOpen);
   };
+  */
 
   const handleEditClick = () => {
     setIsEditing(true);
     setTempInfo({ ...userInfo });
   };
 
+  const handleLogout = () => {
+    dispatch(clearAuth());
+  }
+
   const handleCancelEdit = () => {
     setIsEditing(false);
     setTempInfo({ ...userInfo });
+    navigate('/home');
   };
 
-  const handleSaveEdit = () => {
-    setIsEditing(false);
-    setUserInfo({ ...tempInfo });
+  const handleSaveEdit = async () => {
+  try {
+      const formData = new FormData();
+      formData.append('username', tempInfo.username);
+      formData.append('email', tempInfo.email);
+      formData.append('name', tempInfo.name);
+
+      // Only send password if changed
+      if (tempInfo.password !== '********') {
+        formData.append('password', tempInfo.password);
+      }
+
+      // If avatar is a File object, append it; otherwise, skip or handle accordingly
+      if (fileInputRef.current && fileInputRef.current.files[0]) {
+        formData.append('avatar', fileInputRef.current.files[0]);
+      }
+
+      const response = await fetch('http://localhost:3000/api/users/profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // Do NOT set Content-Type; browser will set it automatically for FormData
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setUserInfo({ ...tempInfo });
+        setIsEditing(false);
+        // Optionally show a success message or update Redux state
+      } else {
+        alert(data.error || 'Failed to update profile');
+      }
+    } catch (err) {
+      alert('Server error: ' + err.message);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -52,11 +104,17 @@ function MyAccount() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setUserInfo((prev) => ({ ...prev, avatar: reader.result }));
-        setTempInfo((prev) => ({ ...prev, avatar: reader.result }));
+        setTempInfo((prev) => ({ ...prev, avatar: file }));
       };
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    if (!user || !token) {
+      navigate('/home');
+    }
+  }, [user, token, navigate]);
 
   return (
     <div className="my-account-container">
@@ -141,7 +199,10 @@ function MyAccount() {
                   <button onClick={handleCancelEdit} className="myaccount-btn myaccount-cancel-btn"><FaTimes /> Cancel</button>
                 </>
               ) : (
-                <button onClick={handleEditClick} className="myaccount-btn myaccount-edit-btn"><FaEdit /> Edit</button>
+                <>
+                  <button onClick={handleEditClick} className="myaccount-btn myaccount-edit-btn"><FaEdit /> Edit</button>
+                  <button onClick={handleLogout} className="myaccount-btn myaccount-edit-btn"><GrLogout /> Log Out</button>
+                </>
               )}
             </div>
           </div>

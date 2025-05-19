@@ -124,11 +124,8 @@ function User() {
               + Create Event
             </button>
             <div className="user-profile">
-              <span className="user-avatar"><FaUserCircle /></span>
-              <span className="user-name">{user.username}</span>
-              <button className="edit-profile-btn" onClick={() => navigate('/myaccount')}>
-                Edit Profile
-              </button>
+              <span className="user-name">Hello, {user.username}!</span>
+              <button className="edit-profile-btn" onClick={() => navigate('/myaccount')}>My Profile</button>
             </div>
           </div>
         </header>

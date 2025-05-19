@@ -12,10 +12,9 @@ const { validationResult } = require('express-validator');
 eventRouter.use(authenticateUser); // Protect all routes below this line
 
 // Event data routes
-eventRouter.get('/:eventId', eventController.getEventById); // get an event by ID
-
 eventRouter.get('/public', eventController.getAllPublicEvents); // get all public events regardless of attendance
 
+eventRouter.get('/:eventId', eventController.getEventById); // get an event by ID
 // Event creation and modification routes
 eventRouter.post('/', upload.single('image'), createEventValidator,
   (req, res, next) => {

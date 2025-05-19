@@ -40,11 +40,15 @@ exports.createEvent = async (req, res) => {
       });
       await participant.save();
 
-      const eventOrganizer = new EventOrganizers({
-        eventId: newEvent._id,
-        userId: creator,
-      });
-      await eventOrganizer.save();
+      // Before saving, check if already exists
+      const existingOrg = await EventOrganizers.findOne({ eventId: newEvent._id, userId: creator, isDeleted: { $ne: true } });
+      if (!existingOrg) {
+        const eventOrganizer = new EventOrganizers({
+          eventId: newEvent._id,
+          userId: creator,
+        });
+        await eventOrganizer.save();
+      }
 
       res.status(201).json(event);
     } catch (err) {
@@ -176,16 +180,7 @@ exports.getAllPublicEvents = async (req, res) => {
       return res.status(404).json({ error: 'No events found' });
     }
 
-    // Add the `myEvent` key to each event
-    const updatedEvents = events.map(event => {
-      const isMyEvent = event.creator._id.toString() === userId?.toString();
-      return {
-        ...event.toObject(), // Convert Mongoose document to plain object
-        myEvent: isMyEvent // Add the `myEvent` key
-      };
-    });
-
-    res.status(200).json(updatedEvents);
+    res.status(200).json({events : events});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

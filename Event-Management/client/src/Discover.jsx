@@ -1,41 +1,40 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUsers, FaMapMarkerAlt, FaCalendarAlt, FaCompass, FaArrowLeft } from 'react-icons/fa';
-import './Home.css'; // Tái sử dụng style hiện đại từ Home
+import './Home.css';
+import EventCard from './EventCard';
+import { useSelector } from 'react-redux';
 
 function Discover() {
   const navigate = useNavigate();
-  // Mock data cho các sự kiện public
-  const events = [
-    {
-      _id: '1',
-      title: 'ReactJS Meetup 2025',
-      startTime: '2025-06-01T18:00:00',
-      location: 'Hà Nội',
-      price: 0,
-      imageURL: '',
-    },
-    {
-      _id: '2',
-      title: 'Summer Music Festival',
-      startTime: '2025-06-10T20:00:00',
-      location: 'TP. HCM',
-      price: 10,
-      imageURL: '',
-    },
-    {
-      _id: '3',
-      title: 'Open Art Exhibition',
-      startTime: '2025-06-15T09:00:00',
-      location: 'Đà Nẵng',
-      price: 0,
-      imageURL: '',
-    }
-  ];
+  const [events, setEvents] = useState([]);
 
-  const handleJoin = (eventId) => {
-    alert('You have joined the event (Demo UI)');
-  };
+  const token = useSelector(state => state.auth.token);
+  
+  useEffect(() => {
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/events/public', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      
+      // <-- Add this for debugging
+      if (Array.isArray(data.events)) {
+        setEvents(data.events);
+      } else {
+        console.log('Unexpected data format:', data);
+        alert(data.error || 'Failed to get events');
+      }
+      } catch (error) {
+        alert('Server error: ' + error.message);
+      }
+    };
+    fetchEvents();
+  }, [token]);
 
   return (
     <div className="home-container float-in-discover">
@@ -70,21 +69,7 @@ function Discover() {
         </div>
         <div className="events-grid">
           {events.map(event => (
-            <div key={event._id} className="event-card">
-              <div className="event-image">
-                <img src={event.imageURL || 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'} alt={event.title} />
-              </div>
-              <div className="event-details">
-                <h3>{event.title}</h3>
-                <div className="event-info">
-                  <span><FaCalendarAlt /> {new Date(event.startTime).toLocaleDateString()}</span>
-                  <span><FaMapMarkerAlt /> {event.location}</span>
-                </div>
-                <div className="event-footer">
-                  <button className="book-now-btn" onClick={() => handleJoin(event._id)}> Join </button>
-                </div>
-              </div>
-            </div>
+            <EventCard event ={event} key={event._id} token={token}/>
           ))}
         </div>
       </section>

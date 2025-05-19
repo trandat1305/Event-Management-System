@@ -79,7 +79,7 @@ function User() {
   ];
 
   if (!token) {
-    navigate('/login');
+    navigate('/home');
     return null;
   }
 

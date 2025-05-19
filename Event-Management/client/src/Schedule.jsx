@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import Calendar from 'react-calendar';
@@ -6,96 +6,51 @@ import 'react-calendar/dist/Calendar.css';
 import './Schedule.css';
 import EventDetails from './EventDetails';
 import DiscussionBoard from './DiscussionBoard';
-
-// Mock event data
-const mockEvents = [
-  {
-    id: 1,
-    title: 'Team Meeting',
-    date: '2025-05-20',
-    type: 'organizer',
-    time: '10:00 - 11:00',
-    location: 'Room A',
-    description: 'Discuss project updates and next steps.',
-    startTime: '2025-05-20T10:00:00',
-    endTime: '2025-05-20T11:00:00',
-    isPublic: true,
-    creator: 'You',
-    imageURL: '',
-  },
-  {
-    id: 2,
-    title: 'Yoga Class',
-    date: '2025-05-20',
-    type: 'participant',
-    time: '18:00 - 19:00',
-    location: 'Studio 2',
-    description: 'Relaxing yoga session for all levels.',
-    startTime: '2025-05-20T18:00:00',
-    endTime: '2025-05-20T19:00:00',
-    isPublic: true,
-    creator: 'Alice',
-    imageURL: '',
-  },
-  {
-    id: 3,
-    title: 'Project Kickoff',
-    date: '2025-05-21',
-    type: 'organizer',
-    time: '09:00 - 10:00',
-    location: 'Room B',
-    description: 'Kickoff meeting for new project.',
-    startTime: '2025-05-21T09:00:00',
-    endTime: '2025-05-21T10:00:00',
-    isPublic: false,
-    creator: 'You',
-    imageURL: '',
-  },
-  {
-    id: 4,
-    title: 'Birthday Party',
-    date: '2025-05-22',
-    type: 'participant',
-    time: '20:00 - 22:00',
-    location: 'Cafe',
-    description: 'Celebrate with friends!',
-    startTime: '2025-05-22T20:00:00',
-    endTime: '2025-05-22T22:00:00',
-    isPublic: true,
-    creator: 'Bob',
-    imageURL: '',
-  },
-  {
-    id: 5,
-    title: 'Strategy Session',
-    date: '2025-05-23',
-    type: 'organizer',
-    time: '14:00 - 15:30',
-    location: 'Room C',
-    description: 'Planning for Q3 objectives.',
-    startTime: '2025-05-23T14:00:00',
-    endTime: '2025-05-23T15:30:00',
-    isPublic: false,
-    creator: 'You',
-    imageURL: '',
-  },
-  {
-    id: 6,
-    title: 'Workshop',
-    date: '2025-05-23',
-    type: 'participant',
-    time: '16:00 - 18:00',
-    location: 'Lab',
-    description: 'Hands-on workshop for new skills.',
-    startTime: '2025-05-23T16:00:00',
-    endTime: '2025-05-23T18:00:00',
-    isPublic: true,
-    creator: 'Carol',
-    imageURL: '',
-  },
-];
+import { useSelector } from 'react-redux';
 
 function Schedule() {
+
+  const [events, setEvents] = useState([]);
+
+  const token = useSelector(state => state.auth.token);
+  const user = useSelector(state => state.auth.user);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/users/events/attending', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        console.log('Fetched events:', data);
+
+      if (Array.isArray(data.events)) {
+        const eventsWithExtras = data.events.map(e => ({
+          ...e.event, // flatten event fields
+          myEvent: e.myEvent,
+          organizer: e.organizer,
+          participantId: e._id,
+          joinedAt: e.joinedAt,
+          date: e.event.startTime ? e.event.startTime.slice(0, 10) : '', // yyyy-mm-dd
+          time: e.event.startTime ? e.event.startTime.slice(11, 16) : '', // HH:mm
+          type: (e.myEvent || e.organizer) ? 'organizer' : 'participant', // <-- updated logic
+          id: e.event._id,
+        }));
+        setEvents(eventsWithExtras);
+      } else {
+        console.log('Unexpected data format:', data);
+        alert(data.error || 'Failed to get events');
+      }
+      } catch (error) {
+        alert('Server error: ' + error.message);
+      }
+    };
+    fetchEvents();
+  }, [token, user._id]);
+
   const [value, setValue] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -112,15 +67,15 @@ function Schedule() {
   // Get events for a date
   const getEventsForDate = (date) => {
     const d = formatDate(date);
-    return mockEvents.filter(e => e.date === d);
+    return events.filter(e => e.date === d);
   };
 
   // Calendar tile coloring
   const tileClassName = ({ date, view }) => {
     if (view !== 'month') return '';
     const d = formatDate(date);
-    const hasOrg = mockEvents.some(e => e.date === d && e.type === 'organizer');
-    const hasPar = mockEvents.some(e => e.date === d && e.type === 'participant');
+    const hasOrg = events.some(e => e.date === d && e.type === 'organizer');
+    const hasPar = events.some(e => e.date === d && e.type === 'participant');
     if (hasOrg && hasPar) return 'purple-indicator';
     if (hasOrg) return 'red-indicator';
     if (hasPar) return 'blue-indicator';

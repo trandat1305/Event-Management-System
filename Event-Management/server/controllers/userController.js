@@ -83,22 +83,19 @@ exports.getUserEvents = async (req, res) => {
     const organized = await eventOrganizers.find({ user: userId }).select('event');
     const organizedEventIds = organized.map(o => o.eventId.toString());
 
-    // Filter out events where the user is the creator or organizer
-    const filteredEvents = events.filter(event =>
-      event.event.creator._id.toString() !== userId.toString() &&
-      !organizedEventIds.includes(event.event._id.toString())
-    );
-
-    // Add the `myEvent` key to each event
-    const updatedEvents = filteredEvents.map(event => {
-      const isMyEvent = event.event.creator._id.toString() === userId.toString();
+    /// Add myEvent and organizer keys to each event
+    const updatedEvents = events.map(eventDoc => {
+      const eventObj = eventDoc.toObject();
+      const isMyEvent = eventObj.event.creator._id.toString() === userId.toString();
+      const isOrganizer = organizedEventIds.includes(eventObj.event._id.toString());
       return {
-        ...event.toObject(), // Convert Mongoose document to plain object
-        myEvent: isMyEvent // Add the `myEvent` key
+        ...eventObj,
+        myEvent: isMyEvent,
+        organizer: isOrganizer
       };
     });
 
-    res.status(200).json(updatedEvents);
+    res.status(200).json({ events: updatedEvents });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

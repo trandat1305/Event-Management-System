@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import './EventDetails.css';
 import DiscussionBoard from './DiscussionBoard';
 
+function decodeHtml(html) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = html;
+  return txt.value;
+}
+
 function EventDetails({ event, onClose }) {
   // State to toggle between view and edit modes
   const [isEditing, setIsEditing] = useState(false);
@@ -58,7 +64,7 @@ function EventDetails({ event, onClose }) {
                   id="edit-description"
                   className="event-edit-input"
                   name="description"
-                  value={editEvent.description}
+                  value={decodeHtml(editEvent.description)}
                   onChange={handleEditChange}
                   placeholder="Describe the event"
                   required
@@ -139,7 +145,7 @@ function EventDetails({ event, onClose }) {
               />
             )}
             <p>
-              <strong>Description:</strong> {editEvent.description}
+              <strong>Description:</strong> {decodeHtml(editEvent.description)}
             </p>
             <p>
               <strong>Start Time:</strong>{' '}
@@ -156,7 +162,7 @@ function EventDetails({ event, onClose }) {
               <strong>Public:</strong> {editEvent.isPublic ? 'Yes' : 'No'}
             </p>
             <p>
-              <strong>Creator:</strong> {editEvent.creator}
+              <strong>Creator:</strong> {editEvent.creator.username}
             </p>
             {/* Show Edit button only if the user is the organizer */}
             {event.type === 'organizer' && (

@@ -26,7 +26,7 @@ eventRouter.post('/', upload.single('image'), createEventValidator,
   },
   eventController.createEvent); // create a new event
 
-eventRouter.put('/:eventId', upload.single('image'), updateEventValidator,
+eventRouter.put('/:eventId/update', upload.single('image'), updateEventValidator,
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {

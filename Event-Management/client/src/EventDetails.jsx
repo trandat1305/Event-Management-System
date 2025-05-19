@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './EventDetails.css';
 import DiscussionBoard from './DiscussionBoard';
+import { useSelector } from 'react-redux';
 
 function decodeHtml(html) {
   const txt = document.createElement('textarea');
@@ -20,11 +21,38 @@ function EventDetails({ event, onClose }) {
     setEditEvent((prev) => ({ ...prev, [name]: value }));
   };
 
+  const token = useSelector((state) => state.auth.token);
+
   // Handle saving the edited event
-  const handleSave = () => {
-    // In a real application, you might call an API here to update the event
-    setIsEditing(false);
-    // Optionally, a callback like onUpdate could be called to propagate changes
+  const handleSave = async () => {
+  try {
+      const response = await fetch(`http://localhost:3000/api/events/${editEvent.id}/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add Authorization if needed:
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: editEvent.title,
+          description: editEvent.description,
+          startTime: editEvent.startTime,
+          endTime: editEvent.endTime,
+          location: editEvent.location,
+          isPublic: editEvent.isPublic,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update event');
+      }
+
+      // Optionally update local state/UI with the new event data
+      setIsEditing(false);
+      // Optionally: const updated = await response.json(); setEditEvent(updated);
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (

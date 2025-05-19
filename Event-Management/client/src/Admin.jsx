@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FaUser, FaCalendarAlt, FaUserTie, FaSignOutAlt, FaTachometerAlt, FaUsers, FaCog, FaEdit, FaTrash, FaTimes, FaCalendar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
@@ -12,6 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import './Admin.css';
+import { useSelector } from 'react-redux';
 
 // Register Chart.js components
 ChartJS.register(
@@ -31,6 +32,16 @@ const pages = [
 ];
 
 function Admin() {
+  const navigate = useNavigate();
+
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    if (!user?.isAdmin) {
+      navigate('/user');
+    }
+  }, [user, navigate]);
+
   const [stats] = useState({ users: 30, organizers: 3, events: 20 });
   const [page, setPage] = useState('dashboard');
   const [config, setConfig] = useState({
@@ -57,7 +68,6 @@ function Admin() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [editingEvent, setEditingEvent] = useState(null);
-  const navigate = useNavigate();
 
   // Mock data for upcoming events (for dashboard chart)
   const upcomingEvents = [

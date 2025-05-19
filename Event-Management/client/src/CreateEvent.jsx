@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaImage, FaLock, FaGlobe } from 'react-icons/fa';
 import './CreateEvent.css';
+import { useSelector } from 'react-redux';
+
 
 function CreateEvent() {
   const navigate = useNavigate();
+
+  const user = useSelector(state => state.auth.user);
+  const token = useSelector(state => state.auth.token);
+
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -65,15 +72,41 @@ function CreateEvent() {
     return true;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const isDatesValid = validateDates();
-    const isVisibilityValid = validateVisibility();
-    const isImageValid = validateImage();
-    if (isDatesValid && isVisibilityValid && isImageValid) {
-      console.log('Event creation:', formData);
-      // Handle event creation logic here
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const isDatesValid = validateDates();
+  const isVisibilityValid = validateVisibility();
+  const isImageValid = validateImage();
+  if (isDatesValid && isVisibilityValid && isImageValid) {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('startTime', `${formData.startDate}T${formData.startTime}`);
+      formDataToSend.append('endTime', `${formData.endDate}T${formData.endTime}`);
+      formDataToSend.append('location', formData.location);
+      formDataToSend.append('isPublic', formData.isPublic);
+      formDataToSend.append('creator', user._id);
+      formDataToSend.append('image', formData.image);
+
+      const response = await fetch('http://localhost:3000/api/events/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formDataToSend,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        navigate('/user');
+      } else {
+        alert(data.errorMessage || 'Failed to create event');
+      }
+    } catch (err) {
+      alert('Server error: ' + err.errorMessage);
     }
+  }
   };
 
   const handleImageChange = (e) => {
@@ -224,6 +257,7 @@ function CreateEvent() {
             <div className={`image-upload ${imageError ? 'invalid' : ''}`}>
               <input
                 type="file"
+                name = "image"
                 accept="image/*"
                 onChange={handleImageChange}
                 required

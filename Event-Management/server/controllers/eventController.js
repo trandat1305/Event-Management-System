@@ -11,8 +11,8 @@ exports.createEvent = async (req, res) => {
       // Handle optional fields with default values
       const isPublicValue = isPublic !== undefined ? isPublic : false; // Default to false
       const descriptionValue = description || ''; // Default to an empty string
-      const imageUrl = req.file?.path || null; // Default to null if no file is uploaded
-
+      const imageURL = req.file ? `uploads/${req.file.filename}` : null;
+      
       // Initialize event data
       const eventData = {
         title,
@@ -21,7 +21,7 @@ exports.createEvent = async (req, res) => {
         startTime,
         endTime,
         creator: creator,
-        imageUrl,
+        imageURL,
         location
       };
 
@@ -29,7 +29,11 @@ exports.createEvent = async (req, res) => {
       const event = new Event(eventData);
       const newEvent = await event.save();
 
-      // Add the creator to the EventParticipants and EventOrgnizers collection
+      // After saving the event
+      if (!newEvent || !newEvent._id || !creator) {
+        return res.status(500).json({ error: 'Missing event or creator information' });
+      }
+
       const participant = new EventParticipants({
         event: newEvent._id,
         user: creator,

@@ -136,7 +136,7 @@ function EventDetails({ event, onClose }) {
         ) : (
           // View mode: Display event details
           <>
-            <h2>{editEvent.title}</h2>
+            <h2>{decodeHtml(editEvent.title)}</h2>
             {editEvent.imageURL && (
               <img
                 src={editEvent.imageURL}
@@ -156,13 +156,13 @@ function EventDetails({ event, onClose }) {
               {new Date(editEvent.endTime).toLocaleString()}
             </p>
             <p>
-              <strong>Location:</strong> {editEvent.location}
+              <strong>Location:</strong> {decodeHtml(editEvent.location)}
             </p>
             <p>
               <strong>Public:</strong> {editEvent.isPublic ? 'Yes' : 'No'}
             </p>
             <p>
-              <strong>Creator:</strong> {editEvent.creator.username}
+              <strong>Creator:</strong> {decodeHtml(editEvent.creator.username)}
             </p>
             {/* Show Edit button only if the user is the organizer */}
             {event.type === 'organizer' && (

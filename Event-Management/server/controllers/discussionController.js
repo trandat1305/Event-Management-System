@@ -13,7 +13,7 @@ exports.postMessage = async (req, res) => {
     const { message } = req.body; // Message content from the request body
 
     // Create a new message in the database
-    const event = await eventExists(eventId);
+    const event = await Event.findByIdIfExists(eventId);
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
@@ -27,7 +27,9 @@ exports.postMessage = async (req, res) => {
     // Create a notification for the event
     // Get all participants of the event except the sender
     const participants = await EventParticipants.find({ event: eventId });
-    const participantIds = participants.map(participant => participant.userId.toString()).filter(id => id !== userId.toString());
+    const participantIds = participants
+    .map(participant => participant.userId ? participant.userId.toString() : null)
+    .filter(id => id && id !== userId.toString());    
     const notifications = participantIds.map(participantId => ({
       userId: participantId,
       eventId: eventId,
@@ -37,7 +39,7 @@ exports.postMessage = async (req, res) => {
 
     await Notification.insertMany(notifications);
 
-    res.status(201).json(newMessage);
+    res.status(201).json({message: newMessage});
   } catch (err) {
     res.status(500).json({ error: 'Failed to post message' });
   }
@@ -46,11 +48,11 @@ exports.postMessage = async (req, res) => {
 exports.getAllMessages = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const messages = await Discussion.find({ event: eventId})
+    const messages = await Discussion.find({ eventId: eventId})
       .populate('userId', 'username') // Corrected field name
       .sort({ timestamp: 1 }); 
 
-    res.status(200).json(messages);
+    res.status(200).json({messages: messages});
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch messages', errorMessage: err.message });
   }

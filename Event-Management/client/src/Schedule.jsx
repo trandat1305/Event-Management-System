@@ -25,7 +25,6 @@ function Schedule() {
           }
         });
         const data = await response.json();
-        console.log('Fetched events:', data);
 
       if (Array.isArray(data.events)) {
         const eventsWithExtras = data.events.map(e => ({
@@ -41,7 +40,6 @@ function Schedule() {
         }));
         setEvents(eventsWithExtras);
       } else {
-        console.log('Unexpected data format:', data);
         alert(data.error || 'Failed to get events');
       }
       } catch (error) {

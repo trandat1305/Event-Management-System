@@ -1,35 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import './DiscussionBoard.css';
+import { useSelector } from 'react-redux';
+
+function decodeHtml(html) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = html;
+  return txt.value;
+}
 
 function DiscussionBoard({ eventId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const token = useSelector(state => state.auth.token);
+
   // Fetch discussions when the component mounts
   useEffect(() => {
     const fetchMessages = async () => {
       setLoading(true);
       try {
-        // Giả lập API, bạn có thể thay bằng API thực tế
-        // const response = await axios.get(`/api/discussions/event/${eventId}`);
-        // setMessages(response.data);
-        setMessages([
-          {
-            _id: '1',
-            author: { username: 'Alice' },
-            content: 'Sự kiện này rất tuyệt!',
-            replies: [
-              { _id: '1-1', author: { username: 'Bob' }, content: 'Đồng ý!' }
-            ]
-          },
-          {
-            _id: '2',
-            author: { username: 'Carol' },
-            content: 'Có cần chuẩn bị gì không?',
-            replies: []
+        const response = await fetch(`http://localhost:3000/api/discussions/${eventId}/messages`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
-        ]);
+        });
+        const data = await response.json();
+        console.log('Fetched discussion data:', data);
+        
+        if (Array.isArray(data.messages)) {
+          const decodedMessages = data.messages.map(message => ({
+            ...message,
+            content: decodeHtml(message.content)
+          }));
+          setMessages(decodedMessages);
+        }
       } catch (err) {
         console.error('Failed to fetch discussions:', err);
       } finally {
@@ -37,21 +44,35 @@ function DiscussionBoard({ eventId }) {
       }
     };
     fetchMessages();
-  }, [eventId]);
+  }, [eventId, token]);
 
   // Handle posting a new discussion
   const handlePostMessage = async () => {
     if (!newMessage.trim()) return;
-    // Gửi API tạo discussion mới ở đây
-    setMessages([
-      ...messages,
-      {
-        _id: Date.now().toString(),
-        author: { username: 'You' },
-        content: newMessage,
-        replies: []
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/discussions/${eventId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ message: newMessage })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to post message');
       }
-    ]);
+
+      const data = await response.json();
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { ...data.message, content: decodeHtml(data.message.content) }
+      ]);
+    } catch (err) {
+      console.error('Failed to post message:', err);
+    }
+
     setNewMessage('');
   };
 

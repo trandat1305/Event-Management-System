@@ -31,7 +31,7 @@ const pages = [
 ];
 
 function Admin() {
-  const [stats] = useState({ users: 120, organizers: 8, events: 31 });
+  const [stats] = useState({ users: 30, organizers: 3, events: 20 });
   const [page, setPage] = useState('dashboard');
   const [config, setConfig] = useState({
     maxActiveEvents: 5,

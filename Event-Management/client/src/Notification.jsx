@@ -38,7 +38,7 @@ function Notification() {
   };
 
   return (
-    <div className="notification-centered-page">
+    <div className="notification-centered-page float-in-discover">
       <header className="notification-top-nav">
         <div className="notification-nav-left">
           <button className="notification-back-btn" onClick={() => navigate(-1)}>

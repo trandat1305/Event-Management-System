@@ -453,7 +453,12 @@
 
 /* Sidebar styles */
 .admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
   min-height: 100vh;
+  height: 100vh;
+  width: 220px;
   background: #fff;
   box-shadow: 2px 0 12px rgba(0,0,0,0.06);
   display: flex;
@@ -461,7 +466,9 @@
   align-items: center;
   padding: 2.5rem 0 1.5rem 0;
   gap: 18px;
-  width: 220px;
+  margin: 0;
+  border-right: 1px solid #eee;
+  z-index: 100;
 }
 
 .admin-sidebar-title {
@@ -532,37 +539,43 @@
   }
 }
 
-.admin-dashboard-content {
-  width: 100%;
-  max-width: none;
+.admin-dashboard-layout {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  background: linear-gradient(135deg, #ff6b6b 0%, #646cff 100%);
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+.admin-dashboard-content {
   flex: 1;
+  width: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-start;
-  padding: 3.5rem 2rem 2rem 2rem;
+  background: #f5f6fa;
+  margin: 0 0 0 220px;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .admin-dashboard-main {
   width: 100%;
   max-width: none;
-  background: #fff;
+  background: #f5f6fa;
   border-radius: 0;
   box-shadow: none;
-  padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+  padding: 2.5rem 0 2.5rem 0;
   margin-bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-}
-
-.admin-dashboard-layout {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #ff6b6b 0%, #646cff 100%);
-  display: flex;
 }
 
 .admin-dashboard-title {
@@ -699,13 +712,12 @@
 
 .admin-dashboard-chart-container {
   width: 100%;
-  max-width: 800px;
   height: 400px;
-  margin: 2rem auto;
-  padding: 0.25rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin: 2rem 0;
+  padding: 0.25rem 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .admin-users-table-container,
@@ -907,16 +919,6 @@
 
 .admin-modal-cancel-btn:hover {
   background: #666;
-}
-
-.admin-announcement-container {
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0.25rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .admin-announcement-title,

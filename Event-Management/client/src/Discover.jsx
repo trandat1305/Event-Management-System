@@ -14,7 +14,7 @@ function Discover() {
   useEffect(() => {
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/events/public', {
+      const response = await fetch('/api/events/public', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`

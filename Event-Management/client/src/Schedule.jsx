@@ -18,7 +18,7 @@ function Schedule() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/users/events/attending', {
+        const response = await fetch('/api/users/events/attending', {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`

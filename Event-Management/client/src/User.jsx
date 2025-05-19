@@ -39,7 +39,7 @@ function User() {
       discussionId: 102,
       role: 'attendee',
       description: 'A festival of music',
-      startTime: '2024-06-10T12:00',
+      startTime: '2024-06-10T11:00',
       endTime: '2024-06-10T22:00',
       isPublic: true,
       creator: 'Another person',

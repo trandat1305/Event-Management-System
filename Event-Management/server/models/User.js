@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean, 
     default: false 
   },
-  avatar: { 
+  imageURL: { 
     type: String,
     default: 'uploads/defaultAvatar.jpg',
     validate: {
@@ -110,8 +110,8 @@ userSchema.methods.comparePassword = async function(submittedPassword) {
 };
 
 // Method to update the profile image
-userSchema.methods.updateProfileImage = async function(newavatar) {
-  this.avatar = newavatar;
+userSchema.methods.updateProfileImage = async function(newImageURL) {
+  this.imageURL = newImageURL;
   return await this.save();
 };
 

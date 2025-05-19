@@ -12,32 +12,28 @@ import User from './User'; // Import the User page
 import AdminEvents from './AdminEvents'; // Updated import
 import Discover from './Discover';
 import Invitation from './Invitation';
-import { Provider } from 'react-redux';
-import store from './store';
 
 function App() {
   return (
-    <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/home/notification" element={<Notification />} /> {/* Home Notification route */}        <Route path="/home/myevent/schedule" element={<Schedule />} /> {/* New Route */}
-          <Route path="/createevent" element={<CreateEvent />} />
-          <Route path="/home/schedule" element={<Schedule />} />
-          <Route path="/myaccount" element={<MyAccount />} /> {/* My Account route */}
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/admin" element={<Admin />} /> {/* Admin route */}
-          <Route path="/admin/users" element={<User />} /> {/* User route */}
-          <Route path="/admin/events" element={<AdminEvents />} /> {/* Updated route */}
-          <Route path="/user" element={<User />} /> {/* User dashboard/profile page */}
-          <Route path="/discover" element={<Discover />} />
-          <Route path="/invitation" element={<Invitation />} />
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </Router>
-    </Provider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/home/notification" element={<Notification />} /> {/* Home Notification route */}        <Route path="/home/myevent/schedule" element={<Schedule />} /> {/* New Route */}
+        <Route path="/createevent" element={<CreateEvent />} />
+        <Route path="/home/schedule" element={<Schedule />} />
+        <Route path="/myaccount" element={<MyAccount />} /> {/* My Account route */}
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/admin" element={<Admin />} /> {/* Admin route */}
+        <Route path="/admin/users" element={<User />} /> {/* User route */}
+        <Route path="/admin/events" element={<AdminEvents />} /> {/* Updated route */}
+        <Route path="/user" element={<User />} /> {/* User dashboard/profile page */}
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/invitation" element={<Invitation />} />
+        <Route path="*" element={<Home />} />
+      </Routes>
+    </Router>
   );
 }
 

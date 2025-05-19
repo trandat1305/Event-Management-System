@@ -6,7 +6,7 @@ const eventOrganizer = require('../models/EventOrganizers');
 
 exports.sendInvitation = async (req, res) => {
     try {
-        const { eventId, username, email, type } = req.body;
+        const { eventId, username, email } = req.body;
 
         const senderId = req.user._id; // Get user ID from the authenticated user
     
@@ -44,7 +44,6 @@ exports.sendInvitation = async (req, res) => {
             eventId: eventId,
             userId: userId,
             senderId: senderId,
-            type: 'attendee',
         });
 
         await invitation.save();

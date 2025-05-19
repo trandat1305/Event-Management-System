@@ -1,23 +1,10 @@
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaEnvelope, FaLock, FaHome, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Login.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { setAuth } from './store/authSlice';
 
 function Login() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const user = useSelector(state => state.auth.user);
-  const token = useSelector(state => state.auth.token);
-
-  useEffect(() => {
-    if (user && token) {
-      navigate('/user');
-    }
-  }, [user, token, navigate]);
-
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -36,8 +23,11 @@ function Login() {
       });
       const data = await response.json();
       if (response.ok) {
-        dispatch(setAuth({ token: data.token, user: data.user }));
         navigate('/user');
+
+        // Store the token in local storage for later uses
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
       } else {
         setError(data.error || 'Invalid email or password');
       }

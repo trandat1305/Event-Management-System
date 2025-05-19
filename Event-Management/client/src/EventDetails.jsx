@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './EventDetails.css';
 import DiscussionBoard from './DiscussionBoard';
+import { useSelector } from 'react-redux';
 
 function decodeHtml(html) {
   const txt = document.createElement('textarea');
@@ -20,15 +21,17 @@ function EventDetails({ event, onClose }) {
     setEditEvent((prev) => ({ ...prev, [name]: value }));
   };
 
+  const token = useSelector((state) => state.auth.token);
+
   // Handle saving the edited event
   const handleSave = async () => {
   try {
-      const response = await fetch(`http://localhost:3000/events/${editEvent.id}`, {
+      const response = await fetch(`http://localhost:3000/api/events/${editEvent.id}/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           // Add Authorization if needed:
-          // 'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           title: editEvent.title,

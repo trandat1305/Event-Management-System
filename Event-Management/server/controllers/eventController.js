@@ -50,7 +50,7 @@ exports.createEvent = async (req, res) => {
         await eventOrganizer.save();
       }
 
-      res.status(201).json(event);
+      res.status(201).json(newEvent);
     } catch (err) {
       res.status(500).json({ error: 'Failed to create event', errorMessage: err.message });
     }
@@ -75,7 +75,9 @@ exports.getEventById = async (req, res) => {
   
 exports.updateEvent = async (req, res) => {
     try {
-      const event = await Event.findById(req.params.id);
+      const eventId = req.params.eventId;
+
+      const event = await Event.findById(eventId);
       if (!event) return res.status(404).json({ error: 'Event not found' });
   
       const oldEvent = event.toObject();
